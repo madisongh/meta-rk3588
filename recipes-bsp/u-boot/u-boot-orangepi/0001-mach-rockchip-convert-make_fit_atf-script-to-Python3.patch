@@ -1,0 +1,198 @@
+From 61ce630576297bfbc98fd09654c4f72bc1c1e5d3 Mon Sep 17 00:00:00 2001
+From: Matt Madison <matt@madison.systems>
+Date: Fri, 24 Mar 2023 12:36:10 -0700
+Subject: [PATCH 1/3] mach-rockchip: convert make_fit_atf script to Python3
+
+Signed-off-by: Matt Madison <matt@madison.systems>
+---
+ arch/arm/mach-rockchip/make_fit_atf.py | 110 ++++++++++++-------------
+ 1 file changed, 55 insertions(+), 55 deletions(-)
+
+diff --git a/arch/arm/mach-rockchip/make_fit_atf.py b/arch/arm/mach-rockchip/make_fit_atf.py
+index fac8d6f121..195d4dab3c 100755
+--- a/arch/arm/mach-rockchip/make_fit_atf.py
++++ b/arch/arm/mach-rockchip/make_fit_atf.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/env python3
+ """
+ A script to generate FIT image source for rockchip boards
+ with ARM Trusted Firmware
+@@ -64,21 +64,21 @@ def append_atf_node(file, atf_index, phy_addr):
+     Append ATF DT node to input FIT dts file.
+     """
+     data = 'bl31_0x%08x.bin' % phy_addr
+-    print >> file, '\t\tatf@%d {' % atf_index
+-    print >> file, '\t\t\tdescription = \"ARM Trusted Firmware\";'
+-    print >> file, '\t\t\tdata = /incbin/("%s");' % data
+-    print >> file, '\t\t\ttype = "firmware";'
+-    print >> file, '\t\t\tarch = "arm64";'
+-    print >> file, '\t\t\tos = "arm-trusted-firmware";'
+-    print >> file, '\t\t\tcompression = "none";'
+-    print >> file, '\t\t\tload = <0x%08x>;' % phy_addr
++    print('\t\tatf@%d {' % atf_index, file=file)
++    print('\t\t\tdescription = \"ARM Trusted Firmware\";', file=file)
++    print('\t\t\tdata = /incbin/("%s");' % data, file=file)
++    print('\t\t\ttype = "firmware";', file=file)
++    print('\t\t\tarch = "arm64";', file=file)
++    print('\t\t\tos = "arm-trusted-firmware";', file=file)
++    print('\t\t\tcompression = "none";', file=file)
++    print('\t\t\tload = <0x%08x>;' % phy_addr, file=file)
+     if atf_index == 1:
+-        print >> file, '\t\t\tentry = <0x%08x>;' % phy_addr
+-    print >> file, '\t\t\thash {'
+-    print >> file, '\t\t\t\talgo = "sha256";'
+-    print >> file, '\t\t\t};'
+-    print >> file, '\t\t};'
+-    print >> file, ''
++        print('\t\t\tentry = <0x%08x>;' % phy_addr, file=file)
++    print('\t\t\thash {', file=file)
++    print('\t\t\t\talgo = "sha256";', file=file)
++    print('\t\t\t};', file=file)
++    print('\t\t};', file=file)
++    print('', file=file)
+ 
+ def append_fdt_node(file, dtbs):
+     """
+@@ -87,54 +87,54 @@ def append_fdt_node(file, dtbs):
+     cnt = 1
+     for dtb in dtbs:
+         dtname = os.path.basename(dtb)
+-        print >> file, '\t\tfdt {'
+-        print >> file, '\t\t\tdescription = "U-Boot device tree blob";'
+-        print >> file, '\t\t\tdata = /incbin/("u-boot.dtb");'
+-        print >> file, '\t\t\ttype = "flat_dt";'
+-        print >> file, '\t\t\tarch = "arm64";'
+-        print >> file, '\t\t\tcompression = "none";'
+-        print >> file, '\t\t\thash {'
+-        print >> file, '\t\t\t\talgo = "sha256";'
+-        print >> file, '\t\t\t};'
+-        print >> file, '\t\t};'
+-        print >> file, ''
++        print('\t\tfdt {', file=file)
++        print('\t\t\tdescription = "U-Boot device tree blob";', file=file)
++        print('\t\t\tdata = /incbin/("u-boot.dtb");', file=file)
++        print('\t\t\ttype = "flat_dt";', file=file)
++        print('\t\t\tarch = "arm64";', file=file)
++        print('\t\t\tcompression = "none";', file=file)
++        print('\t\t\thash {', file=file)
++        print('\t\t\t\talgo = "sha256";', file=file)
++        print('\t\t\t};', file=file)
++        print('\t\t};', file=file)
++        print('', file=file)
+         cnt = cnt + 1
+ 
+ def append_conf_section(file, cnt, dtname, atf_cnt):
+-    print >> file, '\t\tconfig {'
+-    print >> file, '\t\t\tdescription = "Rockchip armv8 with ATF";'
+-    print >> file, '\t\t\trollback-index = <0x0>;'
+-    print >> file, '\t\t\tfirmware = "atf@1";'
+-    print >> file, '\t\t\tloadables = "uboot",',
++    print('\t\tconfig {', file=file)
++    print('\t\t\tdescription = "Rockchip armv8 with ATF";', file=file)
++    print('\t\t\trollback-index = <0x0>;', file=file)
++    print('\t\t\tfirmware = "atf@1";', file=file)
++    print('\t\t\tloadables = "uboot",', end=' ', file=file)
+     for i in range(1, atf_cnt):
+-        print >> file, '"atf@%d"' % (i+1),
++        print('"atf@%d"' % (i+1), end=' ', file=file)
+         if i != (atf_cnt - 1):
+-            print >> file, ',',
++            print(',', end=' ', file=file)
+         else:
+-            print >> file, ';'
+-    print >> file, '\t\t\tfdt = "fdt";'
+-    print >> file, '\t\t\tsignature {'
+-    print >> file, '\t\t\t\talgo = "sha256,rsa2048";'
+-    print >> file, '\t\t\t\tpadding = "pss";'
+-    print >> file, '\t\t\t\tkey-name-hint = "dev";'
+-    print >> file, '\t\t\t\tsign-images = "fdt", "firmware", "loadables";'
+-    print >> file, '\t\t\t};'
+-    print >> file, '\t\t};'
+-    print >> file, ''
++            print(';', file=file)
++    print('\t\t\tfdt = "fdt";', file=file)
++    print('\t\t\tsignature {', file=file)
++    print('\t\t\t\talgo = "sha256,rsa2048";', file=file)
++    print('\t\t\t\tpadding = "pss";', file=file)
++    print('\t\t\t\tkey-name-hint = "dev";', file=file)
++    print('\t\t\t\tsign-images = "fdt", "firmware", "loadables";', file=file)
++    print('\t\t\t};', file=file)
++    print('\t\t};', file=file)
++    print('', file=file)
+ 
+ def append_conf_node(file, dtbs, atf_cnt):
+     """
+     Append configeration nodes.
+     """
+     cnt = 1
+-    print >> file, '\tconfigurations {'
+-    print >> file, '\t\tdefault = "config";'
++    print('\tconfigurations {', file=file)
++    print('\t\tdefault = "config";', file=file)
+     for dtb in dtbs:
+         dtname = os.path.basename(dtb)
+         append_conf_section(file, cnt, dtname, atf_cnt)
+         cnt = cnt + 1
+-    print >> file, '\t};'
+-    print >> file, ''
++    print('\t};', file=file)
++    print('', file=file)
+ 
+ def generate_atf_fit_dts(fit_file_name, bl31_file_name, uboot_file_name, dtbs_file_name):
+     """
+@@ -157,7 +157,7 @@ def generate_atf_fit_dts(fit_file_name, bl31_file_name, uboot_file_name, dtbs_fi
+ 
+     assert (p_paddr != 0xFFFFFFFF and num_load_seg == 1)
+ 
+-    print >> fit_file, DT_HEADER % p_paddr
++    print(DT_HEADER % p_paddr, file=fit_file)
+ 
+     with open(bl31_file_name) as bl31_file:
+         bl31 = ELFFile(bl31_file)
+@@ -169,9 +169,9 @@ def generate_atf_fit_dts(fit_file_name, bl31_file_name, uboot_file_name, dtbs_fi
+                 append_atf_node(fit_file, i+1, paddr)
+     atf_cnt = i+1
+     append_fdt_node(fit_file, dtbs_file_name)
+-    print >> fit_file, '%s' % DT_IMAGES_NODE_END
++    print('%s' % DT_IMAGES_NODE_END, file=fit_file)
+     append_conf_node(fit_file, dtbs_file_name, atf_cnt)
+-    print >> fit_file, '%s' % DT_END
++    print('%s' % DT_END, file=fit_file)
+ 
+     if fit_file_name != sys.stdout:
+         fit_file.close()
+@@ -198,17 +198,17 @@ def get_bl31_segments_info(bl31_file_name):
+         bl31 = ELFFile(bl31_file)
+ 
+         num = bl31.num_segments()
+-        print 'Number of Segments : %d' % bl31.num_segments()
++        print('Number of Segments : %d' % bl31.num_segments())
+         for i in range(num):
+-            print 'Segment %d' % i
++            print('Segment %d' % i)
+             seg = bl31.get_segment(i)
+             ptype = seg[ELF_SEG_P_TYPE]
+             poffset = seg[ELF_SEG_P_OFFSET]
+             pmemsz = seg[ELF_SEG_P_MEMSZ]
+             pfilesz = seg[ELF_SEG_P_FILESZ]
+-            print 'type: %s\nfilesz: %08x\nmemsz: %08x\noffset: %08x' % (ptype, pfilesz, pmemsz, poffset)
++            print('type: %s\nfilesz: %08x\nmemsz: %08x\noffset: %08x' % (ptype, pfilesz, pmemsz, poffset))
+             paddr = seg[ELF_SEG_P_PADDR]
+-            print 'paddr: %08x' % paddr
++            print('paddr: %08x' % paddr)
+ 
+ def main():
+     uboot_elf="./u-boot"
+@@ -235,7 +235,7 @@ def main():
+         elif opt == "-b":
+             bl31_elf=val
+         elif opt == "-h":
+-            print __doc__
++            print(__doc__)
+             sys.exit(2)
+ 
+     dtbs = args
+-- 
+2.34.1
+

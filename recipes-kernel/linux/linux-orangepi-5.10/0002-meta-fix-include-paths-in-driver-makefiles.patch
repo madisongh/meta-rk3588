@@ -1,0 +1,1160 @@
+From ce78f394ddc1051d0d32e2ed83322a79f0edb16a Mon Sep 17 00:00:00 2001
+From: Matt Madison <matt@madison.systems>
+Date: Fri, 24 Mar 2023 10:35:15 -0700
+Subject: [PATCH 2/3] meta: fix include paths in driver makefiles
+
+Signed-off-by: Matt Madison <matt@madison.systems>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/esw/Makefile      | 2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/steering/Makefile | 2 +-
+ drivers/net/wireless/rockchip_wlan/cywdhd/bcmdhd/Makefile | 2 +-
+ .../net/wireless/rockchip_wlan/infineon/bcmdhd/Makefile   | 2 +-
+ drivers/net/wireless/rockchip_wlan/rkwifi/bcmdhd/Makefile | 2 +-
+ drivers/net/wireless/rockchip_wlan/rtl8188eu/Makefile     | 6 +++---
+ .../wireless/rockchip_wlan/rtl8188eu/hal/phydm/phydm.mk   | 2 +-
+ .../rtl8188eu/hal/phydm/sd4_phydm_2_kernel.mk             | 2 +-
+ drivers/net/wireless/rockchip_wlan/rtl8188fu/Makefile     | 6 +++---
+ .../wireless/rockchip_wlan/rtl8188fu/hal/phydm/phydm.mk   | 2 +-
+ .../rtl8188fu/hal/phydm/sd4_phydm_2_kernel.mk             | 2 +-
+ drivers/net/wireless/rockchip_wlan/rtl8189es/Makefile     | 6 +++---
+ drivers/net/wireless/rockchip_wlan/rtl8189fs/Makefile     | 6 +++---
+ .../wireless/rockchip_wlan/rtl8189fs/hal/phydm/phydm.mk   | 2 +-
+ .../rtl8189fs/hal/phydm/sd4_phydm_2_kernel.mk             | 2 +-
+ drivers/net/wireless/rockchip_wlan/rtl8723bs/Makefile     | 6 +++---
+ .../wireless/rockchip_wlan/rtl8723bs/hal/phydm/phydm.mk   | 2 +-
+ drivers/net/wireless/rockchip_wlan/rtl8723bu/Makefile     | 8 ++++----
+ drivers/net/wireless/rockchip_wlan/rtl8723cs/Makefile     | 8 ++++----
+ .../wireless/rockchip_wlan/rtl8723cs/hal/phydm/phydm.mk   | 2 +-
+ .../rtl8723cs/hal/phydm/sd4_phydm_2_kernel.mk             | 2 +-
+ drivers/net/wireless/rockchip_wlan/rtl8723ds/Makefile     | 8 ++++----
+ .../wireless/rockchip_wlan/rtl8723ds/hal/phydm/phydm.mk   | 2 +-
+ .../rtl8723ds/hal/phydm/sd4_phydm_2_kernel.mk             | 2 +-
+ drivers/net/wireless/rockchip_wlan/rtl8821cs/Makefile     | 8 ++++----
+ .../wireless/rockchip_wlan/rtl8821cs/hal/phydm/phydm.mk   | 2 +-
+ .../rtl8821cs/hal/phydm/sd4_phydm_2_kernel.mk             | 2 +-
+ drivers/net/wireless/rockchip_wlan/rtl8822be/Makefile     | 8 ++++----
+ drivers/net/wireless/rockchip_wlan/rtl8822bs/Makefile     | 6 +++---
+ .../wireless/rockchip_wlan/rtl8822bs/hal/phydm/phydm.mk   | 2 +-
+ .../rtl8822bs/hal/phydm/sd4_phydm_2_kernel.mk             | 2 +-
+ drivers/net/wireless/rockchip_wlan/rtl8852be/Makefile     | 4 ++--
+ drivers/net/wireless/rockchip_wlan/rtl8852be/common.mk    | 2 +-
+ drivers/net/wireless/rockchip_wlan/rtl8852bu/Makefile     | 4 ++--
+ drivers/net/wireless/rockchip_wlan/rtl8852bu/common.mk    | 2 +-
+ drivers/net/wireless/rtl8188eu/Makefile                   | 6 +++---
+ drivers/net/wireless/rtl8188eu/hal/phydm/phydm.mk         | 2 +-
+ .../wireless/rtl8188eu/hal/phydm/sd4_phydm_2_kernel.mk    | 2 +-
+ drivers/net/wireless/rtl8189es/Makefile                   | 6 +++---
+ drivers/net/wireless/rtl8189es/hal/phydm/phydm.mk         | 2 +-
+ .../wireless/rtl8189es/hal/phydm/sd4_phydm_2_kernel.mk    | 2 +-
+ drivers/net/wireless/rtl8189fs/Makefile                   | 6 +++---
+ drivers/net/wireless/rtl8189fs/hal/phydm/phydm.mk         | 2 +-
+ .../wireless/rtl8189fs/hal/phydm/sd4_phydm_2_kernel.mk    | 2 +-
+ drivers/net/wireless/rtl8192eu/Makefile                   | 6 +++---
+ drivers/net/wireless/rtl8192eu/hal/phydm/phydm.mk         | 2 +-
+ .../wireless/rtl8192eu/hal/phydm/sd4_phydm_2_kernel.mk    | 2 +-
+ drivers/net/wireless/rtl8723ds/Makefile                   | 8 ++++----
+ drivers/net/wireless/rtl8723du/Makefile                   | 6 +++---
+ drivers/net/wireless/rtl8723du/hal/phydm/phydm.mk         | 2 +-
+ drivers/net/wireless/rtl8811cu/Makefile                   | 6 +++---
+ drivers/net/wireless/rtl8811cu/hal/phydm/phydm.mk         | 2 +-
+ drivers/net/wireless/rtl8812au/Makefile                   | 6 +++---
+ drivers/net/wireless/rtl8812au/hal/phydm/phydm.mk         | 2 +-
+ .../wireless/rtl8812au/hal/phydm/sd4_phydm_2_kernel.mk    | 2 +-
+ drivers/net/wireless/rtl8822bs/Makefile                   | 6 +++---
+ drivers/net/wireless/rtl8822bs/hal/phydm/phydm.mk         | 2 +-
+ drivers/net/wireless/rtl88x2bu/Makefile                   | 6 +++---
+ drivers/net/wireless/rtl88x2bu/hal/phydm/phydm.mk         | 2 +-
+ .../wireless/rtl88x2bu/hal/phydm/sd4_phydm_2_kernel.mk    | 2 +-
+ drivers/net/wireless/rtl88x2cs/Makefile                   | 8 ++++----
+ drivers/net/wireless/rtl88x2cs/hal/phydm/phydm.mk         | 2 +-
+ .../wireless/rtl88x2cs/hal/phydm/sd4_phydm_2_kernel.mk    | 2 +-
+ drivers/rknpu/Makefile                                    | 2 +-
+ 64 files changed, 117 insertions(+), 117 deletions(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/esw/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/esw/Makefile
+index c78512eed8d7..07b81f233e05 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/esw/Makefile
++++ b/drivers/net/ethernet/mellanox/mlx5/core/esw/Makefile
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-subdir-ccflags-y += -I$(src)/..
++subdir-ccflags-y += -I$(srctree)/$(src)/..
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/steering/Makefile
+index c78512eed8d7..07b81f233e05 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/steering/Makefile
++++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/Makefile
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-subdir-ccflags-y += -I$(src)/..
++subdir-ccflags-y += -I$(srctree)/$(src)/..
+diff --git a/drivers/net/wireless/rockchip_wlan/cywdhd/bcmdhd/Makefile b/drivers/net/wireless/rockchip_wlan/cywdhd/bcmdhd/Makefile
+index b1026e1782e9..82724edacc6c 100644
+--- a/drivers/net/wireless/rockchip_wlan/cywdhd/bcmdhd/Makefile
++++ b/drivers/net/wireless/rockchip_wlan/cywdhd/bcmdhd/Makefile
+@@ -298,7 +298,7 @@ DHDCFLAGS += -DTSQ_MULTIPLIER=10
+ 
+ EXTRA_CFLAGS += $(DHDCFLAGS) -DDHD_DEBUG
+ EXTRA_CFLAGS += -DSRCBASE=\"$(src)\"
+-EXTRA_CFLAGS += -I$(src)/include/ -I$(src)/
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include/ -I$(srctree)/$(src)/
+ KBUILD_CFLAGS += -I$(LINUXDIR)/include -I$(shell pwd)
+ 
+ DHDOFILES := dhd_pno.o dhd_common.o dhd_ip.o dhd_custom_gpio.o \
+diff --git a/drivers/net/wireless/rockchip_wlan/infineon/bcmdhd/Makefile b/drivers/net/wireless/rockchip_wlan/infineon/bcmdhd/Makefile
+index 4902f3df03c1..8de5bfb0b1b7 100644
+--- a/drivers/net/wireless/rockchip_wlan/infineon/bcmdhd/Makefile
++++ b/drivers/net/wireless/rockchip_wlan/infineon/bcmdhd/Makefile
+@@ -541,7 +541,7 @@ ifneq ($(CONFIG_QT),y)
+ endif
+ EXTRA_CFLAGS += $(DHDCFLAGS) -DDHD_DEBUG
+ EXTRA_CFLAGS += -DSRCBASE=\"$(src)\"
+-EXTRA_CFLAGS += -I$(src)/include/ -I$(src)/
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include/ -I$(srctree)/$(src)/
+ KBUILD_CFLAGS += -I$(KDIR)/include -I$(CURDIR)
+ 
+ bcmdhd-objs := $(DHDOFILES)
+diff --git a/drivers/net/wireless/rockchip_wlan/rkwifi/bcmdhd/Makefile b/drivers/net/wireless/rockchip_wlan/rkwifi/bcmdhd/Makefile
+index 40736d3c85b2..71efc2f66b07 100755
+--- a/drivers/net/wireless/rockchip_wlan/rkwifi/bcmdhd/Makefile
++++ b/drivers/net/wireless/rockchip_wlan/rkwifi/bcmdhd/Makefile
+@@ -361,7 +361,7 @@ BCMDHD_ROOT = $(src)
+ #$(warning "BCMDHD_ROOT=$(BCMDHD_ROOT)")
+ EXTRA_CFLAGS = $(DHDCFLAGS)
+ EXTRA_CFLAGS += -DDHD_COMPILED=\"$(BCMDHD_ROOT)\"
+-EXTRA_CFLAGS += -I$(BCMDHD_ROOT)/include/ -I$(BCMDHD_ROOT)/
++EXTRA_CFLAGS += -I$(srctree)/$(BCMDHD_ROOT)/include
+ EXTRA_CFLAGS += $(call cc-disable-warning, unused-but-set-variable)
+ ifeq ($(CONFIG_AP6XXX),m)
+ EXTRA_LDFLAGS += --strip-debug
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8188eu/Makefile b/drivers/net/wireless/rockchip_wlan/rtl8188eu/Makefile
+index d382759017bf..253eae33f9dd 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8188eu/Makefile
++++ b/drivers/net/wireless/rockchip_wlan/rtl8188eu/Makefile
+@@ -21,7 +21,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -243,10 +243,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8188eu/hal/phydm/phydm.mk b/drivers/net/wireless/rockchip_wlan/rtl8188eu/hal/phydm/phydm.mk
+index 1b5fb3e6bcfc..66c83b4b8457 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8188eu/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rockchip_wlan/rtl8188eu/hal/phydm/phydm.mk
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8188eu/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rockchip_wlan/rtl8188eu/hal/phydm/sd4_phydm_2_kernel.mk
+index 324d0ee12cad..027865dcde71 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8188eu/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rockchip_wlan/rtl8188eu/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8188fu/Makefile b/drivers/net/wireless/rockchip_wlan/rtl8188fu/Makefile
+index ba3f39dd2b8b..4c44978bc38f 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8188fu/Makefile
++++ b/drivers/net/wireless/rockchip_wlan/rtl8188fu/Makefile
+@@ -21,7 +21,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -243,10 +243,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8188fu/hal/phydm/phydm.mk b/drivers/net/wireless/rockchip_wlan/rtl8188fu/hal/phydm/phydm.mk
+index 1b5fb3e6bcfc..66c83b4b8457 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8188fu/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rockchip_wlan/rtl8188fu/hal/phydm/phydm.mk
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8188fu/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rockchip_wlan/rtl8188fu/hal/phydm/sd4_phydm_2_kernel.mk
+index 324d0ee12cad..027865dcde71 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8188fu/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rockchip_wlan/rtl8188fu/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8189es/Makefile b/drivers/net/wireless/rockchip_wlan/rtl8189es/Makefile
+index 6c71051d7af2..554c452a9f80 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8189es/Makefile
++++ b/drivers/net/wireless/rockchip_wlan/rtl8189es/Makefile
+@@ -21,7 +21,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -214,11 +214,11 @@ _OUTSRC_FILES := hal/phydm/phydm_debug.o	\
+ 		hal/phydm/phydm_noisemonitor.o\
+ 		hal/phydm/phydm_acs.o
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+ ifeq ($(CONFIG_BT_COEXIST), y)
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ _OUTSRC_FILES += hal/btc/HalBtc8192e1Ant.o \
+ 				hal/btc/HalBtc8192e2Ant.o \
+ 				hal/btc/HalBtc8723b1Ant.o \
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8189fs/Makefile b/drivers/net/wireless/rockchip_wlan/rtl8189fs/Makefile
+index 53c17d329f7c..8f3bbde4e405 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8189fs/Makefile
++++ b/drivers/net/wireless/rockchip_wlan/rtl8189fs/Makefile
+@@ -21,7 +21,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -247,10 +247,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8189fs/hal/phydm/phydm.mk b/drivers/net/wireless/rockchip_wlan/rtl8189fs/hal/phydm/phydm.mk
+index 1b5fb3e6bcfc..66c83b4b8457 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8189fs/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rockchip_wlan/rtl8189fs/hal/phydm/phydm.mk
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8189fs/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rockchip_wlan/rtl8189fs/hal/phydm/sd4_phydm_2_kernel.mk
+index 324d0ee12cad..027865dcde71 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8189fs/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rockchip_wlan/rtl8189fs/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8723bs/Makefile b/drivers/net/wireless/rockchip_wlan/rtl8723bs/Makefile
+index fe9d5638a128..b7c131ea7cbd 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8723bs/Makefile
++++ b/drivers/net/wireless/rockchip_wlan/rtl8723bs/Makefile
+@@ -21,7 +21,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -216,10 +216,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ _BTC_FILES += hal/btc/halbtc8723bwifionly.o \
+ 				hal/btc/halbtc8822bwifionly.o \
+ 				hal/btc/halbtc8821cwifionly.o
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8723bs/hal/phydm/phydm.mk b/drivers/net/wireless/rockchip_wlan/rtl8723bs/hal/phydm/phydm.mk
+index 15bdad8e5bc8..177134dd1264 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8723bs/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rockchip_wlan/rtl8723bs/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8723bu/Makefile b/drivers/net/wireless/rockchip_wlan/rtl8723bu/Makefile
+index 541757cdbc4d..c2218110900b 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8723bu/Makefile
++++ b/drivers/net/wireless/rockchip_wlan/rtl8723bu/Makefile
+@@ -17,8 +17,8 @@ EXTRA_CFLAGS += -Wno-unused
+ #EXTRA_CFLAGS += -Wno-uninitialized
+ #EXTRA_CFLAGS += -Wno-error=date-time	# Fix compile error on gcc 4.9 and later
+ 
+-EXTRA_CFLAGS += -I$(src)/include
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -214,11 +214,11 @@ _OUTSRC_FILES := hal/phydm/phydm_debug.o	\
+ 		hal/phydm/txbf/haltxbfinterface.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+ ifeq ($(CONFIG_BT_COEXIST), y)
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ _OUTSRC_FILES += hal/btc/HalBtc8192e1Ant.o \
+ 				hal/btc/HalBtc8192e2Ant.o \
+ 				hal/btc/HalBtc8723b1Ant.o \
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8723cs/Makefile b/drivers/net/wireless/rockchip_wlan/rtl8723cs/Makefile
+index f6a05d0213a6..f0276dd8f19a 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8723cs/Makefile
++++ b/drivers/net/wireless/rockchip_wlan/rtl8723cs/Makefile
+@@ -21,7 +21,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -268,10 +268,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+@@ -2405,7 +2405,7 @@ ifeq ($(CONFIG_SDIO_HCI), y)
+ rtk_core += core/rtw_sdio.o
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/core/crypto
++EXTRA_CFLAGS += -I$(srctree)/$(src)/core/crypto
+ rtk_core += \
+ 		core/crypto/aes-internal.o \
+ 		core/crypto/aes-internal-enc.o \
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8723cs/hal/phydm/phydm.mk b/drivers/net/wireless/rockchip_wlan/rtl8723cs/hal/phydm/phydm.mk
+index 042db19d26ba..7454bfe52810 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8723cs/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rockchip_wlan/rtl8723cs/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8723cs/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rockchip_wlan/rtl8723cs/hal/phydm/sd4_phydm_2_kernel.mk
+index f11c6ac90bf5..09898476eded 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8723cs/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rockchip_wlan/rtl8723cs/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8723ds/Makefile b/drivers/net/wireless/rockchip_wlan/rtl8723ds/Makefile
+index 81351c905001..8edd5c8855e9 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8723ds/Makefile
++++ b/drivers/net/wireless/rockchip_wlan/rtl8723ds/Makefile
+@@ -21,7 +21,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -261,10 +261,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+@@ -2315,7 +2315,7 @@ ifeq ($(CONFIG_SDIO_HCI), y)
+ rtk_core += core/rtw_sdio.o
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/core/crypto
++EXTRA_CFLAGS += -I$(srctree)/$(src)/core/crypto
+ rtk_core += \
+ 		core/crypto/aes-internal.o \
+ 		core/crypto/aes-internal-enc.o \
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8723ds/hal/phydm/phydm.mk b/drivers/net/wireless/rockchip_wlan/rtl8723ds/hal/phydm/phydm.mk
+index 72fd48b58336..fae08970d691 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8723ds/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rockchip_wlan/rtl8723ds/hal/phydm/phydm.mk
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8723ds/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rockchip_wlan/rtl8723ds/hal/phydm/sd4_phydm_2_kernel.mk
+index 324d0ee12cad..027865dcde71 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8723ds/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rockchip_wlan/rtl8723ds/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8821cs/Makefile b/drivers/net/wireless/rockchip_wlan/rtl8821cs/Makefile
+index 797d011e6756..c2321ee3e610 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8821cs/Makefile
++++ b/drivers/net/wireless/rockchip_wlan/rtl8821cs/Makefile
+@@ -21,7 +21,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -270,10 +270,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+@@ -2406,7 +2406,7 @@ ifeq ($(CONFIG_SDIO_HCI), y)
+ rtk_core += core/rtw_sdio.o
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/core/crypto
++EXTRA_CFLAGS += -I$(srctree)/$(src)/core/crypto
+ rtk_core += \
+ 		core/crypto/aes-internal.o \
+ 		core/crypto/aes-internal-enc.o \
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8821cs/hal/phydm/phydm.mk b/drivers/net/wireless/rockchip_wlan/rtl8821cs/hal/phydm/phydm.mk
+index 042db19d26ba..7454bfe52810 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8821cs/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rockchip_wlan/rtl8821cs/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8821cs/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rockchip_wlan/rtl8821cs/hal/phydm/sd4_phydm_2_kernel.mk
+index f11c6ac90bf5..09898476eded 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8821cs/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rockchip_wlan/rtl8821cs/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8822be/Makefile b/drivers/net/wireless/rockchip_wlan/rtl8822be/Makefile
+index 8737389936bf..d3696eafd5e6 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8822be/Makefile
++++ b/drivers/net/wireless/rockchip_wlan/rtl8822be/Makefile
+@@ -22,8 +22,8 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -234,11 +234,11 @@ _OUTSRC_FILES := hal/phydm/phydm_debug.o	\
+ 		hal/phydm/phydm_ccx.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+ ifeq ($(CONFIG_BT_COEXIST), y)
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ _OUTSRC_FILES += hal/btc/halbtc8192e1ant.o \
+ 				hal/btc/halbtc8192e2ant.o \
+ 				hal/btc/halbtc8723b1ant.o \
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8822bs/Makefile b/drivers/net/wireless/rockchip_wlan/rtl8822bs/Makefile
+index b0516c6a7d10..27809115a8c5 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8822bs/Makefile
++++ b/drivers/net/wireless/rockchip_wlan/rtl8822bs/Makefile
+@@ -24,7 +24,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -257,10 +257,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8822bs/hal/phydm/phydm.mk b/drivers/net/wireless/rockchip_wlan/rtl8822bs/hal/phydm/phydm.mk
+index 686350c585b5..15dfba3a7715 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8822bs/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rockchip_wlan/rtl8822bs/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8822bs/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rockchip_wlan/rtl8822bs/hal/phydm/sd4_phydm_2_kernel.mk
+index f11c6ac90bf5..09898476eded 100644
+--- a/drivers/net/wireless/rockchip_wlan/rtl8822bs/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rockchip_wlan/rtl8822bs/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8852be/Makefile b/drivers/net/wireless/rockchip_wlan/rtl8852be/Makefile
+index 5a7fb242e403..dab2c6c16969 100755
+--- a/drivers/net/wireless/rockchip_wlan/rtl8852be/Makefile
++++ b/drivers/net/wireless/rockchip_wlan/rtl8852be/Makefile
+@@ -20,7 +20,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -584,7 +584,7 @@ endif
+ include $(wildcard $(DRV_PATH)/platform/*.mk)
+ 
+ # Import platform specific compile options
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ #_PLATFORM_FILES := platform/platform_ops.o
+ OBJS += $(_PLATFORM_FILES)
+ 
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8852be/common.mk b/drivers/net/wireless/rockchip_wlan/rtl8852be/common.mk
+index a32ab269dcde..82903cb1d113 100755
+--- a/drivers/net/wireless/rockchip_wlan/rtl8852be/common.mk
++++ b/drivers/net/wireless/rockchip_wlan/rtl8852be/common.mk
+@@ -89,7 +89,7 @@ _CORE_FILES :=	core/rtw_cmd.o \
+ _CORE_FILES +=	core/rtw_phl.o \
+ 		core/rtw_phl_cmd.o
+ 
+-EXTRA_CFLAGS += -I$(src)/core/crypto
++EXTRA_CFLAGS += -I$(srctree)/$(src)/core/crypto
+ _CORE_FILES += core/crypto/aes-internal.o \
+ 		core/crypto/aes-internal-enc.o \
+ 		core/crypto/aes-gcm.o \
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8852bu/Makefile b/drivers/net/wireless/rockchip_wlan/rtl8852bu/Makefile
+index 518564a8134f..b97f3c70ac17 100755
+--- a/drivers/net/wireless/rockchip_wlan/rtl8852bu/Makefile
++++ b/drivers/net/wireless/rockchip_wlan/rtl8852bu/Makefile
+@@ -20,7 +20,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -585,7 +585,7 @@ endif
+ include $(wildcard $(DRV_PATH)/platform/*.mk)
+ 
+ # Import platform specific compile options
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ #_PLATFORM_FILES := platform/platform_ops.o
+ OBJS += $(_PLATFORM_FILES)
+ 
+diff --git a/drivers/net/wireless/rockchip_wlan/rtl8852bu/common.mk b/drivers/net/wireless/rockchip_wlan/rtl8852bu/common.mk
+index a32ab269dcde..82903cb1d113 100755
+--- a/drivers/net/wireless/rockchip_wlan/rtl8852bu/common.mk
++++ b/drivers/net/wireless/rockchip_wlan/rtl8852bu/common.mk
+@@ -89,7 +89,7 @@ _CORE_FILES :=	core/rtw_cmd.o \
+ _CORE_FILES +=	core/rtw_phl.o \
+ 		core/rtw_phl_cmd.o
+ 
+-EXTRA_CFLAGS += -I$(src)/core/crypto
++EXTRA_CFLAGS += -I$(srctree)/$(src)/core/crypto
+ _CORE_FILES += core/crypto/aes-internal.o \
+ 		core/crypto/aes-internal-enc.o \
+ 		core/crypto/aes-gcm.o \
+diff --git a/drivers/net/wireless/rtl8188eu/Makefile b/drivers/net/wireless/rtl8188eu/Makefile
+index 8592a3adf589..751e64b0d2ac 100755
+--- a/drivers/net/wireless/rtl8188eu/Makefile
++++ b/drivers/net/wireless/rtl8188eu/Makefile
+@@ -15,7 +15,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -238,10 +238,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_led.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+diff --git a/drivers/net/wireless/rtl8188eu/hal/phydm/phydm.mk b/drivers/net/wireless/rtl8188eu/hal/phydm/phydm.mk
+index e6f856fbb600..594790e61e06 100755
+--- a/drivers/net/wireless/rtl8188eu/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rtl8188eu/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rtl8188eu/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rtl8188eu/hal/phydm/sd4_phydm_2_kernel.mk
+index f11c6ac90bf5..09898476eded 100755
+--- a/drivers/net/wireless/rtl8188eu/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rtl8188eu/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/net/wireless/rtl8189es/Makefile b/drivers/net/wireless/rtl8189es/Makefile
+index d5757274a3e5..92cbe2915aeb 100755
+--- a/drivers/net/wireless/rtl8189es/Makefile
++++ b/drivers/net/wireless/rtl8189es/Makefile
+@@ -19,7 +19,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -249,10 +249,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+diff --git a/drivers/net/wireless/rtl8189es/hal/phydm/phydm.mk b/drivers/net/wireless/rtl8189es/hal/phydm/phydm.mk
+index 686350c585b5..15dfba3a7715 100755
+--- a/drivers/net/wireless/rtl8189es/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rtl8189es/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rtl8189es/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rtl8189es/hal/phydm/sd4_phydm_2_kernel.mk
+index f11c6ac90bf5..09898476eded 100755
+--- a/drivers/net/wireless/rtl8189es/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rtl8189es/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/net/wireless/rtl8189fs/Makefile b/drivers/net/wireless/rtl8189fs/Makefile
+index 75aedda56583..8acc7d475e64 100755
+--- a/drivers/net/wireless/rtl8189fs/Makefile
++++ b/drivers/net/wireless/rtl8189fs/Makefile
+@@ -23,7 +23,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+ EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
+@@ -252,10 +252,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+diff --git a/drivers/net/wireless/rtl8189fs/hal/phydm/phydm.mk b/drivers/net/wireless/rtl8189fs/hal/phydm/phydm.mk
+index 88ce6059a03e..b02f71e4660c 100755
+--- a/drivers/net/wireless/rtl8189fs/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rtl8189fs/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rtl8189fs/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rtl8189fs/hal/phydm/sd4_phydm_2_kernel.mk
+index f11c6ac90bf5..09898476eded 100755
+--- a/drivers/net/wireless/rtl8189fs/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rtl8189fs/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/net/wireless/rtl8192eu/Makefile b/drivers/net/wireless/rtl8192eu/Makefile
+index 8ecdb72d6e0f..1372c5140e0f 100755
+--- a/drivers/net/wireless/rtl8192eu/Makefile
++++ b/drivers/net/wireless/rtl8192eu/Makefile
+@@ -11,7 +11,7 @@ GCC_VER_49 := $(shell echo `$(CC) -dumpversion | cut -f1-2 -d.` \>= 4.9 | bc )
+ ifeq ($(GCC_VER_49),1)
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -251,10 +251,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+diff --git a/drivers/net/wireless/rtl8192eu/hal/phydm/phydm.mk b/drivers/net/wireless/rtl8192eu/hal/phydm/phydm.mk
+index a05df647d9df..3581cad77376 100755
+--- a/drivers/net/wireless/rtl8192eu/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rtl8192eu/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rtl8192eu/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rtl8192eu/hal/phydm/sd4_phydm_2_kernel.mk
+index f11c6ac90bf5..09898476eded 100755
+--- a/drivers/net/wireless/rtl8192eu/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rtl8192eu/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/net/wireless/rtl8723ds/Makefile b/drivers/net/wireless/rtl8723ds/Makefile
+index aa57f853e19e..18ff2ad552a0 100755
+--- a/drivers/net/wireless/rtl8723ds/Makefile
++++ b/drivers/net/wireless/rtl8723ds/Makefile
+@@ -20,8 +20,8 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -233,11 +233,11 @@ _OUTSRC_FILES := hal/phydm/phydm_debug.o	\
+ 		hal/phydm/phydm_ccx.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+ ifeq ($(CONFIG_BT_COEXIST), y)
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ _OUTSRC_FILES += hal/btc/HalBtc8192e1Ant.o \
+ 				hal/btc/HalBtc8192e2Ant.o \
+ 				hal/btc/HalBtc8723b1Ant.o \
+diff --git a/drivers/net/wireless/rtl8723du/Makefile b/drivers/net/wireless/rtl8723du/Makefile
+index 26facb1d85e3..fc1240830e16 100755
+--- a/drivers/net/wireless/rtl8723du/Makefile
++++ b/drivers/net/wireless/rtl8723du/Makefile
+@@ -6,7 +6,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ #EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -59,10 +59,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/hal_usb_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal
+ 
+ include $(TopDIR)/hal/phydm/phydm.mk
+ ########### HAL_RTL8723D #################################
+diff --git a/drivers/net/wireless/rtl8723du/hal/phydm/phydm.mk b/drivers/net/wireless/rtl8723du/hal/phydm/phydm.mk
+index b11038fe24c0..31a2ac430226 100755
+--- a/drivers/net/wireless/rtl8723du/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rtl8723du/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 			hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rtl8811cu/Makefile b/drivers/net/wireless/rtl8811cu/Makefile
+index bbb2de4ac1bf..5ee7941cbc34 100755
+--- a/drivers/net/wireless/rtl8811cu/Makefile
++++ b/drivers/net/wireless/rtl8811cu/Makefile
+@@ -16,7 +16,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -228,10 +228,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+diff --git a/drivers/net/wireless/rtl8811cu/hal/phydm/phydm.mk b/drivers/net/wireless/rtl8811cu/hal/phydm/phydm.mk
+index da4f902ddb64..f1f04b1016d5 100755
+--- a/drivers/net/wireless/rtl8811cu/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rtl8811cu/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rtl8812au/Makefile b/drivers/net/wireless/rtl8812au/Makefile
+index 406c4d0006c2..3210ea6ea32d 100755
+--- a/drivers/net/wireless/rtl8812au/Makefile
++++ b/drivers/net/wireless/rtl8812au/Makefile
+@@ -19,7 +19,7 @@ EXTRA_CFLAGS += -Wno-vla -g
+ #EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ #endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ EXTRA_LDFLAGS += --strip-all -O3
+ 
+ ########################## WIFI IC ############################
+@@ -223,10 +223,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+diff --git a/drivers/net/wireless/rtl8812au/hal/phydm/phydm.mk b/drivers/net/wireless/rtl8812au/hal/phydm/phydm.mk
+index a05df647d9df..3581cad77376 100755
+--- a/drivers/net/wireless/rtl8812au/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rtl8812au/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rtl8812au/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rtl8812au/hal/phydm/sd4_phydm_2_kernel.mk
+index f11c6ac90bf5..09898476eded 100755
+--- a/drivers/net/wireless/rtl8812au/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rtl8812au/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/net/wireless/rtl8822bs/Makefile b/drivers/net/wireless/rtl8822bs/Makefile
+index b05ac46aafd2..a0041ae52bb6 100755
+--- a/drivers/net/wireless/rtl8822bs/Makefile
++++ b/drivers/net/wireless/rtl8822bs/Makefile
+@@ -21,7 +21,7 @@ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and lat
+ endif
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -223,10 +223,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+diff --git a/drivers/net/wireless/rtl8822bs/hal/phydm/phydm.mk b/drivers/net/wireless/rtl8822bs/hal/phydm/phydm.mk
+index 4f3b22b71d36..395b543a07c9 100755
+--- a/drivers/net/wireless/rtl8822bs/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rtl8822bs/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rtl88x2bu/Makefile b/drivers/net/wireless/rtl88x2bu/Makefile
+index 63bfb747c306..881ae3a53f27 100755
+--- a/drivers/net/wireless/rtl88x2bu/Makefile
++++ b/drivers/net/wireless/rtl88x2bu/Makefile
+@@ -18,7 +18,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -254,10 +254,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+diff --git a/drivers/net/wireless/rtl88x2bu/hal/phydm/phydm.mk b/drivers/net/wireless/rtl88x2bu/hal/phydm/phydm.mk
+index 08b6efccc2ec..81b1e3c01b57 100755
+--- a/drivers/net/wireless/rtl88x2bu/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rtl88x2bu/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rtl88x2bu/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rtl88x2bu/hal/phydm/sd4_phydm_2_kernel.mk
+index f11c6ac90bf5..09898476eded 100755
+--- a/drivers/net/wireless/rtl88x2bu/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rtl88x2bu/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/net/wireless/rtl88x2cs/Makefile b/drivers/net/wireless/rtl88x2cs/Makefile
+index 1389a7f9875f..94b4323fe203 100755
+--- a/drivers/net/wireless/rtl88x2cs/Makefile
++++ b/drivers/net/wireless/rtl88x2cs/Makefile
+@@ -20,7 +20,7 @@ ifeq ($(GCC_VER_49),1)
+ EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/include
++EXTRA_CFLAGS += -I$(srctree)/$(src)/include
+ 
+ EXTRA_LDFLAGS += --strip-debug
+ 
+@@ -268,10 +268,10 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
+ 			hal/led/hal_$(HCI_NAME)_led.o
+ 
+ 
+-EXTRA_CFLAGS += -I$(src)/platform
++EXTRA_CFLAGS += -I$(srctree)/$(src)/platform
+ _PLATFORM_FILES := platform/platform_ops.o
+ 
+-EXTRA_CFLAGS += -I$(src)/hal/btc
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/btc
+ 
+ ########### HAL_RTL8188E #################################
+ ifeq ($(CONFIG_RTL8188E), y)
+@@ -2370,7 +2370,7 @@ ifeq ($(CONFIG_SDIO_HCI), y)
+ rtk_core += core/rtw_sdio.o
+ endif
+ 
+-EXTRA_CFLAGS += -I$(src)/core/crypto
++EXTRA_CFLAGS += -I$(srctree)/$(src)/core/crypto
+ rtk_core += \
+ 		core/crypto/aes-internal.o \
+ 		core/crypto/aes-internal-enc.o \
+diff --git a/drivers/net/wireless/rtl88x2cs/hal/phydm/phydm.mk b/drivers/net/wireless/rtl88x2cs/hal/phydm/phydm.mk
+index 305200b879e1..28885480295e 100755
+--- a/drivers/net/wireless/rtl88x2cs/hal/phydm/phydm.mk
++++ b/drivers/net/wireless/rtl88x2cs/hal/phydm/phydm.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_antdiv.o\
+diff --git a/drivers/net/wireless/rtl88x2cs/hal/phydm/sd4_phydm_2_kernel.mk b/drivers/net/wireless/rtl88x2cs/hal/phydm/sd4_phydm_2_kernel.mk
+index f11c6ac90bf5..09898476eded 100755
+--- a/drivers/net/wireless/rtl88x2cs/hal/phydm/sd4_phydm_2_kernel.mk
++++ b/drivers/net/wireless/rtl88x2cs/hal/phydm/sd4_phydm_2_kernel.mk
+@@ -1,4 +1,4 @@
+-EXTRA_CFLAGS += -I$(src)/hal/phydm
++EXTRA_CFLAGS += -I$(srctree)/$(src)/hal/phydm
+ 
+ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
+ 								hal/phydm/phydm_interface.o\
+diff --git a/drivers/rknpu/Makefile b/drivers/rknpu/Makefile
+index 41dacc93157c..e0402d4439b3 100644
+--- a/drivers/rknpu/Makefile
++++ b/drivers/rknpu/Makefile
+@@ -2,7 +2,7 @@
+ obj-$(CONFIG_ROCKCHIP_RKNPU) += rknpu.o
+ 
+ ccflags-y += -I$(srctree)/$(src)/include
+-ccflags-y += -I$(src)/include
++ccflags-y += -I$(srctree)/$(src)/include
+ ccflags-y += -Werror
+ 
+ rknpu-y += rknpu_drv.o
+-- 
+2.34.1
+

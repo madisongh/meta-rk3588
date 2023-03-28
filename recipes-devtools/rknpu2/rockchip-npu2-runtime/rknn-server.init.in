@@ -1,0 +1,37 @@
+#!@BASE_BINDIR@/sh
+DAEMON=@BINDIR@/rknn_server
+ARGS=
+NAME=rknn-server
+DESC="Rockchip NPU service"
+PIDFILE=/run/rknpu2/rknn-server.pid
+
+test -x $DAEMON || exit 0
+
+set -e
+
+case "$1" in
+    start)
+	echo -n "Starting $DESC: "
+	mkdir -p $(dirname $PIDFILE)
+	sh -c "while true; do sleep 1; rknn_server; done" &
+	echo "$!" > $PIDFILE
+	echo "${DAEMON##*/}."
+	;;
+    stop)
+	echo -n "Stopping $DESC: "
+	if [ -e $PIDFILE ]; then
+	    kill -9 $(cat $PIDFILE)
+	fi
+	echo "${DAEMON##*/}."
+	;;
+    restart)
+	"$0" stop
+	sleep 1
+	"$0" start
+	;;
+    *)
+	echo "Usage: $(basename $0) {start|stop|restart}" >&2
+	exit 1
+	;;
+esac
+exit 0

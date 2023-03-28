@@ -1,0 +1,10 @@
+[Unit]
+Description=Rockchip NPU service
+
+[Service]
+Type=simple
+ExecStart=@BINDIR@/rknn_server
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

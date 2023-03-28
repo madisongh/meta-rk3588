@@ -1,0 +1,34 @@
+From 898ebff520145238d5e75fd587442038547f6066 Mon Sep 17 00:00:00 2001
+From: Matt Madison <matt@madison.systems>
+Date: Fri, 24 Mar 2023 12:53:22 -0700
+Subject: [PATCH 3/3] scripts: use python3 for mkbootimg
+
+Signed-off-by: Matt Madison <matt@madison.systems>
+---
+ arch/arm/mach-rockchip/decode_bl31.py | 2 +-
+ scripts/mkbootimg                     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/mach-rockchip/decode_bl31.py b/arch/arm/mach-rockchip/decode_bl31.py
+index 42fa32d23d..1cff8c3a41 100755
+--- a/arch/arm/mach-rockchip/decode_bl31.py
++++ b/arch/arm/mach-rockchip/decode_bl31.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/env python3
+ #
+ # Copyright (C) 2020 Rockchip Electronics Co., Ltd
+ #
+diff --git a/scripts/mkbootimg b/scripts/mkbootimg
+index c3e09aba34..3aed0a0efc 100755
+--- a/scripts/mkbootimg
++++ b/scripts/mkbootimg
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ # Copyright 2015, The Android Open Source Project
+ #
+ # Licensed under the Apache License, Version 2.0 (the "License");
+-- 
+2.34.1
+
