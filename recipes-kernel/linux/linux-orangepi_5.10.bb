@@ -42,8 +42,3 @@ set_scmversion() {
 do_kernel_checkout[postfuncs] += "set_scmversion"
 
 DEPENDS += "openssl-native lz4-native"
-
-do_compile() {
-    kernel_do_compile
-    mv ${B}/*.img ${B}/arch/${ARCH}/boot
-}
