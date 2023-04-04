@@ -1,0 +1,7 @@
+bootloader --ptable gpt --configfile="opi5-extlinux.conf"
+
+part --source rawcopy --sourceparams="file=idblock.img" --offset 64s --no-table
+part --source rawcopy --sourceparams="file=uboot.img" --offset 16384s --no-table
+part /boot --source bootimg-partition --sourceparams="loader=u-boot" --ondisk mmcblk1 --fstype=vfat --label boot --active --offset 32768s
+part / --source rootfs --ondisk mmcblk1 --fstype ext4 --part-name rootfs --offset 261244s
+
