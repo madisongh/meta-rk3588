@@ -1,0 +1,616 @@
+From 0cab585fb4df0e866a4c859e1c90bc669224d610 Mon Sep 17 00:00:00 2001
+From: Matt Madison <matt@madison.systems>
+Date: Wed, 5 Apr 2023 11:15:50 -0700
+Subject: [PATCH 1/2] OE builds of examples
+
+Signed-off-by: Matt Madison <matt@madison.systems>
+---
+ examples/CMakeLists.txt                       |  18 +++
+ examples/rknn_api_demo/CMakeLists.txt         | 144 +++++-------------
+ examples/rknn_benchmark/CMakeLists.txt        |  35 +----
+ examples/rknn_common_test/CMakeLists.txt      |  43 +-----
+ examples/rknn_mobilenet_demo/CMakeLists.txt   |  45 +-----
+ .../rknn_multiple_input_demo/CMakeLists.txt   |  33 +---
+ examples/rknn_ssd_demo/CMakeLists.txt         |  44 +-----
+ examples/rknn_yolov5_demo/CMakeLists.txt      |  83 ++--------
+ 8 files changed, 87 insertions(+), 358 deletions(-)
+ create mode 100644 examples/CMakeLists.txt
+
+diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
+new file mode 100644
+index 0000000..7087903
+--- /dev/null
++++ b/examples/CMakeLists.txt
+@@ -0,0 +1,18 @@
++project(rknn_examples)
++
++include(GNUInstallDirs)
++if(NOT TARGET_SOC)
++  message(FATAL_ERROR "TARGET_SOC must be defined")
++endif()
++
++option(USE_OPENCV "Build examples requiring OpenCV" OFF)
++
++add_subdirectory(rknn_api_demo)
++add_subdirectory(rknn_benchmark)
++add_subdirectory(rknn_multiple_input_demo)
++if(USE_OPENCV)
++  add_subdirectory(rknn_common_test)
++  add_subdirectory(rknn_yolov5_demo)
++  add_subdirectory(rknn_mobilenet_demo)
++  add_subdirectory(rknn_ssd_demo)
++endif()
+diff --git a/examples/rknn_api_demo/CMakeLists.txt b/examples/rknn_api_demo/CMakeLists.txt
+index 9014708..d736139 100644
+--- a/examples/rknn_api_demo/CMakeLists.txt
++++ b/examples/rknn_api_demo/CMakeLists.txt
+@@ -5,68 +5,14 @@ project(rknn_api_demo)
+ set(CMAKE_CXX_STANDARD 11)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ 
+-# skip 3rd-party lib dependencies
+-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--allow-shlib-undefined")
+-
+-# rknn api
+-if(TARGET_SOC STREQUAL "rk356x")
+-  set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../runtime/RK356X/${CMAKE_SYSTEM_NAME}/librknn_api)
+-elseif(TARGET_SOC STREQUAL "rk3588")
+-  set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../runtime/RK3588/${CMAKE_SYSTEM_NAME}/librknn_api)
+-else()
+-  message(FATAL_ERROR "TARGET_SOC is not set, ref value: rk356x or rk3588")
+-endif()
+-
+-if (CMAKE_SYSTEM_NAME STREQUAL "Android")
+-  set(RKNN_RT_LIB ${RKNN_API_PATH}/${CMAKE_ANDROID_ARCH_ABI}/librknnrt.so)
+-else()
+-  if (CMAKE_C_COMPILER MATCHES "aarch64")
+-    set(LIB_ARCH aarch64)
+-  else()
+-    set(LIB_ARCH armhf)
+-  endif()
+-  set(RKNN_RT_LIB ${RKNN_API_PATH}/${LIB_ARCH}/librknnrt.so)
+-endif()
+-include_directories(${RKNN_API_PATH}/include)
+-
+-#stb
+-include_directories(${CMAKE_SOURCE_DIR}/../3rdparty/)
+-
+-#rga
+-if(TARGET_SOC STREQUAL "rk356x")
+-  set(RGA_PATH ${CMAKE_SOURCE_DIR}/../3rdparty/rga/RK356X)
+-elseif(TARGET_SOC STREQUAL "rk3588")
+-  set(RGA_PATH ${CMAKE_SOURCE_DIR}/../3rdparty/rga/RK3588)
+-else()
+-  message(FATAL_ERROR "TARGET_SOC is not set, ref value: rk356x or rk3588")
+-endif()
+-if (CMAKE_SYSTEM_NAME STREQUAL "Android")
+-  set(RGA_LIB ${RGA_PATH}/lib/Android/${CMAKE_ANDROID_ARCH_ABI}/librga.so)
+-else()
+-  if (CMAKE_C_COMPILER MATCHES "aarch64")
+-    set(LIB_ARCH aarch64)
+-  else()
+-    set(LIB_ARCH armhf)
+-  endif()
+-  set(RGA_LIB ${RGA_PATH}/lib/Linux//${LIB_ARCH}/librga.so)
+-endif()
+-include_directories( ${RGA_PATH}/include)
+-
+-# mmz
+-set(MPI_MMZ_PATH ${CMAKE_SOURCE_DIR}/../3rdparty/rk_mpi_mmz)
+-if (CMAKE_SYSTEM_NAME STREQUAL "Android")
+-  set(MPI_MMZ_LIB ${MPI_MMZ_PATH}/lib/Android/${CMAKE_ANDROID_ARCH_ABI}/libmpimmz.so)
+-else()
+-  if (CMAKE_C_COMPILER MATCHES "aarch64")
+-    set(LIB_ARCH aarch64)
+-  else()
+-    set(LIB_ARCH armhf)
+-  endif()
+-  set(MPI_MMZ_LIB ${MPI_MMZ_PATH}/lib/Linux//${LIB_ARCH}/libmpimmz.so)
+-endif()
+-include_directories( ${MPI_MMZ_PATH}/include)
+-
+-set(CMAKE_INSTALL_RPATH "lib")
++find_library(RKNN_RT_LIB rknnrt REQUIRED)
++find_file(STB_IMAGE_H stb/stb_image.h REQUIRED)
++find_library(RGA_LIB rga REQUIRED)
++find_file(RGA_H rga/rga.h REQUIRED)
++cmake_path(GET RGA_H PARENT_PATH RGA_INCLUDEDIR)
++find_library(MPI_MMZ_LIB mpimmz REQUIRED)
++
++include_directories(${RGA_INCLUDEDIR})
+ 
+ # rknn_create_mem_demo
+ add_executable(rknn_create_mem_demo
+@@ -78,8 +24,7 @@ target_link_libraries(rknn_create_mem_demo
+ )
+ 
+ # install target and libraries
+-set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install/rknn_api_demo_${CMAKE_SYSTEM_NAME})
+-install(TARGETS rknn_create_mem_demo DESTINATION ./)
++install(TARGETS rknn_create_mem_demo DESTINATION ${CMAKE_INSTALL_BINDIR})
+ 
+ # rknn_create_mem_with_rga_demo
+ add_executable(rknn_create_mem_with_rga_demo
+@@ -92,57 +37,44 @@ target_link_libraries(rknn_create_mem_with_rga_demo
+ )
+ 
+ # install target and libraries
+-set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install/rknn_api_demo_${CMAKE_SYSTEM_NAME})
+-install(TARGETS rknn_create_mem_with_rga_demo DESTINATION ./)
+-
+-# At present, mmz　demo is only available under Android, but not for Linux temporarily, 
+-# mainly because libmpimmz.so has no Linux implementation now. The API of the NPU itself supports Linux.
+-if (CMAKE_SYSTEM_NAME STREQUAL "Android")
++install(TARGETS rknn_create_mem_with_rga_demo DESTINATION ${CMAKE_INSTALL_BINDIR})
+ 
+-  # rknn_with_mmz_demo
+-  add_executable(rknn_with_mmz_demo
+-          src/rknn_with_mmz_demo.cpp
+-  )
++# rknn_with_mmz_demo
++add_executable(rknn_with_mmz_demo
++        src/rknn_with_mmz_demo.cpp
++)
+ 
+-  target_link_libraries(rknn_with_mmz_demo
+-    ${RKNN_RT_LIB}
+-    ${MPI_MMZ_LIB}
+-  )
++target_link_libraries(rknn_with_mmz_demo
++  ${RKNN_RT_LIB}
++  ${MPI_MMZ_LIB}
++)
+ 
+-  # install target and libraries
+-  set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install/rknn_api_demo_${CMAKE_SYSTEM_NAME})
+-  install(TARGETS rknn_with_mmz_demo DESTINATION ./)
++# install target and libraries
++install(TARGETS rknn_with_mmz_demo DESTINATION ${CMAKE_INSTALL_BINDIR})
+ 
+-  # rknn_set_internal_mem_from_fd_demo
+-  add_executable(rknn_set_internal_mem_from_fd_demo
+-      src/rknn_set_internal_mem_from_fd_demo.cpp
+-  )
++# rknn_set_internal_mem_from_fd_demo
++add_executable(rknn_set_internal_mem_from_fd_demo
++    src/rknn_set_internal_mem_from_fd_demo.cpp
++)
+ 
+-  target_link_libraries(rknn_set_internal_mem_from_fd_demo
++target_link_libraries(rknn_set_internal_mem_from_fd_demo
+   ${RKNN_RT_LIB}
+   ${MPI_MMZ_LIB}
+-  )
+-
+-  # install target and libraries
+-  set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install/rknn_api_demo_${CMAKE_SYSTEM_NAME})
+-  install(TARGETS rknn_set_internal_mem_from_fd_demo DESTINATION ./)
++)
+ 
+-  # rknn_set_internal_mem_from_phy_demo
+-  add_executable(rknn_set_internal_mem_from_phy_demo
+-      src/rknn_set_internal_mem_from_phy_demo.cpp
+-  )
++install(TARGETS rknn_set_internal_mem_from_fd_demo DESTINATION ${CMAKE_INSTALL_BINDIR})
+ 
+-  target_link_libraries(rknn_set_internal_mem_from_phy_demo
+-    ${RKNN_RT_LIB}
+-    ${MPI_MMZ_LIB}
+-  )
++# rknn_set_internal_mem_from_phy_demo
++add_executable(rknn_set_internal_mem_from_phy_demo
++    src/rknn_set_internal_mem_from_phy_demo.cpp
++)
+ 
+-  # install target and libraries
+-  set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install/rknn_api_demo_${CMAKE_SYSTEM_NAME})
+-  install(TARGETS rknn_set_internal_mem_from_phy_demo DESTINATION ./)
++target_link_libraries(rknn_set_internal_mem_from_phy_demo
++  ${RKNN_RT_LIB}
++  ${MPI_MMZ_LIB}
++)
+ 
+-endif()
++# install target and libraries
++install(TARGETS rknn_set_internal_mem_from_phy_demo DESTINATION ${CMAKE_INSTALL_BINDIR})
+ 
+-install(DIRECTORY model DESTINATION ./)
+-install(PROGRAMS ${RKNN_RT_LIB} DESTINATION lib)
+-install(PROGRAMS ${RGA_LIB} DESTINATION lib)
++install(FILES model/dog_224x224.jpg model/${TARGET_SOC}/mobilenet_v1.rknn DESTINATION ${CMAKE_INSTALL_DATADIR}/rknn/models)
+diff --git a/examples/rknn_benchmark/CMakeLists.txt b/examples/rknn_benchmark/CMakeLists.txt
+index 0832087..fa0c896 100644
+--- a/examples/rknn_benchmark/CMakeLists.txt
++++ b/examples/rknn_benchmark/CMakeLists.txt
+@@ -2,44 +2,15 @@ cmake_minimum_required(VERSION 3.4.1)
+ 
+ project(rknn_common_test)
+ 
+-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+-
+-# rknn api
+-if(TARGET_SOC STREQUAL "rk356x")
+-  set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../runtime/RK356X/${CMAKE_SYSTEM_NAME}/librknn_api)
+-elseif(TARGET_SOC STREQUAL "rk3588")
+-  set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../runtime/RK3588/${CMAKE_SYSTEM_NAME}/librknn_api)
+-else()
+-  message(FATAL_ERROR "TARGET_SOC is not set, ref value: rk356x or rk3588")
+-endif()
+-
+-if (CMAKE_SYSTEM_NAME STREQUAL "Android")
+-  set(RKNN_RT_LIB ${RKNN_API_PATH}/${CMAKE_ANDROID_ARCH_ABI}/librknnrt.so)
+-else()
+-  if (CMAKE_C_COMPILER MATCHES "aarch64")
+-    set(LIB_ARCH aarch64)
+-  else()
+-    set(LIB_ARCH armhf)
+-  endif()
+-  set(RKNN_RT_LIB ${RKNN_API_PATH}/${LIB_ARCH}/librknnrt.so)
+-endif()
+-include_directories(${RKNN_API_PATH}/include)
+-
+-
+-set(CMAKE_INSTALL_RPATH "lib")
++set(CMAKE_CXX_STANDARD 14)
++find_library(RKNN_RT_LIB rknnrt REQUIRED)
+ 
+ add_executable(rknn_benchmark
+         src/rknn_benchmark.cpp
+ )
+-
+ target_link_libraries(rknn_benchmark
+ 	${RKNN_RT_LIB}
+-	${OpenCV_LIBS}
+ )
+ 
++install(TARGETS rknn_benchmark DESTINATION ${CMAKE_INSTALL_BINDIR})
+ 
+-# install target and libraries
+-set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install/rknn_benchmark_${CMAKE_SYSTEM_NAME})
+-install(TARGETS rknn_benchmark DESTINATION ./)
+-install(PROGRAMS ${RKNN_RT_LIB} DESTINATION lib)
+diff --git a/examples/rknn_common_test/CMakeLists.txt b/examples/rknn_common_test/CMakeLists.txt
+index 17ee9dc..c5b61c9 100755
+--- a/examples/rknn_common_test/CMakeLists.txt
++++ b/examples/rknn_common_test/CMakeLists.txt
+@@ -2,44 +2,11 @@ cmake_minimum_required(VERSION 3.4.1)
+ 
+ project(rknn_common_test)
+ 
+-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
++set(CMAKE_CXX_STANDARD 11)
+ 
+-# rknn api
+-if(TARGET_SOC STREQUAL "rk356x")
+-  set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../runtime/RK356X/${CMAKE_SYSTEM_NAME}/librknn_api)
+-elseif(TARGET_SOC STREQUAL "rk3588")
+-  set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../runtime/RK3588/${CMAKE_SYSTEM_NAME}/librknn_api)
+-else()
+-  message(FATAL_ERROR "TARGET_SOC is not set, ref value: rk356x or rk3588")
+-endif()
+-
+-if (CMAKE_SYSTEM_NAME STREQUAL "Android")
+-  set(RKNN_RT_LIB ${RKNN_API_PATH}/${CMAKE_ANDROID_ARCH_ABI}/librknnrt.so)
+-else()
+-  if (CMAKE_C_COMPILER MATCHES "aarch64")
+-    set(LIB_ARCH aarch64)
+-  else()
+-    set(LIB_ARCH armhf)
+-  endif()
+-  set(RKNN_RT_LIB ${RKNN_API_PATH}/${LIB_ARCH}/librknnrt.so)
+-endif()
+-include_directories(${RKNN_API_PATH}/include)
+-
+-# opencv
+-if (CMAKE_SYSTEM_NAME STREQUAL "Android")
+-    set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/../3rdparty/opencv/OpenCV-android-sdk/sdk/native/jni/abi-${CMAKE_ANDROID_ARCH_ABI})
+-else()
+-  if(LIB_ARCH STREQUAL "armhf")
+-    set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/../3rdparty/opencv/opencv-linux-armhf/share/OpenCV)
+-  else()
+-    set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/../3rdparty/opencv/opencv-linux-aarch64/share/OpenCV)
+-  endif()
+-endif()
++find_library(RKNN_RT_LIB rknnrt REQUIRED)
+ find_package(OpenCV REQUIRED)
+ 
+-set(CMAKE_INSTALL_RPATH "lib")
+-
+ add_executable(rknn_common_test
+         src/main.cc
+ )
+@@ -51,7 +18,5 @@ target_link_libraries(rknn_common_test
+ 
+ 
+ # install target and libraries
+-set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install/rknn_common_test_${CMAKE_SYSTEM_NAME})
+-install(TARGETS rknn_common_test DESTINATION ./)
+-install(DIRECTORY model DESTINATION ./)
+-install(PROGRAMS ${RKNN_RT_LIB} DESTINATION lib)
++install(TARGETS rknn_common_test DESTINATION ${CMAKE_INSTALL_BINDIR})
++install(FILES model/cat_224x224.jpg DESTINATION ${CMAKE_INSTALL_DATADIR}/rknn/models)
+diff --git a/examples/rknn_mobilenet_demo/CMakeLists.txt b/examples/rknn_mobilenet_demo/CMakeLists.txt
+index 9c0b339..b937758 100644
+--- a/examples/rknn_mobilenet_demo/CMakeLists.txt
++++ b/examples/rknn_mobilenet_demo/CMakeLists.txt
+@@ -2,45 +2,12 @@ cmake_minimum_required(VERSION 3.4.1)
+ 
+ project(rknn_mobilenet_demo)
+ 
+-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
++set(CMAKE_CXX_STANDARD 11)
++set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ 
+-# rknn api
+-if(TARGET_SOC STREQUAL "rk356x")
+-  set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../runtime/RK356X/${CMAKE_SYSTEM_NAME}/librknn_api)
+-elseif(TARGET_SOC STREQUAL "rk3588")
+-  set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../runtime/RK3588/${CMAKE_SYSTEM_NAME}/librknn_api)
+-else()
+-  message(FATAL_ERROR "TARGET_SOC is not set, ref value: rk356x or rk3588")
+-endif()
+-
+-if (CMAKE_SYSTEM_NAME STREQUAL "Android")
+-  set(RKNN_RT_LIB ${RKNN_API_PATH}/${CMAKE_ANDROID_ARCH_ABI}/librknnrt.so)
+-else()
+-  if (CMAKE_C_COMPILER MATCHES "aarch64")
+-    set(LIB_ARCH aarch64)
+-  else()
+-    set(LIB_ARCH armhf)
+-  endif()
+-  set(RKNN_RT_LIB ${RKNN_API_PATH}/${LIB_ARCH}/librknnrt.so)
+-endif()
+-include_directories(${RKNN_API_PATH}/include)
+-include_directories(${CMAKE_SOURCE_DIR}/../3rdparty)
+-
+-# opencv
+-if (CMAKE_SYSTEM_NAME STREQUAL "Android")
+-    set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/../3rdparty/opencv/OpenCV-android-sdk/sdk/native/jni/abi-${CMAKE_ANDROID_ARCH_ABI})
+-else()
+-  if(LIB_ARCH STREQUAL "armhf")
+-    set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/../3rdparty/opencv/opencv-linux-armhf/share/OpenCV)
+-  else()
+-    set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/../3rdparty/opencv/opencv-linux-aarch64/share/OpenCV)
+-  endif()
+-endif()
++find_library(RKNN_RT_LIB rknnrt REQUIRED)
+ find_package(OpenCV REQUIRED)
+ 
+-set(CMAKE_INSTALL_RPATH "lib")
+-
+ add_executable(rknn_mobilenet_demo
+     src/main.cc
+ )
+@@ -51,8 +18,6 @@ target_link_libraries(rknn_mobilenet_demo
+ )
+ 
+ # install target and libraries
+-set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install/rknn_mobilenet_demo_${CMAKE_SYSTEM_NAME})
+-install(TARGETS rknn_mobilenet_demo DESTINATION ./)
++install(TARGETS rknn_mobilenet_demo DESTINATION ${CMAKE_INSTALL_BINDIR})
+ 
+-install(DIRECTORY model DESTINATION ./)
+-install(PROGRAMS ${RKNN_RT_LIB} DESTINATION lib)
++# necessary model files installed from the rknn_api_demo example
+diff --git a/examples/rknn_multiple_input_demo/CMakeLists.txt b/examples/rknn_multiple_input_demo/CMakeLists.txt
+index 834a963..8a8b0d4 100644
+--- a/examples/rknn_multiple_input_demo/CMakeLists.txt
++++ b/examples/rknn_multiple_input_demo/CMakeLists.txt
+@@ -2,31 +2,10 @@ cmake_minimum_required(VERSION 3.4.1)
+ 
+ project(rknn_multiple_input_demo)
+ 
+-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
++set(CMAKE_CXX_STANDARD 11)
++set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ 
+-# rknn api
+-if(TARGET_SOC STREQUAL "rk356x")
+-  set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../runtime/RK356X/${CMAKE_SYSTEM_NAME}/librknn_api)
+-elseif(TARGET_SOC STREQUAL "rk3588")
+-  set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../runtime/RK3588/${CMAKE_SYSTEM_NAME}/librknn_api)
+-else()
+-  message(FATAL_ERROR "TARGET_SOC is not set, ref value: rk356x or rk3588")
+-endif()
+-
+-if (CMAKE_SYSTEM_NAME STREQUAL "Android")
+-  set(RKNN_RT_LIB ${RKNN_API_PATH}/${CMAKE_ANDROID_ARCH_ABI}/librknnrt.so)
+-else()
+-  if (CMAKE_C_COMPILER MATCHES "aarch64")
+-    set(LIB_ARCH aarch64)
+-  else()
+-    set(LIB_ARCH armhf)
+-  endif()
+-  set(RKNN_RT_LIB ${RKNN_API_PATH}/${LIB_ARCH}/librknnrt.so)
+-endif()
+-include_directories(${RKNN_API_PATH}/include)
+-
+-set(CMAKE_INSTALL_RPATH "lib")
++find_library(RKNN_RT_LIB rknnrt REQUIRED)
+ 
+ add_executable(rknn_multiple_input_demo
+         src/main.cc
+@@ -37,7 +16,5 @@ target_link_libraries(rknn_multiple_input_demo
+ )
+ 
+ # install target and libraries
+-set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install/rknn_multiple_input_demo_${CMAKE_SYSTEM_NAME})
+-install(TARGETS rknn_multiple_input_demo DESTINATION ./)
+-install(DIRECTORY model DESTINATION ./)
+-install(PROGRAMS ${RKNN_RT_LIB} DESTINATION lib)
++install(TARGETS rknn_multiple_input_demo DESTINATION ${CMAKE_INSTALL_BINDIR})
++install(FILES model/input1.bin model/input2.bin model/${TARGET_SOC}/multiple_input_demo.rknn DESTINATION ${CMAKE_INSTALL_DATADIR}/rknn/models)
+diff --git a/examples/rknn_ssd_demo/CMakeLists.txt b/examples/rknn_ssd_demo/CMakeLists.txt
+index bd236f6..a526506 100644
+--- a/examples/rknn_ssd_demo/CMakeLists.txt
++++ b/examples/rknn_ssd_demo/CMakeLists.txt
+@@ -2,44 +2,12 @@ cmake_minimum_required(VERSION 3.10)
+ 
+ project(rknn_ssd_demo)
+ 
+-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
++set(CMAKE_CXX_STANDARD 11)
++set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ 
+-# rknn api
+-if(TARGET_SOC STREQUAL "rk356x")
+-  set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../runtime/RK356X/${CMAKE_SYSTEM_NAME}/librknn_api)
+-elseif(TARGET_SOC STREQUAL "rk3588")
+-  set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../runtime/RK3588/${CMAKE_SYSTEM_NAME}/librknn_api)
+-else()
+-  message(FATAL_ERROR "TARGET_SOC is not set, ref value: rk356x or rk3588")
+-endif()
+-
+-if (CMAKE_SYSTEM_NAME STREQUAL "Android")
+-  set(RKNN_RT_LIB ${RKNN_API_PATH}/${CMAKE_ANDROID_ARCH_ABI}/librknnrt.so)
+-else()
+-  if (CMAKE_C_COMPILER MATCHES "aarch64")
+-    set(LIB_ARCH aarch64)
+-  else()
+-    set(LIB_ARCH armhf)
+-  endif()
+-  set(RKNN_RT_LIB ${RKNN_API_PATH}/${LIB_ARCH}/librknnrt.so)
+-endif()
+-include_directories(${RKNN_API_PATH}/include)
+-
+-# opencv
+-if (CMAKE_SYSTEM_NAME STREQUAL "Android")
+-    set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/../3rdparty/opencv/OpenCV-android-sdk/sdk/native/jni/abi-${CMAKE_ANDROID_ARCH_ABI})
+-else()
+-  if(LIB_ARCH STREQUAL "armhf")
+-    set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/../3rdparty/opencv/opencv-linux-armhf/share/OpenCV)
+-  else()
+-    set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/../3rdparty/opencv/opencv-linux-aarch64/share/OpenCV)
+-  endif()
+-endif()
++find_library(RKNN_RT_LIB rknnrt REQUIRED)
+ find_package(OpenCV REQUIRED)
+ 
+-set(CMAKE_INSTALL_RPATH "lib")
+-
+ add_executable(rknn_ssd_demo
+         src/main.cc
+         src/ssd.cc
+@@ -51,7 +19,5 @@ target_link_libraries(rknn_ssd_demo
+ )
+ 
+ # install target and libraries
+-set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install/rknn_ssd_demo_${CMAKE_SYSTEM_NAME})
+-install(TARGETS rknn_ssd_demo DESTINATION ./)
+-install(DIRECTORY model DESTINATION ./)
+-install(PROGRAMS ${RKNN_RT_LIB} DESTINATION lib)
++install(TARGETS rknn_ssd_demo DESTINATION ${CMAKE_INSTALL_BINDIR})
++install(FILES model/box_priors.txt model/coco_labels_list.txt model/${TARGET_SOC}/ssd_inception_v2.rknn DESTINATION ${CMAKE_INSTALL_DATADIR}/rknn/models)
+diff --git a/examples/rknn_yolov5_demo/CMakeLists.txt b/examples/rknn_yolov5_demo/CMakeLists.txt
+index 5e82ba6..4ae6587 100644
+--- a/examples/rknn_yolov5_demo/CMakeLists.txt
++++ b/examples/rknn_yolov5_demo/CMakeLists.txt
+@@ -5,91 +5,26 @@ project(rknn_yolov5_demo)
+ set(CMAKE_CXX_STANDARD 11)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ 
+-# skip 3rd-party lib dependencies
+-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--allow-shlib-undefined")
+-
+-# install target and libraries
+-set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install/rknn_yolov5_demo_${CMAKE_SYSTEM_NAME})
+-
+-set(CMAKE_SKIP_INSTALL_RPATH FALSE)
+-set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+-set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+-
+-# rknn api
+-if(TARGET_SOC STREQUAL "rk356x")
+-  set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../runtime/RK356X/${CMAKE_SYSTEM_NAME}/librknn_api)
+-elseif(TARGET_SOC STREQUAL "rk3588")
+-  set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../runtime/RK3588/${CMAKE_SYSTEM_NAME}/librknn_api)
+-else()
+-  message(FATAL_ERROR "TARGET_SOC is not set, ref value: rk356x or rk3588 or rv110x")
+-endif()
+-
+-if (CMAKE_SYSTEM_NAME STREQUAL "Android")
+-  set(RKNN_RT_LIB ${RKNN_API_PATH}/${CMAKE_ANDROID_ARCH_ABI}/librknnrt.so)
+-else()
+-  if (CMAKE_C_COMPILER MATCHES "aarch64")
+-    set(LIB_ARCH aarch64)
+-  else()
+-    set(LIB_ARCH armhf)
+-  endif()
+-  set(RKNN_RT_LIB ${RKNN_API_PATH}/${LIB_ARCH}/librknnrt.so)
+-endif()
+-include_directories(${RKNN_API_PATH}/include)
+-include_directories(${CMAKE_SOURCE_DIR}/../3rdparty)
+-
+-# opencv
+-if (CMAKE_SYSTEM_NAME STREQUAL "Android")
+-    set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/../3rdparty/opencv/OpenCV-android-sdk/sdk/native/jni/abi-${CMAKE_ANDROID_ARCH_ABI})
+-else()
+-  if(LIB_ARCH STREQUAL "armhf")
+-    set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/../3rdparty/opencv/opencv-linux-armhf/share/OpenCV)
+-  else()
+-    set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/../3rdparty/opencv/opencv-linux-aarch64/share/OpenCV)
+-  endif()
+-endif()
++find_library(RKNN_RT_LIB rknnrt REQUIRED)
+ find_package(OpenCV REQUIRED)
++find_library(RGA_LIB rga REQUIRED)
++find_file(RGA_H rga/rga.h REQUIRED)
++cmake_path(GET RGA_H PARENT_PATH RGA_INCLUDEDIR)
+ 
+-#rga
+-if(TARGET_SOC STREQUAL "rk356x")
+-  set(RGA_PATH ${CMAKE_SOURCE_DIR}/../3rdparty/rga/RK356X)
+-elseif(TARGET_SOC STREQUAL "rk3588")
+-  set(RGA_PATH ${CMAKE_SOURCE_DIR}/../3rdparty/rga/RK3588)
+-else()
+-  message(FATAL_ERROR "TARGET_SOC is not set, ref value: rk356x or rk3588")
+-endif()
+-if (CMAKE_SYSTEM_NAME STREQUAL "Android")
+-  set(RGA_LIB ${RGA_PATH}/lib/Android/${CMAKE_ANDROID_ARCH_ABI}/librga.so)
+-else()
+-  if (CMAKE_C_COMPILER MATCHES "aarch64")
+-    set(LIB_ARCH aarch64)
+-  else()
+-    set(LIB_ARCH armhf)
+-  endif()
+-  set(RGA_LIB ${RGA_PATH}/lib/Linux//${LIB_ARCH}/librga.so)
+-endif()
+-include_directories( ${RGA_PATH}/include)
+-
+-set(CMAKE_INSTALL_RPATH "lib")
+-
+-# rknn_yolov5_demo
+-include_directories( ${CMAKE_SOURCE_DIR}/include)
++include_directories(${RGA_INCLUDEDIR})
+ 
+ add_executable(rknn_yolov5_demo
+         src/main.cc
+         src/postprocess.cc
+ )
+ 
++target_include_directories(rknn_yolov5_demo PRIVATE include)
++
+ target_link_libraries(rknn_yolov5_demo
+   ${RKNN_RT_LIB}
+   ${RGA_LIB}
+   ${OpenCV_LIBS}
+ )
++install(TARGETS rknn_yolov5_demo DESTINATION ${CMAKE_INSTALL_BINDIR})
+ 
+-
+-# install target and libraries
+-set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install/rknn_yolov5_demo_${CMAKE_SYSTEM_NAME})
+-install(TARGETS rknn_yolov5_demo DESTINATION ./)
+-
+-install(PROGRAMS ${RKNN_RT_LIB} DESTINATION lib)
+-install(PROGRAMS ${RGA_LIB} DESTINATION lib)
+-install(DIRECTORY model DESTINATION ./)
++install(FILES model/bus.jpg model/coco_80_labels_list.txt model/${TARGET_SOC}/yolov5s-640-640.rknn DESTINATION ${CMAKE_INSTALL_DATADIR}/rknn/models)
+-- 
+2.34.1
+
