@@ -74,6 +74,11 @@ do_install:append () {
 		sed -i 's/defined(MESA_EGL_NO_X11_HEADERS)/1/' \
 			${D}${includedir}/EGL/eglplatform.h
 	fi
+	# meson.build file hard-codes firmware installation to /lib/firmware
+	if [ "${nonarch_base_libdir}" != "/lib" ]; then
+	    mv ${D}/lib/firmware ${D}${nonarch_base_libdir}/
+	    rmdir ${D}/lib
+	fi
 }
 
 INSANE_SKIP:${PN} = "already-stripped ldflags dev-so textrel"
