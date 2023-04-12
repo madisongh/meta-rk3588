@@ -24,6 +24,8 @@ SRC_URI += "\
 
 DEPENDS += "bc-native dtc-native coreutils-native ${PYTHON_PN}-pyelftools-native"
 
+PROVIDES += "u-boot"
+
 # Generate Rockchip style loader binaries
 RK_IDBLOCK_IMG = "idblock.img"
 RK_LOADER_BIN = "loader.bin"
