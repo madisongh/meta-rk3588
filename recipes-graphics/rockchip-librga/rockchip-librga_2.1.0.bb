@@ -12,6 +12,6 @@ S = "${WORKDIR}/git"
 
 DEPENDS = "libdrm"
 
-inherit meson pkgconfig
+inherit meson pkgconfig rockchip_uapi
 
 EXTRA_OEMESON = "-Dlibdrm=true"

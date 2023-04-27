@@ -59,7 +59,7 @@ python __anonymous() {
         d.appendVar("RCONFLICTS:" + pn_dev, pkgs)
 }
 
-inherit meson pkgconfig
+inherit meson pkgconfig rockchip_uapi
 
 EXTRA_OEMESON = " \
 	-Dgpu=${MALI_GPU} \

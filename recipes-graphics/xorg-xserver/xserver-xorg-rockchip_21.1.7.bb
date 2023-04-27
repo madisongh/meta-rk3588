@@ -15,6 +15,8 @@ COMPATIBLE_MACHINE:rk3588 = "(rk3588)"
 
 PROVIDES += "xserver-xorg"
 
+inherit rockchip_uapi
+
 S = "${WORKDIR}/git"
 
 do_install:append() {

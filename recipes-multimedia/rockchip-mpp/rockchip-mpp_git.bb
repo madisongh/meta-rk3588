@@ -15,7 +15,7 @@ PV = "1.3.8+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-inherit pkgconfig cmake
+inherit pkgconfig cmake rockchip_uapi
 
 EXTRA_OECMAKE = "-DHAVE_DRM=ON"
 

@@ -17,6 +17,6 @@ PACKAGECONFIG[rga] = "-Drga=enabled,-Drga=disabled,rockchip-librga"
 
 S = "${WORKDIR}/git"
 
-inherit meson pkgconfig
+inherit meson pkgconfig rockchip_uapi
 
 require recipes-multimedia/gstreamer/gstreamer1.0-plugins-packaging.inc
