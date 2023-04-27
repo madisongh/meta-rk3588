@@ -5,22 +5,15 @@ require recipes-kernel/linux/linux-yocto.inc
 
 inherit python3native
 
-COMPATIBLE_MACHINE = "(rk3588)"
+require linux-rockchip-downstream-5.10.inc
 
-SRCREV = "4db5e51d516da43b0b4114a1ec7fb465436ccf96"
-SRC_REPO = "github.com/madisongh/linux-rockchip-downstream.git;protocol=https"
-SRCBRANCH = "patches-rockchip-5.10"
-KBRANCH = "${SRCBRANCH}"
-SRC_URI = "git://${SRC_REPO};branch=${KBRANCH}"
 SRC_URI += "\
     file://systemd.cfg \
+    file://broken-drivers.cfg \
+    file://platform-configuration.cfg \
     ${@'file://localversion_auto.cfg' if d.getVar('SCMVERSION') == 'y' else ''} \
 "
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
-
-LINUX_VERSION ?= "5.10.66"
-PV = "${LINUX_VERSION}+git${SRCPV}"
 FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}-${@bb.parse.vars_from_file(d.getVar('FILE', False), d)[1]}:"
 
 LINUX_VERSION_EXTENSION ?= "-rockchip"
