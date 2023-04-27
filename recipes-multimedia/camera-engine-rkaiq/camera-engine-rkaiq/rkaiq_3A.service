@@ -1,0 +1,10 @@
+[Unit]
+Description=rkisp 3A engine
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/rkaiq_3A_server
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
