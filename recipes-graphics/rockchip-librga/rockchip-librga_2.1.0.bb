@@ -6,7 +6,7 @@ HOMEPAGE = "https://github.com/airockchip/libgra"
 SRC_REPO = "github.com/madisongh/rockchip-librga.git;protocol=https"
 SRCBRANCH = "main"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
-SRCREV = "a1b05b8fcf4698176477370fd942b31d9ae66404"
+SRCREV = "7548e39c1944e37f34d110b01f83c9a707b4e6db"
 
 S = "${WORKDIR}/git"
 
