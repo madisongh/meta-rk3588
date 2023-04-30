@@ -1,6 +1,6 @@
 COMPATIBLE_MACHINE = "(rk3588)"
 
-SRCREV = "39d10004acde3659a5062daa48d961364999718c"
+SRCREV = "db1847c8ed8006a212abfd79add346469de4d128"
 SRC_REPO = "github.com/madisongh/linux-rockchip-downstream.git;protocol=https"
 SRCBRANCH = "patches-rockchip-5.10"
 KBRANCH = "${SRCBRANCH}"
