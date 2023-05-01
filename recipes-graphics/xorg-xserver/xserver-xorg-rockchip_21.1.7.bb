@@ -25,4 +25,5 @@ do_install:append() {
         ${D}${datadir}/X11/xorg.conf.d/20-modesetting.conf
 }
 
+RPROVIDES:${PN}-module-exa += "xserver-xorg-module-exa"
 PACKAGE_ARCH = "${SOC_FAMILY_PKGARCH}"
