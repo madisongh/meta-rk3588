@@ -12,7 +12,7 @@ S = "${WORKDIR}/git"
 
 DEPENDS = "stb rockchip-npu2-runtime rockchip-librga"
 
-PACKAGECONFIG ??= ""
+PACKAGECONFIG ??= "opencv"
 PACKAGECONFIG[opencv] = "-DUSE_OPENCV=ON,-DUSE_OPENCV=OFF,opencv"
 
 OECMAKE_SOURCEPATH = "${S}/examples"
