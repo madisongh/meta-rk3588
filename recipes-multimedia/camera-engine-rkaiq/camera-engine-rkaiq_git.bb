@@ -13,7 +13,7 @@ SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH} \
            file://rkaiq_3A.init \
            file://rkaiq_3A.service \
 "
-SRCREV = "6add2c3171ff035bf4e15f6278d3354267c8edf4"
+SRCREV = "2e7b86441e25770b696ab6ca5a0d9298ea53333a"
 PV = "3.0-9.1+git${SRCPV}"
 
 DEPENDS = "coreutils-native xxd-native rockchip-librga libdrm v4l-utils"
