@@ -21,6 +21,7 @@ SRC_URI += "\
     file://broken-drivers.cfg \
     ${@'file://localversion_auto.cfg' if d.getVar('SCMVERSION') == 'y' else ''} \
 "
+BB_GIT_SHALLOW ?= "1"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
