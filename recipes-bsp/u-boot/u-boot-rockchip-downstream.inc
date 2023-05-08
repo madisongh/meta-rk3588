@@ -15,5 +15,6 @@ SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}; \
 SRCREV = "785d8aff70b53288ddd3e3f124c08052a61ea717"
 SRCREV_rkbin = "43c2ce3ce3abe1163cca58c204f9ead6799634b4"
 SRCREV_FORMAT = "default_rkbin"
+PV .= "+git${SRCPV}"
 
 DEPENDS += "bc-native dtc-native coreutils-native ${PYTHON_PN}-pyelftools-native"
