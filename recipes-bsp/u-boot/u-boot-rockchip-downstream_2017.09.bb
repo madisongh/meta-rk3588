@@ -23,7 +23,7 @@ do_compile:append() {
 			cp -rT ${S}/${d} ${d}
 		done
 
-		bash -x ./make.sh --spl
+		./make.sh --spl
 		ln -sf *spl_loader*.bin "${RK_LOADER_BIN}"
 		# uboot.itb (U-Boot proper plus secure OS)
 		./make.sh itb
