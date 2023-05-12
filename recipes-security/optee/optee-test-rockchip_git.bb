@@ -41,3 +41,4 @@ do_install() {
 
 FILES:${PN} += "${nonarch_base_libdir}/optee_armtz ${libdir}/tee-supplicant/plugins"
 RDEPENDS:${PN} = "optee-client-rockchip"
+RPROVIDES:${PN} += "optee-test"
