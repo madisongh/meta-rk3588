@@ -22,6 +22,7 @@ do_install() {
     install -d ${D}${includedir}/optee/export-user_ta
     cp -R --preserve=mode,timestamps ${S}/v2/export-ta_arm64/* ${D}${includedir}/optee/export-user_ta/
     sed -i -e's,-mstrict-align,,' -e's,-mno-outline-atomics,,' ${D}${includedir}/optee/export-user_ta/mk/conf.mk
+    install -D -m 0644 ${S}/v2/ta/rk_public_api/*.[ch] -t ${D}${includedir}/optee/export-user_ta/rk_public_api
 }
 
 FILES:${PN} = "${includedir}/optee"
