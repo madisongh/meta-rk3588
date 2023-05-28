@@ -5,11 +5,18 @@ SOC_FAMILY_PKGARCH = "${ARMPKGARCH}${ARMPKGSFX_DSP}${ARMPKGSFX_EABI}${ARMPKGSFX_
 RK_PKGARCH = "${ARMPKGARCH}${ARMPKGSFX_DSP}${ARMPKGSFX_EABI}${ARMPKGSFX_ENDIAN}${ARMPKGSFX_FPU}_rockchip"
 PACKAGE_EXTRA_ARCHS:append = " ${RK_PKGARCH} ${SOC_FAMILY_PKGARCH}"
 
-KERNEL_IMAGETYPES ?= "Image"
-KERNEL_IMAGETYPE ?= "Image"
+KERNEL_IMAGETYPE ?= "fitImage"
+KERNEL_ALT_IMAGETYPE ?= "Image.gz"
+KERNEL_IMAGETYPE_REPLACEMENT ?= "${KERNEL_ALT_IMAGETYPE}"
+KERNEL_CLASSES:append = "${@' kernel-fitimage' if d.getVar('KERNEL_IMAGETYPE') == 'fitImage' else ''}"
+RK_KERNEL_BOOTARGS ??= ""
+RK_KERNEL_ARGS ?= "${@' '.join(['console=%s' % c for c in d.getVar('SERIAL_CONSOLES').split()])} ${RK_KERNEL_BOOTARGS}"
+RRECOMMENDS:${KERNEL_PACKAGE_NAME}-base ?= "${@'' if d.getVar('KERNEL_IMAGETYPE') == 'fitImage' else '${KERNEL_PACKAGE_NAME}-image (= ${EXTENDPKGV})'}"
 
-IMAGE_BOOT_FILES = "${KERNEL_IMAGETYPE} ${@' '.join([os.path.basename(f) + ';rockchip/' + os.path.basename(f) for f in d.getVar('KERNEL_DEVICETREE').split()])}"
+IMAGE_BOOT_FILES ?= "${@rk.wic.image_boot_files(d)}"
 IMAGE_FSTYPES ?= "ext4 wic wic.bmap"
+RK_IMAGE_CLASSES ?= "kernel-artifact-names"
+IMAGE_CLASSES += "${RK_IMAGE_CLASSES}"
 WIC_DEPLOY_EXTRA_DEPS ?= "virtual/bootloader:do_deploy"
 do_image_wic[depends] += "${WIC_DEPLOY_EXTRA_DEPS}"
 
@@ -38,3 +45,6 @@ PREFERRED_PROVIDER_virtual/mesa ?= "mesa-gl"
 
 # XXX Work around libforms directly depending on mesa rather than virtual/libgl
 COMPATIBLE_MACHINE:pn-libforms:rockchip = "(-)"
+
+RK_UBOOT_MKIMAGE_OPTIONS ?= " -E -p 0x1000"
+UBOOT_MKIMAGE:append = "${RK_UBOOT_MKIMAGE_OPTIONS}"
