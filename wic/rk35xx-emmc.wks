@@ -1,0 +1,8 @@
+bootloader --ptable gpt
+
+part --source rawcopy --sourceparams="file=idblock.img" --offset 64s --no-table
+part --source rawcopy --sourceparams="file=uboot.img" --offset 16384s --no-table
+part --source rawcopy --sourceparams="file=fitImage" --part-name boot --active --offset 32768s --fixed-size=64M
+part --part-name security --fixed-size=4M
+part / --source rootfs --ondisk mmcblk0 --fstype ext4 --part-name rootfs --label rootfs --offset 261244s
+
