@@ -29,4 +29,21 @@ set_scmversion() {
 }
 do_kernel_checkout[postfuncs] += "set_scmversion"
 
-DEPENDS += "openssl-native lz4-native"
+DEPENDS += "openssl-native lz4-native dtc-native"
+
+set_chosen_bootargs() {
+    if [ -z "${RK_KERNEL_ARGS}" ]; then
+        return 0
+    fi
+    for dtb in ${KERNEL_DEVICETREE}; do
+        fdtput -t s -p ${B}/arch/${ARCH}/boot/dts/$dtb /chosen bootargs "${RK_KERNEL_ARGS}"
+    done
+}
+
+do_assemble_fitimage:prepend() {
+    set_chosen_bootargs
+}
+
+do_assemble_fitimage_initramfs:prepend() {
+    set_chosen_bootargs
+}
