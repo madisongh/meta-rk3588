@@ -4,7 +4,8 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 SRC_URI = "file://rockchip-udev.rules"
 
-COMPATIBLE_MACHINE = "(rk3588)"
+COMPATIBLE_MACHINE = "(-)"
+COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 
 do_install() {
     if [ -s ${WORKDIR}/rockchip-udev.rules ]; then
