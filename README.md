@@ -1,10 +1,10 @@
-OpenEmbedded/Yocto BSP layer for Rockchip RK3588
-================================================
+OpenEmbedded/Yocto BSP layer for Rockchip RK356x/RK3588
+=======================================================
 
 Based on [meta-rockchip](https://github.com/JeffyCN/meta-rockchip), with
 the following changes:
 
-* Supports only RK3588-based platforms (specifically, Orange Pi 5)
+* Supports only RK3566 and RK3588-based platforms
 * Removes dependency on the [mirrors](https://github.com/JeffyCN/mirrors) repository
 * Removes meta-oe layer dependency
 * Cleaned up for interoperability with other layers/machines
