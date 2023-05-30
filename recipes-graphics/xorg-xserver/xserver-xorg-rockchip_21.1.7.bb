@@ -11,7 +11,7 @@ SRC_URI += "file://20-modesetting.conf"
 DEPENDS += "rockchip-librga"
 
 COMPATIBLE_MACHINE = "(-)"
-COMPATIBLE_MACHINE:rk3588 = "(rk3588)"
+COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 
 PROVIDES += "xserver-xorg"
 
