@@ -3,13 +3,7 @@ require rockchip-npu2.inc
 SRC_URI += "file://rknn-server.service.in"
 SRC_URI += "file://rknn-server.init.in"
 
-RUNTIME_SUBDIR = ""
-RUNTIME_SUBDIR:rk3588 = "runtime/RK3588/Linux"
-
-COMPATIBLE_MACHINE = "(-)"
-COMPATIBLE_MACHINE:rk3588 = "rk3588"
-
-B = "${WORKDIR}/build"
+RUNTIME_SUBDIR = "runtime/${@d.getVar('RK_TARGET_SOC').upper()}/Linux"
 
 inherit systemd update-rc.d
 
@@ -52,5 +46,3 @@ INSANE_SKIP:${PN} = "dev-so ldflags"
 FILES_SOLIBSDEV = ""
 FILES:${PN}-dev = "${includedir} ${libdir}/librknn_api.so"
 FILES:${PN} += "${libdir}/librknnrt.so ${libdir}/libmpimmz.so"
-
-PACKAGE_ARCH = "${SOC_FAMILY_PKGARCH}"
