@@ -12,23 +12,10 @@ PROVIDES = "rkusbloader"
 SRC_URI:append:rk3588 = " file://rk3588-ipc.cfg"
 SRC_URI:append:rk3568 = " file://rk3568-usbplug.cfg"
 
-LOADER_TARGET = "loader"
-LOADER_OUTPUT = "spl_loader"
-LOADER_TARGET:rk3588 = "--spl"
-LOADER_OUTPUT:rk3588 = "download"
-
 do_compile:append() {
-	cd ${B}
-	# Prepare needed files
-	for d in make.sh scripts configs arch/arm/mach-rockchip; do
-	    cp -rT ${S}/${d} ${d}
-	done
-	bash -x ./make.sh ${LOADER_TARGET}
+    make_rockchip_loader
 }
 
 do_deploy:append() {
-	dlfile=$(basename $(ls -1 ${B}/*_${LOADER_OUTPUT}_*.bin))
-	install -m 0644 ${B}/$dlfile ${DEPLOYDIR}/$dlfile-${PV}
-	ln -sf $dlfile-${PV} ${DEPLOYDIR}/$dlfile
-	ln -sf $dlfile-${PV} ${DEPLOYDIR}/download.bin
+    deploy_rockchip_loader
 }

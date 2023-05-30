@@ -1,0 +1,15 @@
+Index: git/include/configs/rockchip-common.h
+===================================================================
+--- git.orig/include/configs/rockchip-common.h
++++ git/include/configs/rockchip-common.h
+@@ -193,9 +193,9 @@
+ 	"boot_fit;"
+ #else
+ #define RKIMG_BOOTCOMMAND			\
++	"boot_fit;"				\
+ 	"run distro_bootcmd;"			\
+ 	"boot_android ${devtype} ${devnum};"	\
+-	"boot_fit;"				\
+ 	"bootrkp;"
+ #endif
+ 
