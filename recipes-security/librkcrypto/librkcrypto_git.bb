@@ -12,7 +12,7 @@ SRC_URI += "file://0001-CMakeLists-changes-for-OE-builds.patch"
 PV = "1.2.0+git${SRCPV}"
 
 COMPATIBLE_MACHINE = "(-)"
-COMPATIBLE_MACHINE:rk3588 = "(rk3588)"
+COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 
 DEPENDS = "optee-client libdrm"
 

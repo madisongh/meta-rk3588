@@ -8,6 +8,6 @@ PV = "3.13.0-rk+git${SRCPV}"
 S = "${WORKDIR}/git"
 
 COMPATIBLE_MACHINE = "(-)"
-COMPATIBLE_MACHINE:rk3588 = "(rk3588)"
+COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 
 PACKAGE_ARCH = "${SOC_FAMILY_PKGARCH}"
