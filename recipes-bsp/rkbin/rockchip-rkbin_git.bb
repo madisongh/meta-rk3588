@@ -10,7 +10,7 @@ SRCREV = "43c2ce3ce3abe1163cca58c204f9ead6799634b4"
 PV = "1.0+git${SRCPV}"
 
 COMPATIBLE_MACHINE = "(-)"
-COMPATIBLE_MACHINE:rk3588 = "(rk3588)"
+COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 COMPATIBLE_MACHINE:class-native = ""
 
 PROVIDES:class-native = "rockchip-rkbin-tools-native"
@@ -21,7 +21,9 @@ S = "${WORKDIR}/git"
 
 RKBIN_SUBDIR = "${@d.getVar('SOC_FAMILY')[0:4]}"
 RKBIN_PREFIX = "${SOC_FAMILY}"
-RKBIN_INI_PREFIX = "${@d.getVar('SOC_FAMILY').upper()}"
+# Need binaries prefixed with rk3566, rk3568, and rk356x
+RKBIN_PREFIX:rk3568 = "rk356"
+RKBIN_INI_PREFIX = "${@d.getVar('RKBIN_PREFIX').upper()}"
 
 do_configure() {
     :
