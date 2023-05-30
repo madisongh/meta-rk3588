@@ -5,7 +5,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://NOTICE;md5=9645f39e9db895a4aa6e02cb57294595"
 
 COMPATIBLE_MACHINE = "(-)"
-COMPATIBLE_MACHINE:rk3588 = "(rk3588)"
+COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 
 SRC_REPO = "github.com/madisongh/camera-engine-rkaiq.git;protocol=https"
 SRCBRANCH = "patches-v3.0x9.1"
@@ -25,12 +25,13 @@ inherit pkgconfig cmake rockchip_uapi
 
 RK_ISP_VERSION = ""
 RK_ISP_VERSION:rk3588 = "ISP_HW_V30"
+RK_ISP_VERSION:rk3568 = "ISP_HW_V21"
 
 EXTRA_OECMAKE = "     \
     -DARCH=${@bb.utils.contains('TUNE_FEATURES', 'aarch64', 'aarch64', 'arm', d)} \
     -DISP_HW_VERSION=-D${RK_ISP_VERSION} \
     -DIQ_PARSER_V2_EXTRA_CFLAGS='-I${STAGING_INCDIR}/rockchip-uapi;-I${STAGING_INCDIR}' \
-    -DRKAIQ_TARGET_SOC=${SOC_FAMILY} \
+    -DRKAIQ_TARGET_SOC=${RK_TARGET_SOC} \
 "
 
 do_install:append () {
