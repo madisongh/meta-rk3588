@@ -15,6 +15,9 @@ SRCREV = "1625bd0638fe77cf0e90209a6bfba2f54a6d5139"
 
 PV .= "+git${SRCPV}"
 
+COMPATIBLE_MACHINE = "(-)"
+COMPATIBLE_MACHINE:rockchip = "(rockchip)"
+
 DEPENDS += "bc-native dtc-native coreutils-native ${PYTHON_PN}-pyelftools-native rockchip-rkbin rockchip-rkbin-tools-native"
 
 export RKBIN_TOOLS = "${STAGING_BINDIR_NATIVE}/rkbin-tools"

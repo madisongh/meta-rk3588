@@ -4,6 +4,9 @@
 require u-boot-rockchip-downstream.inc
 require u-boot-orangepi-source.inc
 
+COMPATIBLE_MACHINE:rockchip = "(-)"
+COMPATIBLE_MACHINE:orangepi5 = "(orangepi5)"
+
 PROVIDES += "u-boot"
 
 do_compile:append() {
