@@ -75,7 +75,7 @@ do_install:append () {
 			${D}${includedir}/EGL/eglplatform.h
 	fi
 	# meson.build file hard-codes firmware installation to /lib/firmware
-	if [ "${nonarch_base_libdir}" != "/lib" ]; then
+	if [ -d "${D}/lib" -a "${nonarch_base_libdir}" != "/lib" ]; then
 	    mv ${D}/lib/firmware ${D}${nonarch_base_libdir}/
 	    rmdir ${D}/lib
 	fi
