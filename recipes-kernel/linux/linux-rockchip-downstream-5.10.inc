@@ -1,7 +1,7 @@
 COMPATIBLE_MACHINE = "(-)"
 COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 
-SRCREV = "cf9fd8f32b0aceb6019727086f116fa3efd9cba2"
+SRCREV = "b50cd1513926905cbcd8341549bb0c5b87307f5b"
 SRC_REPO = "github.com/madisongh/linux-rockchip-downstream.git;protocol=https"
 SRCBRANCH = "patches-rockchip-5.10"
 KBRANCH = "${SRCBRANCH}"

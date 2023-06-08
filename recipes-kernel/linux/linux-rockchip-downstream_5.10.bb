@@ -9,7 +9,6 @@ require linux-rockchip-downstream-5.10.inc
 
 SRC_URI += "\
     file://systemd.cfg \
-    file://broken-drivers.cfg \
     file://platform-configuration.cfg \
     ${@'file://localversion_auto.cfg' if d.getVar('SCMVERSION') == 'y' else ''} \
 "
