@@ -1,0 +1,10 @@
+[Unit]
+Description=Bluetooth module initialization
+Before=bluetooth.service
+
+[Service]
+Type=simple
+ExecStart=@SBINDIR@/rk-bluetooth-init
+
+[Install]
+WantedBy=bluetooth.target
