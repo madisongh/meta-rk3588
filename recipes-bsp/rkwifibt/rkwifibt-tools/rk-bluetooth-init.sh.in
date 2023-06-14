@@ -1,0 +1,10 @@
+#!/bin/sh
+echo 0 > /sys/class/rfkill/rfkill0/state
+echo 0 > /proc/bluetooth/sleep/btwrite
+sleep 0.5
+echo 1 > /sys/class/rfkill/rfkill0/state
+echo 1 > /proc/bluetooth/sleep/btwrite
+sleep 0.5
+
+exec rtk_hciattach -n -s 115200 @BT_TTY_DEV@ rtk_h5
+

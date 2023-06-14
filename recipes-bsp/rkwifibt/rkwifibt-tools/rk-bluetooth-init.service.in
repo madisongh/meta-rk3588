@@ -1,10 +1,12 @@
 [Unit]
 Description=Bluetooth module initialization
+After=systemd-modules-load.service
 Before=bluetooth.service
 
 [Service]
 Type=simple
 ExecStart=@SBINDIR@/rk-bluetooth-init
+TimeoutStopSec=10
 
 [Install]
 WantedBy=bluetooth.target
