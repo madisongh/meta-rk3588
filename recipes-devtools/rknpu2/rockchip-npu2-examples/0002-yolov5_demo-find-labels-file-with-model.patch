@@ -1,123 +1,15 @@
-From 2a385344e0f0b824556bad4d55f3b14f9bc33690 Mon Sep 17 00:00:00 2001
+From 958b6853ba5a92a84e929d7df3ec5aafb38690e6 Mon Sep 17 00:00:00 2001
 From: Matt Madison <matt@madison.systems>
 Date: Wed, 5 Apr 2023 15:04:05 -0700
 Subject: [PATCH 2/2] yolov5_demo: find labels file with model
 
 Signed-off-by: Matt Madison <matt@madison.systems>
 ---
- examples/rknn_ssd_demo/src/main.cc            |  5 +++-
- examples/rknn_ssd_demo/src/ssd.cc             | 27 ++++++++++++++-----
- examples/rknn_ssd_demo/src/ssd.h              |  2 +-
- .../rknn_yolov5_demo/include/postprocess.h    |  2 +-
- examples/rknn_yolov5_demo/src/main.cc         |  8 ++++--
- examples/rknn_yolov5_demo/src/postprocess.cc  | 15 ++++++++---
- 6 files changed, 45 insertions(+), 14 deletions(-)
+ examples/rknn_yolov5_demo/include/postprocess.h |  2 +-
+ examples/rknn_yolov5_demo/src/main.cc           |  8 ++++++--
+ examples/rknn_yolov5_demo/src/postprocess.cc    | 15 ++++++++++++---
+ 3 files changed, 19 insertions(+), 6 deletions(-)
 
-diff --git a/examples/rknn_ssd_demo/src/main.cc b/examples/rknn_ssd_demo/src/main.cc
-index fb3f775..353cbb3 100644
---- a/examples/rknn_ssd_demo/src/main.cc
-+++ b/examples/rknn_ssd_demo/src/main.cc
-@@ -25,6 +25,7 @@
- #include <stdio.h>
- #include <stdlib.h>
- #include <sys/time.h>
-+#include <libgen.h>
- 
- #include <fstream>
- #include <iostream>
-@@ -95,6 +96,8 @@ int main(int argc, char** argv)
-     return -1;
-   }
- 
-+  char *model_dir = dirname(strdup(model_path));
-+
-   // Load image
-   cv::Mat orig_img = cv::imread(img_path, 1);
-   if (!orig_img.data) {
-@@ -195,7 +198,7 @@ int main(int argc, char** argv)
-   // Post Process
-   detect_result_group_t detect_result_group;
-   postProcessSSD((float*)(outputs[0].buf), (float*)(outputs[1].buf), orig_img.cols, orig_img.rows,
--                 &detect_result_group);
-+                 &detect_result_group, model_dir);
-   // Release rknn_outputs
-   rknn_outputs_release(ctx, 2, outputs);
- 
-diff --git a/examples/rknn_ssd_demo/src/ssd.cc b/examples/rknn_ssd_demo/src/ssd.cc
-index 10cc0d6..033e5ed 100755
---- a/examples/rknn_ssd_demo/src/ssd.cc
-+++ b/examples/rknn_ssd_demo/src/ssd.cc
-@@ -20,9 +20,10 @@
- #include <string.h>
- #include <stdint.h>
- #include <sys/time.h>
-+#include <limits.h>
- 
--#define BOX_PRIORS_TXT_PATH "./model/box_priors.txt"
--#define LABEL_NALE_TXT_PATH "./model/coco_labels_list.txt"
-+#define BOX_PRIORS_TXT_FILE "box_priors.txt"
-+#define LABEL_NALE_TXT_FILE "coco_labels_list.txt"
- 
- float MIN_SCORE     = 0.4f;
- float NMS_THRESHOLD = 0.45f;
-@@ -281,20 +282,34 @@ void sort(int output[][1917], float* props, int sz)
- #endif
- }
- 
--int postProcessSSD(float* predictions, float* output_classes, int width, int heigh, detect_result_group_t* group)
-+int postProcessSSD(float* predictions, float* output_classes, int width, int heigh, detect_result_group_t* group, const char *model_dir)
- {
-   static int init = -1;
-   if (init == -1) {
-     int ret = 0;
-+    char pathname[PATH_MAX];
-+    ssize_t len;
- 
-+    len = snprintf(pathname, sizeof(pathname)-1, "%s/" LABEL_NALE_TXT_FILE, model_dir);
-+    if (len < 0) {
-+      fprintf(stderr, "error forming path to label file\n");
-+      return -1;
-+    }
-+    pathname[len] = '\0';
-     printf("loadLabelName\n");
--    ret = loadLabelName(LABEL_NALE_TXT_PATH, labels);
-+    ret = loadLabelName(pathname, labels);
-     if (ret < 0) {
-       return -1;
-     }
- 
-+    len = snprintf(pathname, sizeof(pathname)-1, "%s/" BOX_PRIORS_TXT_FILE, model_dir);
-+    if (len < 0) {
-+      fprintf(stderr, "error forming path to box priors file\n");
-+      return -1;
-+    }
-+    pathname[len] = '\0';
-     printf("loadBoxPriors\n");
--    ret = loadBoxPriors(BOX_PRIORS_TXT_PATH, box_priors);
-+    ret = loadBoxPriors(pathname, box_priors);
-     if (ret < 0) {
-       return -1;
-     }
-@@ -363,4 +378,4 @@ void deinitPostProcessSSD()
-       labels[i] = nullptr;
-     }
-   }
--}
-\ No newline at end of file
-+}
-diff --git a/examples/rknn_ssd_demo/src/ssd.h b/examples/rknn_ssd_demo/src/ssd.h
-index 1cdbca1..8212b3a 100755
---- a/examples/rknn_ssd_demo/src/ssd.h
-+++ b/examples/rknn_ssd_demo/src/ssd.h
-@@ -56,7 +56,7 @@ int loadLabelName(const char* locationFilename, char* labels[]);
- 
- int loadBoxPriors(const char* locationFilename, float (*boxPriors)[NUM_RESULTS]);
- 
--int postProcessSSD(float* predictions, float* output_classes, int width, int heigh, detect_result_group_t* group);
-+int postProcessSSD(float* predictions, float* output_classes, int width, int heigh, detect_result_group_t* group, const char *model_dir);
- 
- void deinitPostProcessSSD();
- 
 diff --git a/examples/rknn_yolov5_demo/include/postprocess.h b/examples/rknn_yolov5_demo/include/postprocess.h
 index 58504d4..dc9ea41 100644
 --- a/examples/rknn_yolov5_demo/include/postprocess.h
@@ -132,7 +24,7 @@ index 58504d4..dc9ea41 100644
  void deinitPostProcess();
  #endif //_RKNN_ZERO_COPY_DEMO_POSTPROCESS_H_
 diff --git a/examples/rknn_yolov5_demo/src/main.cc b/examples/rknn_yolov5_demo/src/main.cc
-index 1e90310..b46a4f2 100755
+index 289160c..91931a5 100755
 --- a/examples/rknn_yolov5_demo/src/main.cc
 +++ b/examples/rknn_yolov5_demo/src/main.cc
 @@ -20,6 +20,7 @@
@@ -143,7 +35,7 @@ index 1e90310..b46a4f2 100755
  
  #define _BASETSD_H
  
-@@ -143,6 +144,7 @@ int main(int argc, char** argv)
+@@ -149,6 +150,7 @@ int main(int argc, char** argv)
  
    model_name       = (char*)argv[1];
    char* image_name = argv[2];
@@ -151,7 +43,7 @@ index 1e90310..b46a4f2 100755
  
    printf("Read %s ...\n", image_name);
    cv::Mat orig_img = cv::imread(image_name, 1);
-@@ -279,7 +281,8 @@ int main(int argc, char** argv)
+@@ -285,7 +287,8 @@ int main(int argc, char** argv)
      out_zps.push_back(output_attrs[i].zp);
    }
    post_process((int8_t*)outputs[0].buf, (int8_t*)outputs[1].buf, (int8_t*)outputs[2].buf, height, width,
@@ -161,7 +53,7 @@ index 1e90310..b46a4f2 100755
  
    // Draw Objects
    char text[256];
-@@ -308,7 +311,8 @@ int main(int argc, char** argv)
+@@ -314,7 +317,8 @@ int main(int argc, char** argv)
      ret = rknn_outputs_get(ctx, io_num.n_output, outputs, NULL);
  #if PERF_WITH_POST
      post_process((int8_t*)outputs[0].buf, (int8_t*)outputs[1].buf, (int8_t*)outputs[2].buf, height, width,
