@@ -9,9 +9,9 @@ inherit python3native
 LIC_FILES_CHKSUM = "file://Licenses/README;md5=a2c678cfd4a4d97135585cad908541c6"
 
 SRC_REPO = "github.com/madisongh/u-boot-rockchip-downstream.git;protocol=https"
-SRCBRANCH = "patches-rockchip-v2017.09"
+SRCBRANCH = "patches-2023.07-rockchip-v2017.09"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
-SRCREV = "1625bd0638fe77cf0e90209a6bfba2f54a6d5139"
+SRCREV = "0615ca08635f8dfe7847d77a6e7051dc1fd66f26"
 
 PV .= "+git${SRCPV}"
 
