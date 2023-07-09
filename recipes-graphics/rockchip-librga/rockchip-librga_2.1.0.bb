@@ -3,10 +3,11 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=89aea4e17d99a7cacdbeed46a0096b10"
 HOMEPAGE = "https://github.com/airockchip/libgra"
 
-SRC_REPO = "github.com/madisongh/rockchip-librga.git;protocol=https"
-SRCBRANCH = "main"
+SRC_REPO = "gitlab.com/firefly-linux/external/linux-rga.git;protocol=https"
+SRCBRANCH = "rk3588/firefly"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
-SRCREV = "7548e39c1944e37f34d110b01f83c9a707b4e6db"
+SRCREV = "c4347cd97c638f3a938ab2fa969798d7ab65cd5b"
+PV .= "+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
