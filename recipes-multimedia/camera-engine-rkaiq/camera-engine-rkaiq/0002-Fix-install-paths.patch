@@ -1,0 +1,42 @@
+From 2f66b6dbf3e28485a763335ffdade312ac184779 Mon Sep 17 00:00:00 2001
+From: Matt Madison <matt@madison.systems>
+Date: Sat, 8 Jul 2023 08:35:05 -0700
+Subject: [PATCH 2/2] Fix install paths
+
+Signed-off-by: Matt Madison <matt@madison.systems>
+---
+ rkaiq_3A_server/CMakeLists.txt | 10 +---------
+ rkisp_demo/CMakeLists.txt      |  1 +
+ 2 files changed, 2 insertions(+), 9 deletions(-)
+
+diff --git a/rkaiq_3A_server/CMakeLists.txt b/rkaiq_3A_server/CMakeLists.txt
+index 87593f36..b208c212 100644
+--- a/rkaiq_3A_server/CMakeLists.txt
++++ b/rkaiq_3A_server/CMakeLists.txt
+@@ -132,13 +132,5 @@ if(BUILDROOT_BUILD_PROJECT)
+ 		GROUP_EXECUTE GROUP_READ
+ 		WORLD_EXECUTE WORLD_READ)
+ else()
+-	install(TARGETS rkaiq_3A_server
+-		RUNTIME DESTINATION "usr/bin"
+-		LIBRARY DESTINATION "usr/lib"
+-		)
+-
+-	install(FILES S40rkaiq_3A DESTINATION "etc/init.d"
+-		PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
+-		GROUP_EXECUTE GROUP_READ
+-		WORLD_EXECUTE WORLD_READ)
++	install(TARGETS rkaiq_3A_server RUNTIME)
+ endif()
+diff --git a/rkisp_demo/CMakeLists.txt b/rkisp_demo/CMakeLists.txt
+index f3d9ed6e..4bb3f3ca 100644
+--- a/rkisp_demo/CMakeLists.txt
++++ b/rkisp_demo/CMakeLists.txt
+@@ -169,3 +169,4 @@ if (librga_FOUND)
+         librga::librga
+         )
+ endif()
++install(TARGETS rkisp_demo RUNTIME)
+-- 
+2.34.1
+

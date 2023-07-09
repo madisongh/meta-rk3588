@@ -1,0 +1,25 @@
+From f4b01d52d352b989c3495ba2533476f99482747d Mon Sep 17 00:00:00 2001
+From: Matt Madison <matt@madison.systems>
+Date: Sat, 8 Jul 2023 08:20:56 -0700
+Subject: [PATCH 1/2] iq_parser_v2: add variable for extra compiler flags
+
+Signed-off-by: Matt Madison <matt@madison.systems>
+---
+ rkaiq/iq_parser_v2/CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/rkaiq/iq_parser_v2/CMakeLists.txt b/rkaiq/iq_parser_v2/CMakeLists.txt
+index cc16fa4d..6c05abf5 100644
+--- a/rkaiq/iq_parser_v2/CMakeLists.txt
++++ b/rkaiq/iq_parser_v2/CMakeLists.txt
+@@ -20,6 +20,7 @@ add_custom_command(
+     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/output.h
+     COMMAND ${CMAKE_C_COMPILER}
+     ${rk_aiq_SOURCE_DIR}/include/iq_parser_v2/RkAiqCalibDbTypesV2.h -E -C -o .temp.h ${ISP_HW_VERSION}
++    ${IQ_PARSER_V2_EXTRA_CFLAGS}
+     -I${rk_aiq_SOURCE_DIR}/
+     -I${rk_aiq_SOURCE_DIR}/include
+     -I${rk_aiq_SOURCE_DIR}/include/common
+-- 
+2.34.1
+
