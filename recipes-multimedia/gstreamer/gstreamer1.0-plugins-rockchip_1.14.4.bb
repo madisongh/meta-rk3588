@@ -7,7 +7,7 @@ DEPENDS += "gstreamer1.0-plugins-base"
 SRC_REPO = "github.com/madisongh/gstreamer-rockchip.git;protocol=https"
 SRCBRANCH = "main"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
-SRCREV = "2ed1e68b0aa77728b1d493344d8e62a04b1b64e0"
+SRCREV = "f9c7186c5f7eb04667978384258c112d17bfa4be"
 PV .= "+git${SRCPV}"
 
 PACKAGECONFIG ??= "mpp ${@bb.utils.filter('DISTRO_FEATURES', 'x11', d)} rga"
