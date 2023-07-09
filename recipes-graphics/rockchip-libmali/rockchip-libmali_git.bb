@@ -3,10 +3,10 @@ DESCRIPTION = "Userspace Mali GPU drivers for Rockchip SoCs"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://END_USER_LICENCE_AGREEMENT.txt;md5=3918cc9836ad038c5a090a0280233eea"
 
-SRC_REPO = "gitlab.com/rk3588_linux/linux/libmali.git;protocol=https"
-SRCBRANCH = "master"
+SRC_REPO = "gitlab.com/firefly-linux/external/libmali.git;protocol=https"
+SRCBRANCH = "rk3588/firefly"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
-SRCREV = "309268f7a34ca0bba0ab94a0b09feb0191c77fb8"
+SRCREV = "b51d8f9c4f3b67ac1fd0cd57087451d2f7348249"
 
 PV = "1.9.0+git${SRCPV}"
 
