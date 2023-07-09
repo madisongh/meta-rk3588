@@ -4,6 +4,8 @@
 require recipes-kernel/linux-libc-headers/linux-libc-headers.inc
 require recipes-kernel/linux/linux-rockchip-downstream-5.10.inc
 
+SRCREV = "${RK_UAPI_SRCREV}"
+
 DEPENDS += "linux-libc-headers"
 
 S = "${WORKDIR}/git"
