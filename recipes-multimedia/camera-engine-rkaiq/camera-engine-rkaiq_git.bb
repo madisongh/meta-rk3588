@@ -7,14 +7,16 @@ LIC_FILES_CHKSUM = "file://NOTICE;md5=9645f39e9db895a4aa6e02cb57294595"
 COMPATIBLE_MACHINE = "(-)"
 COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 
-SRC_REPO = "github.com/madisongh/camera-engine-rkaiq.git;protocol=https"
-SRCBRANCH = "patches-v3.0x9.1"
+SRC_REPO = "gitlab.com/firefly-linux/external/camera_engine_rkaiq.git;protocol=https"
+SRCBRANCH = "rk3588/firefly"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH} \
+           file://0001-iq_parser_v2-add-variable-for-extra-compiler-flags.patch \
+           file://0002-Fix-install-paths.patch \
            file://rkaiq_3A.init \
            file://rkaiq_3A.service \
 "
-SRCREV = "2e7b86441e25770b696ab6ca5a0d9298ea53333a"
-PV = "3.0-9.1+git${SRCPV}"
+SRCREV = "f0070efc11af249ddeaec87cfc99dadd4726f22f"
+PV = "5.0-1.2-rc4+git${SRCPV}"
 
 DEPENDS = "coreutils-native xxd-native rockchip-librga libdrm v4l-utils"
 
@@ -25,7 +27,10 @@ inherit pkgconfig cmake rockchip_uapi
 
 RK_ISP_VERSION = ""
 RK_ISP_VERSION:rk3588 = "ISP_HW_V30"
+IQFILES_SUBDIR = ""
+IQFILES_SUBDIR:rk3588 = "isp3x"
 RK_ISP_VERSION:rk3568 = "ISP_HW_V21"
+IQFILES_SUBDIR:rk3568 = "isp21"
 
 EXTRA_OECMAKE = "     \
     -DARCH=${@bb.utils.contains('TUNE_FEATURES', 'aarch64', 'aarch64', 'arm', d)} \
@@ -36,7 +41,7 @@ EXTRA_OECMAKE = "     \
 
 do_install:append () {
 	install -d ${D}${sysconfdir}/iqfiles
-	install -m 0644 ${S}/iqfiles/*/*.json ${D}${sysconfdir}/iqfiles/
+	install -m 0644 ${S}/rkaiq/iqfiles/${IQFILES_SUBDIR}/*.json ${D}${sysconfdir}/iqfiles/
 
 	install -d ${D}${sysconfdir}/init.d
 	install -m 0755 ${WORKDIR}/rkaiq_3A.init ${D}${sysconfdir}/init.d/rkaiq_3A
