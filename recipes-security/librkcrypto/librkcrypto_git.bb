@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Proprietary;md5=0557f9d92cf58f2
 SRC_REPO = "gitlab.com/firefly-linux/external/security/librkcrypto;protocol=https"
 SRCBRANCH = "rk3588/firefly"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
-SRCREV = "95f918a0bb627f3f12c82ab0e4a888c5330583e7"
+SRCREV = "ede9855ad4f2b04693f1ad0ce7d2bf1d294c51b6"
 
 SRC_URI += "file://0001-CMakeLists-changes-for-OE-builds.patch"
 
