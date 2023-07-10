@@ -1,4 +1,4 @@
-DESCRIPTION = "Rockchip out-of-tree drivers for supported WiFi/BT devices"
+DESCRIPTION = "Rockchip/Broadcom out-of-tree bcmdhd driver"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://Makefile;endline=1;md5=daad6f7f7a0a286391cd7773ccf79340"
 
