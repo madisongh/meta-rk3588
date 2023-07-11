@@ -24,6 +24,7 @@ inherit allarch
 RKWIFIBT_FIRMWARE_PATHS ?= "\
    broadcom/AP6398SV \
    realtek/RTL8852BS \
+   realtek/RTL8723DS \
 "
 
 do_compile() {
@@ -44,7 +45,7 @@ do_install() {
     install -m 0644 -t ${D}${nonarch_base_libdir}/firmware ${S}/extra/LICENCE.*
 }
 
-PACKAGES =+ "${PN}-ap6398sv ${PN}-broadcom-license ${PN}-rtl8852bs ${PN}-rtlwifi-license"
+PACKAGES =+ "${PN}-ap6398sv ${PN}-broadcom-license ${PN}-rtl8723ds ${PN}-rtl8852bs ${PN}-rtlwifi-license"
 NO_GENERIC_LICENSE[Firmware-rk-bcm43xx] = "extra/LICENCE.broadcom_bcm43xx"
 FILES:${PN}-broadcom-license = "${nonarch_base_libdir}/firmware/LICENCE.broadcom_bcm43xx"
 LICENSE:${PN}-broadcom-license = "Firmware-rk-bcm43xx"
@@ -61,6 +62,19 @@ FILES:${PN}-ap6398sv = "\
 "
 LICENSE:${PN}-ap6398sv = "Firmware-rk-bcm43xx"
 RDEPENDS:${PN}-ap6398sv = "${PN}-broadcom-license"
+
+FILES:${PN}-rtl8723ds = "\
+    ${nonarch_base_libdir}/firmware/mp_rtl8723d_config \
+    ${nonarch_base_libdir}/firmware/mp_rtl8723d_fw \
+    ${nonarch_base_libdir}/firmware/rtl8723d_config \
+    ${nonarch_base_libdir}/firmware/rtl8723d_fw \
+    ${nonarch_base_libdir}/firmware/rtlbt/mp_rtl8723d_config \
+    ${nonarch_base_libdir}/firmware/rtlbt/mp_rtl8723d_fw \
+    ${nonarch_base_libdir}/firmware/rtlbt/rtl8723d_config \
+    ${nonarch_base_libdir}/firmware/rtlbt/rtl8723d_fw \
+"
+LICENSE:${PN}-rtl8723ds = "Firmware-rk-rtlwifi"
+RDEPENDS:${PN}-rtl8723ds = "${PN}-rtlwifi-license"
 
 FILES:${PN}-rtl8852bs = "\
     ${nonarch_base_libdir}/firmware/rtl8852bs_config \
