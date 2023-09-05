@@ -1,7 +1,7 @@
 COMPATIBLE_MACHINE = "(-)"
 COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 
-SRCREV = "3d5e678ca9fb59c28f0cf9ad5ccdb4c555076476"
+SRCREV = "06f140d6f5c5561b0754713720eb4bc2f947c2ab"
 # Bump RK_UAPI_SRCREV only if the Rockchip-specific UAPI headers change
 RK_UAPI_SRCREV = "41686f3616521eab5c5d0d8d2b9ed9f0dc22c432"
 SRC_REPO = "github.com/madisongh/linux-rockchip-downstream.git;protocol=https"
