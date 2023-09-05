@@ -11,9 +11,9 @@ COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 SRC_REPO = "github.com/rockchip-linux/rknpu2.git;protocol=https"
 SRCBRANCH = "master"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
-SRCREV = "4e2101af40a6cbe253eb680673846b7ec832a896"
+SRCREV = "f29bfee21066a35a0a6b789208b630144735acd4"
 
-PV = "1.5.0+git${SRCPV}"
+PV = "1.5.2+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"

@@ -1,4 +1,4 @@
-From 84df8b183b1930db670a5b8bb6b8f1f3dec32570 Mon Sep 17 00:00:00 2001
+From 82d8dcbfbb986a6d405c1df6cfacdc2fd86cd97f Mon Sep 17 00:00:00 2001
 From: Matt Madison <matt@madison.systems>
 Date: Wed, 5 Apr 2023 11:15:50 -0700
 Subject: [PATCH 1/2] OE builds of examples
@@ -9,11 +9,11 @@ Signed-off-by: Matt Madison <matt@madison.systems>
  examples/rknn_api_demo/CMakeLists.txt         | 139 ++++-------------
  examples/rknn_benchmark/CMakeLists.txt        |  36 +----
  examples/rknn_common_test/CMakeLists.txt      |  43 +-----
- .../CMakeLists.txt                            |  80 ++--------
+ .../CMakeLists.txt                            | 113 +-------------
  examples/rknn_mobilenet_demo/CMakeLists.txt   |  45 +-----
  .../rknn_multiple_input_demo/CMakeLists.txt   |  33 +---
  examples/rknn_yolov5_demo/CMakeLists.txt      | 145 +++++-------------
- 8 files changed, 117 insertions(+), 422 deletions(-)
+ 8 files changed, 107 insertions(+), 465 deletions(-)
  create mode 100644 examples/CMakeLists.txt
 
 diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
@@ -321,10 +321,10 @@ index 17ee9dc..c5b61c9 100755
 +install(TARGETS rknn_common_test DESTINATION ${CMAKE_INSTALL_BINDIR})
 +install(FILES model/cat_224x224.jpg DESTINATION ${CMAKE_INSTALL_DATADIR}/rknn/models)
 diff --git a/examples/rknn_dynamic_shape_input_demo/CMakeLists.txt b/examples/rknn_dynamic_shape_input_demo/CMakeLists.txt
-index e06d16a..34a95db 100644
+index 00cadd9..4380c9a 100644
 --- a/examples/rknn_dynamic_shape_input_demo/CMakeLists.txt
 +++ b/examples/rknn_dynamic_shape_input_demo/CMakeLists.txt
-@@ -2,75 +2,23 @@ cmake_minimum_required(VERSION 3.4.1)
+@@ -2,113 +2,8 @@ cmake_minimum_required(VERSION 3.4.1)
  
  project(rknn_dynshape_demo)
  
@@ -333,6 +333,9 @@ index e06d16a..34a95db 100644
 +set(CMAKE_CXX_STANDARD 11)
 +set(CMAKE_CXX_STANDARD_REQUIRED ON)
  
+-# skip 3rd-party lib dependencies
+-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--allow-shlib-undefined")
+-
 -# rknn api
 -if(TARGET_SOC STREQUAL "rk356x")
 -  set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../runtime/RK356X/${CMAKE_SYSTEM_NAME}/librknn_api)
@@ -365,20 +368,30 @@ index e06d16a..34a95db 100644
 -    set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/../3rdparty/opencv/opencv-linux-aarch64/share/OpenCV)
 -  endif()
 -endif()
-+find_library(RKNN_RT_LIB rknnrt REQUIRED)
-+find_library(CNPY cnpy REQUIRED)
- find_package(OpenCV REQUIRED)
- 
+-find_package(OpenCV REQUIRED)
+-
+-# mmz
+-set(MPI_MMZ_PATH ${CMAKE_SOURCE_DIR}/../3rdparty/rk_mpi_mmz)
+-
+-if(CMAKE_SYSTEM_NAME STREQUAL "Android")
+-  set(MPI_MMZ_LIB ${MPI_MMZ_PATH}/lib/Android/${CMAKE_ANDROID_ARCH_ABI}/libmpimmz.so)
+-else()
+-  if(CMAKE_C_COMPILER MATCHES "aarch64")
+-    set(LIB_ARCH aarch64)
+-  else()
+-    set(LIB_ARCH armhf)
+-  endif()
+-
+-  set(MPI_MMZ_LIB ${MPI_MMZ_PATH}/lib/Linux//${LIB_ARCH}/libmpimmz.so)
+-endif()
+-include_directories(${MPI_MMZ_PATH}/include)
+-
 -#### cnpy
 -set(CNPY_ROOT ${CMAKE_SOURCE_DIR}/../3rdparty/cnpy)
 -include_directories(${CNPY_ROOT})
 -
 -set(CMAKE_INSTALL_RPATH "lib")
-+add_executable(rknn_ssd_demo
-+        src/main.cc
-+        src/ssd.cc
-+        )
- 
+-
 -### 普通API Demo
 -add_executable(rknn_dynshape_inference
 -    src/rknn_dynshape_inference.cc
@@ -387,12 +400,8 @@ index e06d16a..34a95db 100644
 -target_link_libraries(rknn_dynshape_inference
 -  ${RKNN_RT_LIB}
 -  ${OpenCV_LIBS}
-+target_link_libraries(rknn_ssd_demo
-+	${CNPY_LIBS}
-+	${RKNN_RT_LIB}
-+	${OpenCV_LIBS}
- )
- # install target and libraries
+-)
+-# install target and libraries
 -set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install/rknn_dynshape_demo_${CMAKE_SYSTEM_NAME})
 -install(TARGETS rknn_dynshape_inference DESTINATION ./)
 -
@@ -406,12 +415,32 @@ index e06d16a..34a95db 100644
 -  ${OpenCV_LIBS}
 -)
 -# install target and libraries
--set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install/rknn_dynshape_demo_${CMAKE_SYSTEM_NAME})
 -install(TARGETS rknn_dynshape_inference_zero_copy DESTINATION ./)
 -
 -install(DIRECTORY model DESTINATION ./)
 -install(DIRECTORY images DESTINATION ./)
 -install(PROGRAMS ${RKNN_RT_LIB} DESTINATION lib)
+-
+-
+-
+-# At present, mmz　demo is only available under Android, but not for Linux temporarily,
+-# mainly because libmpimmz.so has no Linux implementation now. The API of the NPU itself supports Linux.
+-if(CMAKE_SYSTEM_NAME STREQUAL "Android")
+-  # rknn_dynshape_inference_zero_copy_alloc_outside
+-  add_executable(rknn_dynshape_inference_zero_copy_alloc_outside
+-    src/rknn_dynshape_inference_zero_copy_alloc_outside.cc
+-    ${CNPY_ROOT}/cnpy.cpp
+-  )
+-
+-  target_link_libraries(rknn_dynshape_inference_zero_copy_alloc_outside
+-    ${RKNN_RT_LIB}
+-    ${MPI_MMZ_LIB}
+-  )
+-
+-  # install target and libraries
+-  install(TARGETS rknn_dynshape_inference_zero_copy_alloc_outside DESTINATION ./)
+-endif()
+\ No newline at end of file
 +install(TARGETS rknn_ssd_demo DESTINATION ${CMAKE_INSTALL_BINDIR})
 +install(FILES model/box_priors.txt model/coco_labels_list.txt model/${TARGET_SOC}/ssd_inception_v2.rknn DESTINATION ${CMAKE_INSTALL_DATADIR}/rknn/models)
 diff --git a/examples/rknn_mobilenet_demo/CMakeLists.txt b/examples/rknn_mobilenet_demo/CMakeLists.txt
