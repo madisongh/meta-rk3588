@@ -12,10 +12,10 @@ PV = "1.0+git${SRCPV}"
 COMPATIBLE_MACHINE = "(-)"
 COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 COMPATIBLE_MACHINE:class-native = ""
+COMPATIBLE_MACHINE:class-nativesdk = ""
 
 PROVIDES:class-native = "rockchip-rkbin-tools-native"
-
-inherit nopackages
+PROVIDES:class-nativesdk = "nativesdk-rockchip-rkbin-tools"
 
 S = "${WORKDIR}/git"
 
@@ -24,6 +24,9 @@ RKBIN_PREFIX = "${SOC_FAMILY}"
 # Need binaries prefixed with rk3566, rk3568, and rk356x
 RKBIN_PREFIX:rk3568 = "rk356"
 RKBIN_INI_PREFIX = "${@d.getVar('RKBIN_PREFIX').upper()}"
+
+TOOLS_BINARIES = "boot_merger rk_sign_tool"
+TOOLS_FILES = "setting.ini"
 
 do_configure() {
     :
@@ -41,16 +44,28 @@ do_install() {
 }
 
 do_install:class-native() {
+    install_tools
+}
+
+do_install:class-nativesdk() {
+    install_tools
+}
+
+install_tools() {
     install -d ${D}${bindir}/rkbin-tools
-    for f in ${S}/tools/*; do
-        [ -f "$f" ] || continue
-        if [ "${f%%.ini}" != "$f" -o "${f%%.txt}" != "$f" ]; then
-            install -m 0644 "$f" ${D}${bindir}/rkbin-tools/
-        else
-            install -m 0755 "$f" ${D}${bindir}/rkbin-tools/
-        fi
+    for f in ${TOOLS_BINARIES}; do
+	install -m 0755 ${S}/tools/$f ${D}${bindir}/rkbin-tools/
+    done
+    for f in ${TOOLS_FILES}; do
+	install -m 0644 ${S}/tools/$f ${D}${bindir}/rkbin-tools/
     done
 }
 
-BBCLASSEXTEND = "native"
+PACKAGES =+ "${PN}-tools"
+ALLOW_EMPTY:${PN} = "1"
+ALLOW_EMPTY:${PN}-tools = "1"
+FILES:${PN} = "${datadir}/rkbin"
+FILES:${PN}-tools = "${bindir}"
+
+BBCLASSEXTEND = "native nativesdk"
 PACKAGE_ARCH:class-target = "${SOC_FAMILY_PKGARCH}"
