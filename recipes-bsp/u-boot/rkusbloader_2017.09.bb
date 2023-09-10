@@ -12,10 +12,14 @@ PROVIDES = "rkusbloader"
 SRC_URI:append:rk3588 = " file://rk3588-ipc.cfg"
 SRC_URI:append:rk3568 = " file://rk3568-usbplug.cfg"
 
-do_compile:append() {
-    make_rockchip_loader
+do_install() {
+    :
 }
+do_install[noexec] = "1"
 
-do_deploy:append() {
+addtask assemble_rkusbloader after do_compile before do_deploy
+addtask rk_sign_usbloader after do_assemble_rkusbloader before do_deploy
+
+do_deploy() {
     deploy_rockchip_loader
 }
