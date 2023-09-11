@@ -34,22 +34,12 @@ python __anonymous () {
         if image:
             d.appendVarFlag('do_assemble_fitimage_initramfs', 'depends', ' ${INITRAMFS_IMAGE}:do_image_complete')
 
-        ubootenv = d.getVar('UBOOT_ENV')
-        if ubootenv:
-            d.appendVarFlag('do_assemble_fitimage', 'depends', ' virtual/bootloader:do_populate_sysroot')
-
         #check if there are any dtb providers
         providerdtb = d.getVar("PREFERRED_PROVIDER_virtual/dtb")
         if providerdtb:
             d.appendVarFlag('do_assemble_fitimage_initramfs', 'depends', ' virtual/dtb:do_populate_sysroot')
             d.setVar('EXTERNAL_KERNEL_DEVICETREE', "${RECIPE_SYSROOT}/boot/devicetree")
 
-        # Verified boot will sign the fitImage and append the public key to
-        # U-Boot dtb. We ensure the U-Boot dtb is deployed before assembling
-        # the fitImage:
-        if d.getVar('UBOOT_SIGN_ENABLE') == "1" and d.getVar('UBOOT_DTB_BINARY'):
-            uboot_pn = d.getVar('PREFERRED_PROVIDER_u-boot') or 'u-boot'
-            d.appendVarFlag('do_assemble_fitimage_initramfs', 'depends', ' %s:do_populate_sysroot' % uboot_pn)
 }
 
 
@@ -688,6 +678,7 @@ do_assemble_fitimage_initramfs() {
 	fi
 }
 do_assemble_fitimage_initramfs[depends] += "${@'virtual/bootloader:do_uboot_generate_rsa_keys' if d.getVar('UBOOT_SIGN_ENABLE') == '1' else ''}"
+do_assemble_fitimage_initramfs[depends] += "${@'virtual/bootloader:do_populate_sysroot' if d.getVar('UBOOT_ENV') or bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else ''}"
 do_assemble_fitimage_initramfs[dirs] = "${B}"
 
 addtask assemble_fitimage_initramfs before do_deploy after do_bundle_initramfs

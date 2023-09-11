@@ -39,12 +39,17 @@ inherit uboot-config
 # Enable use of a U-Boot fitImage
 UBOOT_FITIMAGE_ENABLE ?= "1"
 
-# Signature activation - these require their respective fitImages
+# Check RK_SECURE_BOOT when you need to determine if signing is being
+# used.
 RK_SECURE_BOOT ??= "0"
+# These next two variables drive whether the signing happens directly
+# during the build or not.  If you use an external signing service,
+# set these to 0.
 UBOOT_SIGN_ENABLE ?= "${@'1' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else '0'}"
 SPL_SIGN_ENABLE ?= "${@'1' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else '0'}"
 
-# Rockchip scripts assume 'dev' is the key name
+# Rockchip scripts assume 'dev' is the key name, and should be used
+# for both the U-Boot FIT and the kernel FIT.
 SPL_SIGN_KEYNAME ?= "dev"
 UBOOT_SIGN_KEYNAME ?= "${SPL_SIGN_KEYNAME}"
 SPL_SIGN_KEYDIR ?= "${TOPDIR}/signing-keys"
@@ -93,26 +98,14 @@ UBOOT_FIT_GENERATE_KEYS ?= "0"
 # Size of private keys in number of bits
 # For Rockchip secure boot, should use same key and key size for
 # u-boot and kernel FITs
-FIT_SIGN_NUMBITS ?= "${UBOOT_FIT_SIGN_NUMBITS}"
 UBOOT_FIT_SIGN_NUMBITS ?= "2048"
-
-# args to openssl genrsa (Default is just the public exponent)
-FIT_KEY_GENRSA_ARGS ?= "-F4"
-UBOOT_FIT_KEY_GENRSA_ARGS ?= "-F4"
 
 # args to openssl req (Default is -batch for non interactive mode and
 # -new for new certificate)
-FIT_KEY_REQ_ARGS ?= "-batch -new"
 UBOOT_FIT_KEY_REQ_ARGS ?= "-batch -new"
 
 # Standard format for public key certificate
-FIT_KEY_SIGN_PKCS ?= "-x509"
 UBOOT_FIT_KEY_SIGN_PKCS ?= "-x509"
-
-# Functions on this bbclass can apply to either U-boot or Kernel,
-# depending on the scenario
-UBOOT_PN = "${@d.getVar('PREFERRED_PROVIDER_u-boot') or 'u-boot'}"
-KERNEL_PN = "${@d.getVar('PREFERRED_PROVIDER_virtual/kernel')}"
 
 # We need (Rockchip-specific) u-boot-tools-native if we're creating a
 # U-Boot fitImage

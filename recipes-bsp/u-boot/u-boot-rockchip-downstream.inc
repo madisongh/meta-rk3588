@@ -27,8 +27,8 @@ inherit uboot-config uboot-extlinux-config rk-uboot-sign deploy python3native ke
 
 DEPENDS += "swig-native"
 DEPENDS += "bc-native dtc-native coreutils-native ${PYTHON_PN}-pyelftools-native rockchip-rkbin rockchip-rkbin-tools-native"
-UBOOT_ASSEMBLE_FITIMAGE_DEPS ?= "${@'virtual/kernel:do_deploy' if d.getVar('UBOOT_SIGN_ENABLE') == '1' else ''}"
-RKUSBLOADER_ASSEMBLE_DEPS ?= "${@'virtual/bootloader:do_deploy' if d.getVar('SPL_SIGN_ENABLE') == '1' else ''}"
+UBOOT_ASSEMBLE_FITIMAGE_DEPS ?= "${@'virtual/kernel:do_deploy' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else ''}"
+RKUSBLOADER_ASSEMBLE_DEPS ?= "${@'virtual/bootloader:do_deploy' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else ''}"
 
 export RKBIN_TOOLS = "${STAGING_BINDIR_NATIVE}/rkbin-tools"
 
@@ -68,6 +68,9 @@ do_compile() {
     unset CFLAGS
     unset CPPFLAGS
 
+    rm -rf ${B}/dtb-stash
+    mkdir -p ${B}/dtb-stash
+
     if [ ! -e ${B}/.scmversion -a ! -e ${S}/.scmversion ]
     then
         echo ${UBOOT_LOCALVERSION} > ${B}/.scmversion
@@ -84,6 +87,13 @@ do_compile() {
                 if [ $j -eq $i ]
                 then
                     oe_runmake -C ${S} O=${B}/${config} ${UBOOT_MAKE_TARGET}
+		    mkdir ${B}/dtb-stash/$config
+		    if [ -e ${B}/$config/${UBOOT_DTB_BINARY} ]; then
+		        cp ${B}/$config/${UBOOT_DTB_BINARY} ${B}/dtb-stash/$config/
+		    fi
+		    if [ -e ${B}/$config/${SPL_DIR}/${SPL_DTB_BINARY} ]; then
+		        cp ${B}/$config/${SPL_DIR}/${SPL_DTB_BINARY} ${B}/dtb-stash/$config/
+		    fi
                     for binary in ${UBOOT_BINARIES}; do
                         k=$(expr $k + 1);
                         if [ $k -eq $i ]; then
@@ -105,6 +115,12 @@ do_compile() {
         unset i
     else
         oe_runmake -C ${S} O=${B} ${UBOOT_MAKE_TARGET}
+	if [ -e ${B}/${UBOOT_DTB_BINARY} ]; then
+	    cp ${B}/${UBOOT_DTB_BINARY} ${B}/dtb-stash/
+	fi
+	if [ -e ${B}/${SPL_DIR}/${SPL_DTB_BINARY} ]; then
+	    cp ${B}/${SPL_DIR}/${SPL_DTB_BINARY} ${B}/dtb-stash/
+	fi
 
         # Generate the uboot-initial-env
         if [ -n "${UBOOT_INITIAL_ENV}" ]; then
@@ -133,18 +149,6 @@ uboot_sign_install_helper() {
     else
         bbwarn "${UBOOT_DTB_BINARY} not found in $b"
     fi
-    uboot_sign_install_spl_helper "$b" ${D}${datadir}
-}
-
-uboot_sign_install_spl_helper() {
-    local b="$1"
-    local dest="$2"
-    if [ -f "$b/${SPL_DIR}/${SPL_DTB_BINARY}" ]; then
-        install -Dm 0644 "$b/${SPL_DIR}/${SPL_DTB_BINARY}" $dest/${SPL_DTB_IMAGE}
-        ln -sf ${SPL_DTB_IMAGE} $dest/${SPL_DTB_BINARY}
-    else
-        bbwarn "${SPL_DTB_BINARY} not found in $b"
-    fi
 }
 
 do_install() {
@@ -163,8 +167,8 @@ do_install() {
                         ln -sf ${UBOOT_INITIAL_ENV}-${MACHINE}-${type}-${PV}-${PR} ${D}/${sysconfdir}/${UBOOT_INITIAL_ENV}-${type}
                         ln -sf ${UBOOT_INITIAL_ENV}-${MACHINE}-${type}-${PV}-${PR} ${D}/${sysconfdir}/${UBOOT_INITIAL_ENV}
                     fi
-                    if [ "${UBOOT_SIGN_ENABLE}" = "1" ]; then
-                        uboot_sign_install_helper ${B}/$config
+                    if ${@'true' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else 'false'}; then
+                        uboot_sign_install_helper ${B}/dtb-stash/$config
                     fi
                 fi
             done
@@ -172,8 +176,8 @@ do_install() {
         done
         unset i
     else
-        if [ "${UBOOT_SIGN_ENABLE}" = "1" ]; then
-	    uboot_sign_install_helper ${B}
+        if ${@'true' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else 'false'}; then
+            uboot_sign_install_helper ${B}/dtb-stash
         fi
         # Install the uboot-initial-env
         if [ -n "${UBOOT_INITIAL_ENV}" ]; then
@@ -264,15 +268,21 @@ FILES:${PN} = "/boot ${datadir}"
 RDEPENDS:${PN} += "${PN}-env"
 
 do_deploy() {
-    if [ "${UBOOT_SIGN_ENABLE}" = "1" -a -n "${UBOOT_DTB_BINARY}" ] ; then
+    # The DTB file itself will get deployed by the kernel recipe, so
+    # just create the symlinks here since that can't be easily done there
+    if ${@'true' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else 'false'} && [ -n "${UBOOT_DTB_BINARY}" ] ; then
         if [ -e "${UBOOT_DTB_BINARY}" ]; then
 	    ln -sf ${UBOOT_DTB_IMAGE} ${DEPLOYDIR}/${UBOOT_DTB_BINARY}
 	    ln -sf ${UBOOT_DTB_IMAGE} ${DEPLOYDIR}/${UBOOT_DTB_SYMLINK}
 	fi
     fi
 
-    if [ "${UBOOT_SIGN_ENABLE}" = "1" -a -n "${SPL_DTB_BINARY}" ] ; then
-        uboot_sign_install_spl_helper ${B} ${DEPLOYDIR}
+    # Stage the SPL DTB with the RSA public key in it, for use when
+    # constructing the USB loader
+    if ${@'true' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else 'false'} && \
+	    [ -n "${SPL_DTB_BINARY}" -a -f ${B}/${SPL_DIR}/${SPL_DTB_BINARY} ] ; then
+        install -Dm 0644 ${B}/${SPL_DIR}/${SPL_DTB_BINARY} ${DEPLOYDIR}/${SPL_DTB_IMAGE}
+	ln -sf ${SPL_DTB_IMAGE} ${DEPLOYDIR}/${SPL_DTB_BINARY}
     fi
 
     if [ -n "${UBOOT_CONFIG}" ]
@@ -424,11 +434,12 @@ do_uboot_assemble_fitimage() {
 
 	# Pick up the u-boot DTB with the RSA public key inserted
 	# by the kernel recipe's signing task, and make sure we're
-	# using the clean u-boot-spl.dtb staged into the sysroot,
-	# rather than one that has the public key inserted
+	# using the clean u-boot-spl.dtb staged into the dtb-stash
+	# subdirectory we created just after compilation, rather
+	# than one that has the public key inserted
 	if [ "${UBOOT_SIGN_ENABLE}" = "1" ]; then
 		cp ${DEPLOY_DIR_IMAGE}/${UBOOT_DTB_IMAGE} ${B}/u-boot.dtb
-		cp ${SYSROOT_DESTDIR}${datadir}/u-boot-spl.dtb ${B}/spl
+		cp ${B}/dtb-stash/u-boot-spl.dtb ${B}/spl
 		mkdir -p keys
 		cp ${SPL_SIGN_KEYDIR}/${SPL_SIGN_KEYNAME}.* keys/
 	fi
@@ -476,11 +487,13 @@ do_uboot_generate_rsa_keys() {
 	fi
 
 	if [ "${SPL_SIGN_ENABLE}" = "1" ] && [ "${UBOOT_FIT_GENERATE_KEYS}" = "1" ]; then
-
 		# Generate keys only if they don't already exist
 		if [ ! -f "${SPL_SIGN_KEYDIR}/${SPL_SIGN_KEYNAME}".key ] || \
 			[ ! -f "${SPL_SIGN_KEYDIR}/${SPL_SIGN_KEYNAME}".crt ]; then
 
+			if [ "${RK_SIGN_BURN_KEY_HASH}" = "1" ]; then
+				bberror "RK_SIGN_BURN_KEY_HASH enabled, but keys are being dynamically generated.  Build with that setting disabled first and safely store keys before burning the key hash."
+			fi
 			echo "Using rk_sign_tool to generate RSA key"
 			cp ${RKBIN_TOOLS}/rk_sign_tool ${RKBIN_TOOLS}/setting.ini .
 			./rk_sign_tool kk --bits=${UBOOT_FIT_SIGN_NUMBITS} --out .
@@ -549,11 +562,14 @@ do_assemble_rkusbloader() {
 	# If we're signing the U-Boot FIT (not the kernel one), make
 	# sure we pick up the SPL DTB that has the public key
 	# inserted, otherwise just make sure we've got a clean copy of
-	# the SPL with the device tree appended
-	if [ "${SPL_SIGN_ENABLE}" = "1" ]; then
-		cat spl/u-boot-spl-nodtb.bin ${DEPLOY_DIR_IMAGE}/${SPL_DTB_IMAGE} > spl/u-boot-spl.bin
-	else
-		cat spl/u-boot-spl-nodtb.bin spl/u-boot-spl.dtb > spl/u-boot-spl.bin
+	# the SPL with the device tree appended, for platforms that
+	# use the built SPL with the USB loader.
+	if grep -q '^CONFIG_SPL=y' .config; then
+		if ${@'true' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else 'false'}; then
+			cat spl/u-boot-spl-nodtb.bin ${DEPLOY_DIR_IMAGE}/${SPL_DTB_IMAGE} > spl/u-boot-spl.bin
+		else
+			cat spl/u-boot-spl-nodtb.bin spl/u-boot-spl.dtb > spl/u-boot-spl.bin
+		fi
 	fi
 
 	./make.sh ${LOADER_TARGET}
