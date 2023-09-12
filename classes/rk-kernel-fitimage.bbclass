@@ -697,11 +697,32 @@ kernel_do_install:append() {
 
 
 kernel_do_deploy[vardepsexclude] = "DATETIME"
+# XXX Another workaround for our lack of base fitImage when we have an initramfs image (bundled or not)
+kernel_do_deploy:prepend() {
+    if [ -n "${INITRAMFS_IMAGE}" ]; then
+        touch ${KERNEL_OUTPUT_DIR}/fitImage
+    fi
+}
 kernel_do_deploy:append() {
 	# Update deploy directory
 	if echo ${KERNEL_IMAGETYPES} | grep -wq "fitImage"; then
 
-		if [ "${INITRAMFS_IMAGE_BUNDLE}" != "1" ]; then
+		if [ -n "${INITRAMFS_IMAGE}" ]; then
+			# XXX clean up the empty created in the :prepend above
+			rm -f ${KERNEL_OUTPUT_DIR}/fitImage
+			rm -f $deployDir/fitImage${KERNEL_IMAGE_BIN_EXT} $deployDir/fitImage $deployDir/fitImage-${KERNEL_IMAGE_LINK_NAME}${KERNEL_IMAGE_BIN_EXT}
+			bbnote "Copying fit-image-${INITRAMFS_IMAGE}.its source file..."
+			install -m 0644 ${B}/fit-image-${INITRAMFS_IMAGE}.its "$deployDir/fitImage-its-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_NAME}.its"
+			if [ -n "${KERNEL_FIT_LINK_NAME}" ] ; then
+				ln -snf fitImage-its-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_NAME}.its "$deployDir/fitImage-its-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_LINK_NAME}"
+			fi
+
+			bbnote "Copying fitImage-${INITRAMFS_IMAGE} file..."
+			install -m 0644 ${B}/arch/${ARCH}/boot/fitImage-${INITRAMFS_IMAGE} "$deployDir/fitImage-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_NAME}${KERNEL_FIT_BIN_EXT}"
+			if [ -n "${KERNEL_FIT_LINK_NAME}" ] ; then
+				ln -snf fitImage-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_NAME}${KERNEL_FIT_BIN_EXT} "$deployDir/fitImage-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_LINK_NAME}"
+			fi
+		else
 			bbnote "Copying fit-image.its source file..."
 			install -m 0644 ${B}/fit-image.its "$deployDir/fitImage-its-${KERNEL_FIT_NAME}.its"
 			if [ -n "${KERNEL_FIT_LINK_NAME}" ] ; then
@@ -715,24 +736,8 @@ kernel_do_deploy:append() {
 			fi
 		fi
 
-		if [ -n "${INITRAMFS_IMAGE}" ]; then
-			bbnote "Copying fit-image-${INITRAMFS_IMAGE}.its source file..."
-			install -m 0644 ${B}/fit-image-${INITRAMFS_IMAGE}.its "$deployDir/fitImage-its-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_NAME}.its"
-			if [ -n "${KERNEL_FIT_LINK_NAME}" ] ; then
-				ln -snf fitImage-its-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_NAME}.its "$deployDir/fitImage-its-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_LINK_NAME}"
-			fi
-
-			if [ "${INITRAMFS_IMAGE_BUNDLE}" != "1" ]; then
-				bbnote "Copying fitImage-${INITRAMFS_IMAGE} file..."
-				install -m 0644 ${B}/arch/${ARCH}/boot/fitImage-${INITRAMFS_IMAGE} "$deployDir/fitImage-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_NAME}${KERNEL_FIT_BIN_EXT}"
-				if [ -n "${KERNEL_FIT_LINK_NAME}" ] ; then
-					ln -snf fitImage-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_NAME}${KERNEL_FIT_BIN_EXT} "$deployDir/fitImage-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_LINK_NAME}"
-				fi
-			fi
-		fi
 	fi
-	if [ "${UBOOT_SIGN_ENABLE}" = "1" -o "${UBOOT_FITIMAGE_ENABLE}" = "1" ] && \
-	   [ -n "${UBOOT_DTB_BINARY}" ] ; then
+	if [ "${UBOOT_SIGN_ENABLE}" = "1" -a -n "${UBOOT_DTB_BINARY}" ]; then
 		# UBOOT_DTB_IMAGE is a realfile, but we can't use
 		# ${UBOOT_DTB_IMAGE} since it contains ${PV} which is aimed
 		# for u-boot, but we are in kernel env now.
