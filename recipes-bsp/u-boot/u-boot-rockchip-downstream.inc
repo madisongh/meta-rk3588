@@ -578,12 +578,10 @@ do_assemble_rkusbloader[dirs] = "${B}"
 do_assemble_rkusbloader[depends] += "${RKUSBLOADER_ASSEMBLE_DEPS}"
 
 deploy_rockchip_binaries() {
-	cd ${B}
-
 	for binary in "${RK_IDBLOCK_IMG}" "${RK_LOADER_BIN}" "${RK_TRUST_IMG}";do
-		[ -f "${binary}" ] || continue
-		install "${binary}" "${DEPLOYDIR}/${binary}-${PV}"
-		ln -sf "${binary}-${PV}" "${DEPLOYDIR}/${binary}"
+		[ -f "${B}/$binary" ] || continue
+		install "${B}/$binary" "${DEPLOYDIR}/$binary-${PV}"
+		ln -sf "$binary-${PV}" "${DEPLOYDIR}/$binary"
 	done
 }
 
