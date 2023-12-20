@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Proprietary;md5=0557f9d92cf58f2
 SRC_REPO = "gitlab.com/firefly-linux/rkbin.git;protocol=https"
 SRCBRANCH = "rk3588/firefly"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
-SRCREV = "3614a5114200cc12d71efb2172ea2aef302b5b7c"
+SRCREV = "aba33eb6f88991d2603d91e1afbe28165cf6e8ba"
 
 PV = "1.0+git${SRCPV}"
 
@@ -25,7 +25,7 @@ RKBIN_PREFIX = "${SOC_FAMILY}"
 RKBIN_PREFIX:rk3568 = "rk356"
 RKBIN_INI_PREFIX = "${@d.getVar('RKBIN_PREFIX').upper()}"
 
-TOOLS_BINARIES = "boot_merger rk_sign_tool"
+TOOLS_BINARIES = "boot_merger trust_merger loaderimage rk_sign_tool"
 TOOLS_FILES = "setting.ini"
 
 do_configure() {
