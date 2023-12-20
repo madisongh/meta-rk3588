@@ -1,0 +1,1 @@
+inherit rockchip_uapi
