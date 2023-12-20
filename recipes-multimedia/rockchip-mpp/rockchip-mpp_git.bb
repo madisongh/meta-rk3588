@@ -9,15 +9,13 @@ LIC_FILES_CHKSUM = "file://inc/rk_mpi.h;beginline=4;endline=14;md5=acbba394ae563
 SRC_REPO = "github.com/rockchip-linux/mpp.git;protocol=https"
 SRCBRANCH = "develop"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
-SRCREV = "ae444a6cb5cde1116ea523ed31b0e5cc13a0b536"
+SRCREV = "ed377c99a733e2cdbcc457a6aa3f0fcd438a9dff"
 
 PV = "1.3.8+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
 inherit pkgconfig cmake rockchip_uapi
-
-EXTRA_OECMAKE = "-DHAVE_DRM=ON"
 
 PACKAGES =+ "${PN}-tests ${PN}-legacy-vpu"
 FILES:${PN}-tests = "${bindir}"
