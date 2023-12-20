@@ -1,11 +1,11 @@
 COMPATIBLE_MACHINE = "(-)"
 COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 
-SRCREV = "06f140d6f5c5561b0754713720eb4bc2f947c2ab"
+SRCREV = "75c5fc2ccf7d9942777303948a6d1ea4da99fff9"
 # Bump RK_UAPI_SRCREV only if the Rockchip-specific UAPI headers change
-RK_UAPI_SRCREV = "41686f3616521eab5c5d0d8d2b9ed9f0dc22c432"
+RK_UAPI_SRCREV = "7d3da7bcf26ee3042da7978d3ae1921fe299f2ca"
 SRC_REPO = "github.com/madisongh/linux-rockchip-downstream.git;protocol=https"
-SRCBRANCH = "patches-rockchip-5.10.160"
+SRCBRANCH = "patches-2023.12-rockchip-5.10.160"
 KBRANCH = "${SRCBRANCH}"
 SRC_URI = "git://${SRC_REPO};branch=${KBRANCH}"
 BB_GIT_SHALLOW ?= "1"
