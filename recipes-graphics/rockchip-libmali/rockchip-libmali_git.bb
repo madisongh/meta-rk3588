@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://END_USER_LICENCE_AGREEMENT.txt;md5=3918cc9836ad038c5a
 SRC_REPO = "gitlab.com/firefly-linux/external/libmali.git;protocol=https"
 SRCBRANCH = "rk3588/firefly"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
-SRCREV = "b51d8f9c4f3b67ac1fd0cd57087451d2f7348249"
+SRCREV = "c0a0122e56871dc5099cf5edafc34466878e0258"
 
 PV = "1.9.0+git${SRCPV}"
 
