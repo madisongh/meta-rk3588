@@ -16,7 +16,7 @@ EXTRA_OEMAKE:class-target = 'CROSS_COMPILE="${TARGET_PREFIX}" CC="${CC} ${CFLAGS
 EXTRA_OEMAKE:class-native = 'CC="${BUILD_CC} ${BUILD_CFLAGS} ${BUILD_LDFLAGS}" HOSTCC="${BUILD_CC} ${BUILD_CFLAGS} ${BUILD_LDFLAGS}" STRIP=true V=1 CONFIG_ARCH_ROCKCHIP=1'
 EXTRA_OEMAKE:class-nativesdk = 'CROSS_COMPILE="${HOST_PREFIX}" CC="${CC} ${CFLAGS} ${LDFLAGS}" HOSTCC="${BUILD_CC} ${BUILD_CFLAGS} ${BUILD_LDFLAGS}" STRIP=true V=1 CONFIG_ARCH_ROCKCHIP=1'
 
-RK_TOOLS = "boot_merger trust_merger loaderimage resource_tool fit_info"
+RK_TOOLS = "resource_tool fit_info"
 
 do_configure () {
 	# Yes, this is crazy. If you build on a system with git < 2.14 from scratch, the tree will

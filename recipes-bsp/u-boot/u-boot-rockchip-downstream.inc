@@ -467,16 +467,19 @@ do_uboot_assemble_fitimage() {
 
 	# Generate idblock image
 	bbnote "${PN}: Generating ${RK_IDBLOCK_IMG} from ${RK_LOADER_BIN}"
-	./tools/boot_merger --unpack "${RK_LOADER_BIN}"
+	rm -rf idblock
+	mkdir -p idblock
+	${RKBIN_TOOLS}/boot_merger unpack -i "${RK_LOADER_BIN}" -o idblock
 
-	if [ -f FlashHead ]; then
-		cat FlashHead FlashData > "${RK_IDBLOCK_IMG}"
+	if [ -f idblock/FlashHead.bin ]; then
+		cat idblock/FlashHead.bin idblock/FlashData.bin > "${RK_IDBLOCK_IMG}"
 	else
-		./tools/mkimage -n "${SOC_FAMILY}" -T rksd -d FlashData \
+		./tools/mkimage -n "${SOC_FAMILY}" -T rksd -d idblock/FlashData.bin \
 			"${RK_IDBLOCK_IMG}"
 	fi
 
-	cat FlashBoot >> "${RK_IDBLOCK_IMG}"
+	cat idblock/FlashBoot.bin >> "${RK_IDBLOCK_IMG}"
+	rm -rf idblock
 
 }
 do_uboot_assemble_fitimage[dirs] = "${B}"
