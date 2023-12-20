@@ -1,7 +1,7 @@
 SRC_REPO = "gitlab.com/firefly-linux/external/security/rk_tee_user.git;protocol=https"
 SRCBRANCH = "rk3588/firefly"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
-SRCREV = "bad597104b432fce87b0d83feb561d2c62e9b912"
+SRCREV = "6f741be69106e02d45566522affbdc9f3ed4bd36"
 
 PV = "3.13.0-rk+git${SRCPV}"
 
