@@ -12,6 +12,7 @@ S = "${WORKDIR}/git"
 
 HEADER_OVERRIDES = "\
     drm/drm_fourcc.h \
+    linux/cec.h \
     linux/dma-buf.h \
     linux/dma-heap.h \
     linux/fec-config.h \
