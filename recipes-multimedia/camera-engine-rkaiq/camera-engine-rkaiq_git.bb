@@ -8,15 +8,15 @@ COMPATIBLE_MACHINE = "(-)"
 COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 
 SRC_REPO = "gitlab.com/firefly-linux/external/camera_engine_rkaiq.git;protocol=https"
-SRCBRANCH = "rk356x/firefly-5.10"
+SRCBRANCH = "rk3588/firefly"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH} \
            file://0001-iq_parser_v2-add-variable-for-extra-compiler-flags.patch \
            file://0002-Fix-install-paths.patch \
            file://rkaiq_3A.init \
            file://rkaiq_3A.service \
 "
-SRCREV = "711f03c4be098b2083dbdf8b7d8dbbba76bb012c"
-PV = "5.0-1.3+git${SRCPV}"
+SRCREV = "4b7e908b9faeae103c385697af5fa778f56497d7"
+PV = "5.0-3.0+git${SRCPV}"
 
 DEPENDS = "coreutils-native xxd-native rockchip-librga libdrm v4l-utils"
 
@@ -55,11 +55,12 @@ INITSCRIPT_PACKAGES = "${PN}-server"
 INITSCRIPT_NAME:${PN}-server = "rkaiq_daemons.sh"
 INITSCRIPT_PARAMS:${PN}-server = "start 70 5 4 3 2 . stop 30 0 1 6 ."
 
-PACKAGES =+ "${PN}-server ${PN}-demo ${PN}-iqfiles"
+PACKAGES =+ "${PN}-server ${PN}-tool-server ${PN}-demo ${PN}-iqfiles"
 SYSTEMD_PACKAGES = "${PN}-server"
 SYSTEMD_SERVICE:${PN}-server = "rkaiq_3A.service"
 FILES:${PN}-dev = "${includedir}"
 FILES:${PN}-demo = "${bindir}/rkisp_demo"
+FILES:${PN}-tool-server = "${bindir}/rkaiq_tool_server"
 FILES:${PN}-server = " \
 	${bindir}/rkaiq_3A_server \
 	${sysconfdir}/init.d/ \
