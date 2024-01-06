@@ -23,7 +23,6 @@ RK_OPTEE_TOOLSDEP = "${@'rk-optee-signing-tools-native' if d.getVar('RK_OPTEE_SI
 RK_OPTEE_TOOLSDEP:class-native = ""
 RK_OPTEE_TOOLSDEP:class-nativesdk = ""
 DEPENDS = "${RK_OPTEE_TOOLSDEP}"
-inherit ${RK_OPTEE_SIGNING_CLASS}
 
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
@@ -53,6 +52,10 @@ do_sign_bl32() {
     fi
 }
 do_sign_bl32[dirs] = "${B}"
+
+# Placed here to allow a user-provided signing class to override the
+# do_sign_bl32 function more easily
+inherit ${RK_OPTEE_SIGNING_CLASS}
 
 do_sign_bl32:class-native() {
     :
