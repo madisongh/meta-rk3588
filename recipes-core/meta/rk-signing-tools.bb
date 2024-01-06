@@ -6,6 +6,7 @@ TOOLCHAIN_TARGET_TASK = ""
 
 TOOLCHAIN_HOST_TASK = "\
     nativesdk-rockchip-rkbin-tools \
+    nativesdk-rk-optee-signing-tools \
     nativesdk-sdk-provides-dummy \
     "
 
