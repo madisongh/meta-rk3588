@@ -69,4 +69,4 @@ INSANE_SKIP:${PN} = "ldflags"
 # Wrong SONAME used in librk_tee_service.so
 RPROVIDES:${PN} += "optee-client libteec.so.1.0()(64bit)"
 RDEPENDS:${PN} += "optee-client-rockchip-headers"
-PACKAGE_ARCH = "${SOC_FAMILY_PKGARCH}"
+
