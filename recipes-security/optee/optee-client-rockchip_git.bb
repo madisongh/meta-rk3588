@@ -24,7 +24,7 @@ DEPENDS = "optee-client-rockchip-headers"
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
 
-inherit systemd
+inherit systemd rk-optee-ta-signing
 
 do_configure() {
     :
@@ -38,11 +38,16 @@ do_compile() {
         -e's,@sysconfdir@,${sysconfdir},g' \
         -e's,@stripped_path@,${base_sbindir}:${base_bindir}:${sbindir}:${bindir},g' \
         ${WORKDIR}/tee-supplicant.sh.in >${B}/tee-supplicant.sh
+    rm -rf ${B}/ta
+    cp -R ${S}/optee_v2/ta ${B}/
 }
 
 do_install() {
     install -d ${D}${sbindir} ${D}${includedir} ${D}${libdir} ${D}${nonarch_base_libdir}/optee_armtz
-    install -m 0644 ${S}/optee_v2/ta/*.ta ${D}${nonarch_base_libdir}/optee_armtz/
+     find ${B}/ta -type f -name '*.ta' | while read inf; do
+        outf=$(basename $inf)
+        install -m 0644 $inf ${D}${nonarch_base_libdir}/optee_armtz/$outf
+    done
     install -m 0644 ${S}/optee_v2/include/*.h ${D}${includedir}
     install -m 0755 ${S}/optee_v2/lib/arm64/tee-supplicant ${D}${sbindir}/
     install -m 0644 ${S}/optee_v2/lib/arm64/libteec.so.1.0.0 ${D}${libdir}/

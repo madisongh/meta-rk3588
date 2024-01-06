@@ -8,7 +8,7 @@ PROVIDES = "optee-test"
 
 DEPENDS = "optee-tadevkit-rockchip optee-client-rockchip python3-pyelftools-native python3-cryptography-native python3-pycryptodome-native"
 
-inherit python3native
+inherit python3native rk-optee-ta-signing
 
 export OPENSSL_MODULES="${STAGING_LIBDIR_NATIVE}/ossl-modules"
 
@@ -27,12 +27,11 @@ do_compile() {
     oe_runmake -C ${S}/host/supp_plugin CFG_TEE_PLUGIN_LOAD_PATH="${libdir}/tee-supplicant/plugins"
     oe_runmake -C ${S}/host/rk_test rk_test
 }
-
 do_compile[cleandirs] = "${B}"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/optee_armtz
-    find ${B} -name '*.ta' -exec install -m 0644 {} ${D}${nonarch_base_libdir}/optee_armtz/ \;
+    find ${B}/ta -name '*.ta' -exec install -m 0644 {} ${D}${nonarch_base_libdir}/optee_armtz/ \;
     install -d ${D}${bindir}
     install -m 0755 ${B}/xtest/xtest ${B}/rktest ${D}${bindir}
     install -d ${D}${libdir}/tee-supplicant/plugins
