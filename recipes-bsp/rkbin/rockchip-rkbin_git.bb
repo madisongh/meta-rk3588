@@ -17,7 +17,16 @@ COMPATIBLE_MACHINE:class-nativesdk = ""
 PROVIDES:class-native = "rockchip-rkbin-tools-native"
 PROVIDES:class-nativesdk = "nativesdk-rockchip-rkbin-tools"
 
+RK_OPTEE_SIGNING_PUBKEY ??= ""
+RK_OPTEE_SIGNING_CLASS ??= ""
+RK_OPTEE_TOOLSDEP = "${@'rk-optee-signing-tools-native' if d.getVar('RK_OPTEE_SIGNING_PUBKEY') else ''}"
+RK_OPTEE_TOOLSDEP:class-native = ""
+RK_OPTEE_TOOLSDEP:class-nativesdk = ""
+DEPENDS = "${RK_OPTEE_TOOLSDEP}"
+inherit ${RK_OPTEE_SIGNING_CLASS}
+
 S = "${WORKDIR}/git"
+B = "${WORKDIR}/build"
 
 RKBIN_SUBDIR = "${@d.getVar('SOC_FAMILY')[0:4]}"
 RKBIN_PREFIX = "${SOC_FAMILY}"
@@ -33,12 +42,36 @@ do_configure() {
 }
 
 do_compile() {
+    cp ${S}/bin/${RKBIN_SUBDIR}/${RKBIN_PREFIX}*bl32*.bin ${B}/
+}
+
+do_sign_bl32() {
+    if [ -n "${RK_OPTEE_SIGNING_PUBKEY}" ]; then
+        for f in ${RKBIN_PREFIX}*bl32*bin; do
+            change_puk --teebin $f --key "${RK_OPTEE_SIGNING_PUBKEY}"
+        done
+    fi
+}
+do_sign_bl32[dirs] = "${B}"
+
+do_sign_bl32:class-native() {
     :
 }
+
+do_sign_bl32:class-nativesdk() {
+    :
+}
+
+addtask sign_bl32 before do_install after do_compile
 
 do_install() {
     install -d ${D}${datadir}/rkbin/bin/${RKBIN_SUBDIR} ${D}${datadir}/rkbin/RKBOOT ${D}${datadir}/rkbin/RKTRUST
     install -m 0644 ${S}/bin/${RKBIN_SUBDIR}/${RKBIN_PREFIX}* ${D}${datadir}/rkbin/bin/${RKBIN_SUBDIR}/
+    for inf in ${B}/${RKBIN_PREFIX}*bl32*.bin; do
+        outf=$(basename $inf)
+        rm -f ${D}${datadir}/rkbin/bin/${RKBIN_SUBDIR}/$outf
+	install -m 0644 $inf ${D}${datadir}/rkbin/bin/${RKBIN_SUBDIR}/$outf
+    done
     install -m 0644 ${S}/RKBOOT/${RKBIN_INI_PREFIX}*.ini ${D}${datadir}/rkbin/RKBOOT/
     install -m 0644 ${S}/RKTRUST/${RKBIN_INI_PREFIX}*.ini ${D}${datadir}/rkbin/RKTRUST/
 }
@@ -68,4 +101,4 @@ FILES:${PN} = "${datadir}/rkbin"
 FILES:${PN}-tools = "${bindir}"
 
 BBCLASSEXTEND = "native nativesdk"
-PACKAGE_ARCH:class-target = "${SOC_FAMILY_PKGARCH}"
+PACKAGE_ARCH:class-target = "${MACHINE_ARCH}"
