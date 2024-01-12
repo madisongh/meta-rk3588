@@ -27,7 +27,7 @@ DEPENDS = "${RK_OPTEE_TOOLSDEP}"
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
 
-RKBIN_SUBDIR = "${@d.getVar('SOC_FAMILY')[0:4]}"
+RKBIN_SUBDIR = "${@d.getVar('SOC_FAMILY')[0:4] if d.getVar('SOC_FAMILY') else ''}"
 RKBIN_PREFIX = "${SOC_FAMILY}"
 # Need binaries prefixed with rk3566, rk3568, and rk356x
 RKBIN_PREFIX:rk3568 = "rk356"
