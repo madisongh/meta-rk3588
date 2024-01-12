@@ -5,7 +5,10 @@ require u-boot-rockchip-downstream-common.inc
 
 inherit cml1
 
-DEBUG_BUILD:class-native = "1"
+COMPATIBLE_MACHINE = "(-)"
+COMPATIBLE_MACHINE:rockchip = "(rockchip)"
+COMPATIBLE_MACHINE:class-native = ""
+COMPATIBLE_MACHINE:class-nativesdk = ""
 
 SRC_URI += "file://rk-u-boot-tools.cfg"
 
@@ -67,6 +70,5 @@ do_install () {
 }
 
 RDEPENDS:${PN} += "dtc rockchip-rkbin-tools"
-#RDEPENDS:${PN}:class-native = "dtc-native rockchip-rkbin-native"
 
 BBCLASSEXTEND = "native nativesdk"
