@@ -448,6 +448,14 @@ do_uboot_assemble_fitimage() {
 	# uboot.itb (U-Boot proper plus secure OS)
 	./make.sh itb
 	ln -sf u-boot.itb ${UBOOT_BINARY}
+}
+do_uboot_assemble_fitimage[dirs] = "${B}"
+do_uboot_assemble_fitimage[depends] += "${UBOOT_ASSEMBLE_FITIMAGE_DEPS}"
+
+# If you have an external signing server to re-sign your U-Boot FIT,
+# make sure it runs before this task and has installed the updated
+# u-boot-spl.dtb back into ${B}/spl.
+do_pack_rk_spl_loader() {
 	if ${@'true' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) and bb.utils.to_boolean(d.getVar('RK_SIGN_BURN_KEY_HASH'), False) else 'false'}; then
 		if grep -q '^CONFIG_SPL_FIT_HW_CRYPTO=y' .config ; then
 			fdtput -tx spl/u-boot-spl.dtb /signature/key-dev burn-key-hash 0x1
@@ -455,7 +463,6 @@ do_uboot_assemble_fitimage() {
 			bberror "burning key hash requires CONFIG_SPL_FIT_HW_CRYPTO=y"
 		fi
 	fi
-
 	# Reconstruct the SPL binaries in case the DTB has changed
 	cat spl/u-boot-spl-nodtb.bin spl/u-boot-spl.dtb > spl/u-boot-spl-dtb.bin
 	cp spl/u-boot-spl-dtb.bin spl/u-boot-spl.bin
@@ -482,8 +489,7 @@ do_uboot_assemble_fitimage() {
 	rm -rf idblock
 
 }
-do_uboot_assemble_fitimage[dirs] = "${B}"
-do_uboot_assemble_fitimage[depends] += "${UBOOT_ASSEMBLE_FITIMAGE_DEPS}"
+do_pack_rk_spl_loader[dirs] = "${B}"
 
 do_uboot_generate_rsa_keys() {
 	if [ "${SPL_SIGN_ENABLE}" = "0" ] && [ "${UBOOT_FIT_GENERATE_KEYS}" = "1" ]; then
