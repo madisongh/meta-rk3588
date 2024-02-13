@@ -651,7 +651,7 @@ fitimage_assemble() {
 			cp -P ${STAGING_DATADIR}/u-boot*.dtb ${B}
 			add_key_to_u_boot="-K ${B}/${UBOOT_DTB_BINARY}"
 		fi
-		${UBOOT_MKIMAGE} \
+		${UBOOT_MKIMAGE_SIGN} \
 			${@'-D "${UBOOT_MKIMAGE_DTCOPTS}"' if len('${UBOOT_MKIMAGE_DTCOPTS}') else ''} \
 			-f $1 -k "${UBOOT_SIGN_KEYDIR}" \
 			$add_key_to_u_boot \
