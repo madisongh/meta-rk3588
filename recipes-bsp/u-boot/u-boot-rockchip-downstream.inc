@@ -442,7 +442,10 @@ do_uboot_assemble_fitimage() {
 		cp ${DEPLOY_DIR_IMAGE}/${UBOOT_DTB_IMAGE} ${B}/u-boot.dtb
 		cp ${B}/dtb-stash/u-boot-spl.dtb ${B}/spl
 		mkdir -p keys
-		cp ${SPL_SIGN_KEYDIR}/${SPL_SIGN_KEYNAME}.* keys/
+		for f in ${SPL_SIGN_KEYDIR}/${SPL_SIGN_KEYNAME}.*; do
+		    [ -e "$f" ] || continue
+		    cp "$f" keys/
+		done
 	fi
 
 	# uboot.itb (U-Boot proper plus secure OS)
