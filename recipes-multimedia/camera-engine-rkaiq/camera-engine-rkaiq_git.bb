@@ -10,13 +10,14 @@ COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 SRC_REPO = "gitlab.com/firefly-linux/external/camera_engine_rkaiq.git;protocol=https"
 SRCBRANCH = "rk3588/firefly"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH} \
-           file://0001-iq_parser_v2-add-variable-for-extra-compiler-flags.patch \
-           file://0002-Fix-install-paths.patch \
+           file://0001-iq_parser_v2-add-variable-for-extra-compiler-flags.patch \ 
+           file://0002-Fix-install-paths.patch \ 
+           file://0003-Fix-AE-mutex-double-unlock.patch \ 
            file://rkaiq_3A.init \
            file://rkaiq_3A.service \
 "
-SRCREV = "4b7e908b9faeae103c385697af5fa778f56497d7"
-PV = "5.0-3.0+git${SRCPV}"
+SRCREV = "1d1c688752e967161db23cd3430bfc71bf24b5da"
+PV = "5.0-4.1+git${SRCPV}"
 
 DEPENDS = "coreutils-native xxd-native rockchip-librga libdrm v4l-utils"
 

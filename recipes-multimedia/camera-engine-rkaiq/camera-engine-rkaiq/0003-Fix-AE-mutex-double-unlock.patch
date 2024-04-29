@@ -1,0 +1,27 @@
+From 61b7033f4409fa21fa3a225d240c43876fd68691 Mon Sep 17 00:00:00 2001
+From: Matt Madison <matt@madison.systems>
+Date: Mon, 29 Apr 2024 05:41:19 -0700
+Subject: [PATCH 3/4] Fix AE mutex double-unlock
+
+Upstream-Status: Inappropriate [upstream does not take patches]
+
+Signed-off-by: Matt Madison <matt@madison.systems>
+---
+ rkaiq/aiq_core/algo_handlers/RkAiqAeHandle.cpp | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/rkaiq/aiq_core/algo_handlers/RkAiqAeHandle.cpp b/rkaiq/aiq_core/algo_handlers/RkAiqAeHandle.cpp
+index 9c77a410..fe34c7b5 100644
+--- a/rkaiq/aiq_core/algo_handlers/RkAiqAeHandle.cpp
++++ b/rkaiq/aiq_core/algo_handlers/RkAiqAeHandle.cpp
+@@ -278,7 +278,6 @@ XCamReturn RkAiqAeHandleInt::getExpSwAttr(Uapi_ExpSwAttrV2_t* pExpSwAttrV2) {
+         }
+     }
+ #endif
+-    mCfgMutex.unlock();
+ 
+     EXIT_ANALYZER_FUNCTION();
+     return ret;
+-- 
+2.34.1
+

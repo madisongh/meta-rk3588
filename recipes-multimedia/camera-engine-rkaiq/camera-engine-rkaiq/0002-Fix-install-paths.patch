@@ -1,13 +1,15 @@
-From 2f66b6dbf3e28485a763335ffdade312ac184779 Mon Sep 17 00:00:00 2001
+From eabd3c8c714dcb93b4291add9ccf3e3eb39eaab5 Mon Sep 17 00:00:00 2001
 From: Matt Madison <matt@madison.systems>
 Date: Sat, 8 Jul 2023 08:35:05 -0700
-Subject: [PATCH 2/2] Fix install paths
+Subject: [PATCH 2/4] Fix install paths
+
+Upstream-Status: Inappropriate [upstream does not take patches]
 
 Signed-off-by: Matt Madison <matt@madison.systems>
 ---
  rkaiq_3A_server/CMakeLists.txt | 10 +---------
- rkisp_demo/CMakeLists.txt      |  1 +
- 2 files changed, 2 insertions(+), 9 deletions(-)
+ rkisp_demo/CMakeLists.txt      |  2 ++
+ 2 files changed, 3 insertions(+), 9 deletions(-)
 
 diff --git a/rkaiq_3A_server/CMakeLists.txt b/rkaiq_3A_server/CMakeLists.txt
 index 87593f36..b208c212 100644
@@ -29,13 +31,14 @@ index 87593f36..b208c212 100644
 +	install(TARGETS rkaiq_3A_server RUNTIME)
  endif()
 diff --git a/rkisp_demo/CMakeLists.txt b/rkisp_demo/CMakeLists.txt
-index f3d9ed6e..4bb3f3ca 100644
+index 1a8eecbf..bcb7af7a 100644
 --- a/rkisp_demo/CMakeLists.txt
 +++ b/rkisp_demo/CMakeLists.txt
-@@ -169,3 +169,4 @@ if (librga_FOUND)
-         librga::librga
-         )
+@@ -211,3 +211,5 @@ else ()
+     target_link_libraries(rkisp_demo
+         pthread)
  endif()
++
 +install(TARGETS rkisp_demo RUNTIME)
 -- 
 2.34.1
