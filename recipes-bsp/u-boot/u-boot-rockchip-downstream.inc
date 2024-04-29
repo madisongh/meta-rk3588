@@ -563,8 +563,6 @@ do_rk_sign_usbloader[dirs] = "${B}"
 
 LOADER_TARGET = "loader"
 LOADER_OUTPUT = "spl_loader"
-LOADER_TARGET:rk3588 = "--spl"
-LOADER_OUTPUT:rk3588 = "download"
 
 do_assemble_rkusbloader() {
 	# Prepare needed files; Rockchip scripts unfortunately assume
