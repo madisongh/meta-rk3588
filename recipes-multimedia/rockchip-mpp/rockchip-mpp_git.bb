@@ -9,9 +9,9 @@ LIC_FILES_CHKSUM = "file://inc/rk_mpi.h;beginline=4;endline=14;md5=acbba394ae563
 SRC_REPO = "github.com/rockchip-linux/mpp.git;protocol=https"
 SRCBRANCH = "develop"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
-SRCREV = "ed377c99a733e2cdbcc457a6aa3f0fcd438a9dff"
+SRCREV = "1a4f3d456c2d40c913abc5caccc27370a4b14761"
 
-PV = "1.3.8+git${SRCPV}"
+PV = "1.5.0+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
