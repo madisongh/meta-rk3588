@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Proprietary;md5=0557f9d92cf58f2
 SRC_REPO = "gitlab.com/firefly-linux/rkbin.git;protocol=https"
 SRCBRANCH = "rk3588/firefly"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
-SRCREV = "aba33eb6f88991d2603d91e1afbe28165cf6e8ba"
+SRCREV = "fd46174432fbfdbdd3274bcd94990fd81185ae51"
 
 PV = "1.0+git${SRCPV}"
 
