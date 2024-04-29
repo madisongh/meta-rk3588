@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://END_USER_LICENCE_AGREEMENT.txt;md5=3918cc9836ad038c5a
 SRC_REPO = "gitlab.com/firefly-linux/external/libmali.git;protocol=https"
 SRCBRANCH = "rk3588/firefly"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
-SRCREV = "c0a0122e56871dc5099cf5edafc34466878e0258"
+SRCREV = "92ed60856079b982ef38a02c9f5a71802fbb4d48"
 
 PV = "1.9.0+git${SRCPV}"
 
@@ -66,6 +66,7 @@ EXTRA_OEMESON = " \
 	-Dversion=${MALI_VERSION} \
 	-Dsubversion=${MALI_SUBVERSION} \
 	-Dplatform=${MALI_PLATFORM} \
+        -Dfirmware-dir=${nonarch_base_libdir}/firmware \
 "
 
 do_install:append () {
@@ -73,11 +74,6 @@ do_install:append () {
 		${D}${libdir}/pkgconfig/egl.pc; then
 		sed -i 's/defined(MESA_EGL_NO_X11_HEADERS)/1/' \
 			${D}${includedir}/EGL/eglplatform.h
-	fi
-	# meson.build file hard-codes firmware installation to /lib/firmware
-	if [ -d "${D}/lib" -a "${nonarch_base_libdir}" != "/lib" ]; then
-	    mv ${D}/lib/firmware ${D}${nonarch_base_libdir}/
-	    rmdir ${D}/lib
 	fi
 }
 
