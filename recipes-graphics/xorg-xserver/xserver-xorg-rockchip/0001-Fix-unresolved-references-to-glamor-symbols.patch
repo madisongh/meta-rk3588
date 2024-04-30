@@ -1,18 +1,20 @@
-From d518b11ba750e446926b8649bed51b7171f00af8 Mon Sep 17 00:00:00 2001
+From 8ea3305e09229d63665b8c63ceceb77a42b97e57 Mon Sep 17 00:00:00 2001
 From: Matt Madison <matt@madison.systems>
-Date: Wed, 5 Apr 2023 08:02:47 -0700
+Date: Tue, 30 Apr 2024 05:42:38 -0700
 Subject: [PATCH] Fix unresolved references to glamor symbols
+
+Upstream-Status: Pending
 
 Signed-off-by: Matt Madison <matt@madison.systems>
 ---
- hw/xfree86/drivers/modesetting/drmmode_display.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ hw/xfree86/drivers/modesetting/drmmode_display.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/hw/xfree86/drivers/modesetting/drmmode_display.c b/hw/xfree86/drivers/modesetting/drmmode_display.c
-index 345e00488..1be0b7668 100644
+index 3e2e9a503..1ca2864d8 100644
 --- a/hw/xfree86/drivers/modesetting/drmmode_display.c
 +++ b/hw/xfree86/drivers/modesetting/drmmode_display.c
-@@ -924,7 +924,7 @@ drmmode_crtc_set_mode(xf86CrtcPtr crtc, Bool test_only)
+@@ -980,7 +980,7 @@ drmmode_crtc_set_mode(xf86CrtcPtr crtc, Bool test_only)
  #ifdef GLAMOR_HAS_GBM
      /* Make sure any pending drawing will be visible in a new scanout buffer */
      if (drmmode->glamor)
@@ -21,7 +23,7 @@ index 345e00488..1be0b7668 100644
  #endif
  
      if (ms->atomic_modeset) {
-@@ -1606,6 +1606,7 @@ drmmode_crtc_copy_fb(ScrnInfoPtr pScrn, drmmode_ptr drmmode,
+@@ -1701,6 +1701,7 @@ drmmode_crtc_copy_fb(ScrnInfoPtr pScrn, drmmode_ptr drmmode,
      PixmapPtr screen_pixmap = pScreen->GetScreenPixmap(pScreen);
      drmmode_crtc_private_ptr drmmode_crtc = crtc->driver_private;
      drmmode_prop_info_rec *props_plane = drmmode_crtc->props_plane;
@@ -29,16 +31,7 @@ index 345e00488..1be0b7668 100644
      drmModeObjectProperties *props;
      PixmapPtr src = NULL, dst;
      drmModeFBPtr fbcon;
-@@ -1693,7 +1694,7 @@ drmmode_crtc_copy_fb(ScrnInfoPtr pScrn, drmmode_ptr drmmode,
-     }
- #ifdef GLAMOR_HAS_GBM
-     else if (drmmode->glamor) {
--        if (!glamor_egl_create_textured_pixmap(src, bo->handle, bo->pitch))
-+        if (!ms->glamor.egl_create_textured_pixmap(src, bo->handle, bo->pitch))
-             goto out;
-     }
- #endif
-@@ -5020,7 +5021,7 @@ drmmode_update_fb(xf86CrtcPtr crtc, drmmode_fb *fb)
+@@ -5175,7 +5176,7 @@ drmmode_update_fb(xf86CrtcPtr crtc, drmmode_fb *fb)
  
  #ifdef GLAMOR_HAS_GBM
      if (ms->drmmode.glamor)
