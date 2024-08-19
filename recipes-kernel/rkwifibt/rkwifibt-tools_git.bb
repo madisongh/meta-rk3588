@@ -17,7 +17,6 @@ do_compile() {
 }
 
 do_clean() {
-    meson_do_clean
     oe_runmake -C ${S}/tools/rtk_hciattach clean
 }
 
