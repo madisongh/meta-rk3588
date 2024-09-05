@@ -1,4 +1,4 @@
-DESCRIPTION = "Rokchip boot firmware binaries, configs, tools"
+DESCRIPTION = "Rockchip boot firmware binaries, configs, tools"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Proprietary;md5=0557f9d92cf58f2ccdd50f62f8ac0b28"
 
@@ -33,7 +33,7 @@ RKBIN_PREFIX = "${SOC_FAMILY}"
 RKBIN_PREFIX:rk3568 = "rk356"
 RKBIN_INI_PREFIX = "${@d.getVar('RKBIN_PREFIX').upper()}"
 
-TOOLS_BINARIES = "boot_merger trust_merger loaderimage rk_sign_tool"
+TOOLS_BINARIES = "boot_merger trust_merger loaderimage rk_sign_tool upgrade_tool"
 TOOLS_FILES = "setting.ini"
 
 do_configure() {
