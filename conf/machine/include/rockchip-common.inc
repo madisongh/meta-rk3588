@@ -15,7 +15,7 @@ RRECOMMENDS:${KERNEL_PACKAGE_NAME}-base ?= "${@'' if d.getVar('KERNEL_IMAGETYPE'
 
 IMAGE_BOOT_FILES ?= "${@rk.wic.image_boot_files(d)}"
 IMAGE_FSTYPES ?= "ext4 wic wic.bmap"
-RK_IMAGE_CLASSES ?= "kernel-artifact-names"
+RK_IMAGE_CLASSES ?= "kernel-artifact-names rk_update_img"
 IMAGE_CLASSES += "${RK_IMAGE_CLASSES}"
 WIC_DEPLOY_EXTRA_DEPS ?= "virtual/bootloader:do_deploy"
 do_image_wic[depends] += "${WIC_DEPLOY_EXTRA_DEPS}"
