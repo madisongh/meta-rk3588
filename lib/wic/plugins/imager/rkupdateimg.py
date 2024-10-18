@@ -1,4 +1,5 @@
 import logging
+import shutil
 import os
 
 from wic import WicError
@@ -72,13 +73,21 @@ class RkUpdateImagePlugin(DirectPlugin):
             for p in self.parts:
                 if p.part_name and p.source_file:
                     # The tools expect files to be together in one directory,
-                    # so symlink in any files that aren't already here.
+                    # so copy in any files that aren't already here. They may
+                    # need adjustment, too.
                     source_file_name = os.path.basename(p.source_file)
                     source_file_dir = os.path.dirname(p.source_file)
-                    if os.path.realpath(source_file_dir) == os.path.realpath(self.workdir):
-                        self.to_remove.append(p.source_file)
+                    if os.path.realpath(source_file_dir) != os.path.realpath(self.workdir):
+                        dest_file = os.path.join(self.workdir, source_file_name)
+                        shutil.copyfile(p.source_file, dest_file)
                     else:
-                        path.symlink(p.source_file, os.path.join(self.workdir, source_file_name))
+                        dest_file = p.source_file
+                    # Can get boot failures after writing if the file contents
+                    # is not an even multiple of 1KiB, so pad if necessary
+                    file_size = os.stat(dest_file).st_size
+                    if file_size % 1024 != 0:
+                        os.truncate(dest_file, 1024 * ((file_size + 1023) // 1024))
+                    self.to_remove.append(dest_file)
                     print(p.part_name + " " + source_file_name, file=pf)
 
     def assemble_package(self):
