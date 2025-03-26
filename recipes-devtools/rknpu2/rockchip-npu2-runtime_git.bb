@@ -3,7 +3,7 @@ require rockchip-npu2.inc
 SRC_URI += "file://rknn-server.service.in"
 SRC_URI += "file://rknn-server.init.in"
 
-RUNTIME_SUBDIR = "runtime/${@d.getVar('RK_TARGET_SOC').upper()}/Linux"
+RUNTIME_SUBDIR = "rknpu2/runtime/Linux"
 
 inherit systemd update-rc.d
 
@@ -30,8 +30,8 @@ do_install() {
     install -m 0644 ${S}/${RUNTIME_SUBDIR}/librknn_api/aarch64/librknnrt.so ${D}${libdir}/
     ln -sf librknnrt.so ${D}${libdir}/librknn_api.so
     # Needed for the example programs
-    install -m 0644 ${S}/examples/3rdparty/rk_mpi_mmz/lib/Linux/aarch64/libmpimmz.so ${D}${libdir}/
-    install -m 0644 ${S}/examples/3rdparty/rk_mpi_mmz/include/rk_mpi_mmz.h ${D}${includedir}/
+    install -m 0644 ${S}/rknpu2/examples/3rdparty/rk_mpi_mmz/lib/Linux/aarch64/libmpimmz.so ${D}${libdir}/
+    install -m 0644 ${S}/rknpu2/examples/3rdparty/rk_mpi_mmz/include/rk_mpi_mmz.h ${D}${includedir}/
 }
 
 INITSCRIPT_NAME = "rknn-server"

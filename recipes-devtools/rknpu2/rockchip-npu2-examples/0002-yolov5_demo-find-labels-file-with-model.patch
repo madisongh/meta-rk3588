@@ -1,32 +1,34 @@
-From f5439b6ae9d706735dabdef2d348a9d8d3adbc0f Mon Sep 17 00:00:00 2001
+From aadfe2de19eff5b4ac00a04c7b3c3b41c34716de Mon Sep 17 00:00:00 2001
 From: Matt Madison <matt@madison.systems>
 Date: Wed, 5 Apr 2023 15:04:05 -0700
-Subject: [PATCH 2/2] yolov5_demo: find labels file with model
+Subject: [PATCH] yolov5_demo: find labels file with model
 
+Upstream-Status: Pending
 Signed-off-by: Matt Madison <matt@madison.systems>
+
 ---
- examples/rknn_yolov5_demo/include/postprocess.h |  2 +-
- examples/rknn_yolov5_demo/src/main.cc           |  8 ++++++--
- examples/rknn_yolov5_demo/src/postprocess.cc    | 15 ++++++++++++---
+ .../rknn_yolov5_demo/include/postprocess.h        |  2 +-
+ rknpu2/examples/rknn_yolov5_demo/src/main.cc      |  8 ++++++--
+ .../examples/rknn_yolov5_demo/src/postprocess.cc  | 15 ++++++++++++---
  3 files changed, 19 insertions(+), 6 deletions(-)
 
-diff --git a/examples/rknn_yolov5_demo/include/postprocess.h b/examples/rknn_yolov5_demo/include/postprocess.h
-index 58504d4..dc9ea41 100644
---- a/examples/rknn_yolov5_demo/include/postprocess.h
-+++ b/examples/rknn_yolov5_demo/include/postprocess.h
+diff --git a/rknpu2/examples/rknn_yolov5_demo/include/postprocess.h b/rknpu2/examples/rknn_yolov5_demo/include/postprocess.h
+index de3c288..3322da4 100644
+--- a/rknpu2/examples/rknn_yolov5_demo/include/postprocess.h
++++ b/rknpu2/examples/rknn_yolov5_demo/include/postprocess.h
 @@ -36,7 +36,7 @@ typedef struct _detect_result_group_t
  int post_process(int8_t *input0, int8_t *input1, int8_t *input2, int model_in_h, int model_in_w,
-                  float conf_threshold, float nms_threshold, float scale_w, float scale_h,
+                  float conf_threshold, float nms_threshold, BOX_RECT pads, float scale_w, float scale_h,
                   std::vector<int32_t> &qnt_zps, std::vector<float> &qnt_scales,
 -                 detect_result_group_t *group);
 +                 detect_result_group_t *group, const char *model_dir);
  
  void deinitPostProcess();
- #endif //_RKNN_ZERO_COPY_DEMO_POSTPROCESS_H_
-diff --git a/examples/rknn_yolov5_demo/src/main.cc b/examples/rknn_yolov5_demo/src/main.cc
-index 289160c..91931a5 100755
---- a/examples/rknn_yolov5_demo/src/main.cc
-+++ b/examples/rknn_yolov5_demo/src/main.cc
+ #endif //_RKNN_YOLOV5_DEMO_POSTPROCESS_H_
+diff --git a/rknpu2/examples/rknn_yolov5_demo/src/main.cc b/rknpu2/examples/rknn_yolov5_demo/src/main.cc
+index ef9c1ab..708a4c6 100644
+--- a/rknpu2/examples/rknn_yolov5_demo/src/main.cc
++++ b/rknpu2/examples/rknn_yolov5_demo/src/main.cc
 @@ -20,6 +20,7 @@
  #include <stdlib.h>
  #include <string.h>
@@ -35,38 +37,38 @@ index 289160c..91931a5 100755
  
  #define _BASETSD_H
  
-@@ -149,6 +150,7 @@ int main(int argc, char** argv)
- 
-   model_name       = (char*)argv[1];
-   char* image_name = argv[2];
-+  char* model_dir = dirname(strdup(model_name));
- 
-   printf("Read %s ...\n", image_name);
-   cv::Mat orig_img = cv::imread(image_name, 1);
-@@ -285,7 +287,8 @@ int main(int argc, char** argv)
+@@ -138,6 +139,7 @@ int main(int argc, char **argv)
+   struct timeval start_time, stop_time;
+   char *model_name = (char *)argv[1];
+   char *input_path = argv[2];
++  char *model_dir = dirname(strdup(model_name));
+   std::string option = "letterbox";
+   std::string out_path = "./out.jpg";
+   if (argc >= 4)
+@@ -324,7 +326,8 @@ int main(int argc, char **argv)
      out_zps.push_back(output_attrs[i].zp);
    }
-   post_process((int8_t*)outputs[0].buf, (int8_t*)outputs[1].buf, (int8_t*)outputs[2].buf, height, width,
--               box_conf_threshold, nms_threshold, scale_w, scale_h, out_zps, out_scales, &detect_result_group);
-+               box_conf_threshold, nms_threshold, scale_w, scale_h, out_zps, out_scales, &detect_result_group,
+   post_process((int8_t *)outputs[0].buf, (int8_t *)outputs[1].buf, (int8_t *)outputs[2].buf, height, width,
+-               box_conf_threshold, nms_threshold, pads, scale_w, scale_h, out_zps, out_scales, &detect_result_group);
++               box_conf_threshold, nms_threshold, pads, scale_w, scale_h, out_zps, out_scales, &detect_result_group,
 +               model_dir);
  
-   // Draw Objects
+   // 画框和概率
    char text[256];
-@@ -314,7 +317,8 @@ int main(int argc, char** argv)
+@@ -356,7 +359,8 @@ int main(int argc, char **argv)
      ret = rknn_outputs_get(ctx, io_num.n_output, outputs, NULL);
  #if PERF_WITH_POST
-     post_process((int8_t*)outputs[0].buf, (int8_t*)outputs[1].buf, (int8_t*)outputs[2].buf, height, width,
--                 box_conf_threshold, nms_threshold, scale_w, scale_h, out_zps, out_scales, &detect_result_group);
-+                 box_conf_threshold, nms_threshold, scale_w, scale_h, out_zps, out_scales, &detect_result_group,
+     post_process((int8_t *)outputs[0].buf, (int8_t *)outputs[1].buf, (int8_t *)outputs[2].buf, height, width,
+-                 box_conf_threshold, nms_threshold, pads, scale_w, scale_h, out_zps, out_scales, &detect_result_group);
++                 box_conf_threshold, nms_threshold, pads, scale_w, scale_h, out_zps, out_scales, &detect_result_group,
 +                 model_dir);
  #endif
      ret = rknn_outputs_release(ctx, io_num.n_output, outputs);
    }
-diff --git a/examples/rknn_yolov5_demo/src/postprocess.cc b/examples/rknn_yolov5_demo/src/postprocess.cc
-index 4ad8e45..48de8d8 100644
---- a/examples/rknn_yolov5_demo/src/postprocess.cc
-+++ b/examples/rknn_yolov5_demo/src/postprocess.cc
+diff --git a/rknpu2/examples/rknn_yolov5_demo/src/postprocess.cc b/rknpu2/examples/rknn_yolov5_demo/src/postprocess.cc
+index 4004703..7ad439b 100644
+--- a/rknpu2/examples/rknn_yolov5_demo/src/postprocess.cc
++++ b/rknpu2/examples/rknn_yolov5_demo/src/postprocess.cc
 @@ -20,10 +20,11 @@
  #include <stdlib.h>
  #include <string.h>
@@ -78,19 +80,20 @@ index 4ad8e45..48de8d8 100644
 -#define LABEL_NALE_TXT_PATH "./model/coco_80_labels_list.txt"
 +#define LABEL_NALE_TXT_FILE "coco_80_labels_list.txt"
  
- static char* labels[OBJ_CLASS_NUM];
+ static char *labels[OBJ_CLASS_NUM];
  
-@@ -238,12 +239,20 @@ static int process(int8_t* input, int* anchor, int grid_h, int grid_w, int heigh
+@@ -259,13 +260,21 @@ static int process(int8_t *input, int *anchor, int grid_h, int grid_w, int heigh
  
- int post_process(int8_t* input0, int8_t* input1, int8_t* input2, int model_in_h, int model_in_w, float conf_threshold,
-                  float nms_threshold, float scale_w, float scale_h, std::vector<int32_t>& qnt_zps,
--                 std::vector<float>& qnt_scales, detect_result_group_t* group)
-+                 std::vector<float>& qnt_scales, detect_result_group_t* group, const char *model_dir)
+ int post_process(int8_t *input0, int8_t *input1, int8_t *input2, int model_in_h, int model_in_w, float conf_threshold,
+                  float nms_threshold, BOX_RECT pads, float scale_w, float scale_h, std::vector<int32_t> &qnt_zps,
+-                 std::vector<float> &qnt_scales, detect_result_group_t *group)
++                 std::vector<float> &qnt_scales, detect_result_group_t *group, const char *model_dir)
  {
    static int init = -1;
-   if (init == -1) {
+   if (init == -1)
+   {
      int ret = 0;
--    ret     = loadLabelName(LABEL_NALE_TXT_PATH, labels);
+-    ret = loadLabelName(LABEL_NALE_TXT_PATH, labels);
 +    char label_path[PATH_MAX];
 +    ssize_t len;
 +    len = snprintf(label_path, sizeof(label_path)-1, "%s/" LABEL_NALE_TXT_FILE, model_dir);
@@ -100,9 +103,6 @@ index 4ad8e45..48de8d8 100644
 +    }
 +    label_path[len] = '\0';
 +    ret     = loadLabelName(label_path, labels);
-     if (ret < 0) {
+     if (ret < 0)
+     {
        return -1;
-     }
--- 
-2.34.1
-
