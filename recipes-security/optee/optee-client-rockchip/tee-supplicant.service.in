@@ -1,8 +1,12 @@
 [Unit]
 Description=TEE Supplicant
+DefaultDependencies=no
+After=dev-teepriv0.device
+Wants=dev-teepriv0.device
+Conflicts=shutdown.target
+Before=sysinit.target shutdown.target
 
 [Service]
-User=root
 EnvironmentFile=-@sysconfdir@/default/tee-supplicant
 ExecStart=@sbindir@/tee-supplicant $OPTARGS
 
