@@ -16,7 +16,7 @@ require rkwifibt.inc
 S = "${WORKDIR}/rkwifibt"
 B = "${S}"
 
-PV = "1.0+git${SRCPV}"
+PV = "1.0+git"
 
 inherit allarch
 

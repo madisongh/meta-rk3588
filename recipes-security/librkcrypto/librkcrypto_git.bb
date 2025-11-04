@@ -9,7 +9,7 @@ SRCREV = "70030e714459a2f2c3742869dd24fe788edd1979"
 
 SRC_URI += "file://0001-CMakeLists-changes-for-OE-builds.patch"
 
-PV = "1.2.0+git${SRCPV}"
+PV = "1.2.0+git"
 
 COMPATIBLE_MACHINE = "(-)"
 COMPATIBLE_MACHINE:rockchip = "(rockchip)"

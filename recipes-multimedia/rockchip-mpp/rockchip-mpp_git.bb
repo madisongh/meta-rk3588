@@ -11,7 +11,7 @@ SRCBRANCH = "develop"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
 SRCREV = "ab796560522c767b610ef1ef7930a73d2f8c77eb"
 
-PV = "1.0.8+git${SRCPV}"
+PV = "1.0.8+git"
 PE = "1"
 
 S = "${WORKDIR}/git"

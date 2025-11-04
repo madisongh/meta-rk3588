@@ -7,7 +7,7 @@ SRCBRANCH = "rk3588/firefly"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
 SRCREV = "fd46174432fbfdbdd3274bcd94990fd81185ae51"
 
-PV = "1.0+git${SRCPV}"
+PV = "1.0+git"
 
 COMPATIBLE_MACHINE = "(-)"
 COMPATIBLE_MACHINE:rockchip = "(rockchip)"

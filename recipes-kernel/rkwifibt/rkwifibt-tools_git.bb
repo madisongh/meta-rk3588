@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=919c961282a1817c7f9a6bf495fa7b2e \
 
 require rkwifibt.inc
 
-PV = "1.0+git${SRCPV}"
+PV = "1.0+git"
 
 inherit meson
 

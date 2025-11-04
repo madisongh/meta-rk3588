@@ -3,7 +3,7 @@ SRC_REPO = "github.com/JeffyCN/xorg-xserver;protocol=https"
 SRC_URI = "git://${SRC_REPO};nobranch=1"
 # 21.1.8_2024_01_31 tag
 SRCREV = "19ac81ee935825dff2a16b680bbc66561e70eb7c"
-PV .= "+git${SRCPV}"
+PV .= "+git"
 
 SRC_URI += "file://0001-Fix-unresolved-references-to-glamor-symbols.patch"
 SRC_URI += "file://20-modesetting.conf"

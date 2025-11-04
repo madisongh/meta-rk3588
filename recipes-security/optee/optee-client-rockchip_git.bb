@@ -16,7 +16,7 @@ SRC_URI += "\
 COMPATIBLE_MACHINE = "(-)"
 COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 
-PV = "3.13.0-rk+git${SRCPV}"
+PV = "3.13.0-rk+git"
 
 PROVIDES = "optee-client"
 

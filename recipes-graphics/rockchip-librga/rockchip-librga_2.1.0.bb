@@ -7,7 +7,7 @@ SRC_REPO = "gitlab.com/firefly-linux/external/linux-rga.git;protocol=https"
 SRCBRANCH = "rk3588/firefly"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
 SRCREV = "bfeaf919fd9570efdd405ce7212bf784455f725f"
-PV .= "+git${SRCPV}"
+PV .= "+git"
 
 S = "${WORKDIR}/git"
 

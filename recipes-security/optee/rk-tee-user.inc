@@ -3,7 +3,7 @@ SRCBRANCH = "rk3588/firefly"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
 SRCREV = "a3e353db5a052b6197fdb5c282e49ea96824b662"
 
-PV = "3.13.0-rk+git${SRCPV}"
+PV = "3.13.0-rk+git"
 
 S = "${WORKDIR}/git"
 
