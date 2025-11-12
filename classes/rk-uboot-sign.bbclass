@@ -33,9 +33,6 @@
 
 UBOOT_MKIMAGE_SIGN_ARGS ?= ""
 
-# We need some variables from u-boot-config
-inherit uboot-config
-
 # Enable use of a U-Boot fitImage
 UBOOT_FITIMAGE_ENABLE ?= "1"
 
@@ -43,10 +40,13 @@ UBOOT_FITIMAGE_ENABLE ?= "1"
 # used.
 RK_SECURE_BOOT ??= "0"
 # These next two variables drive whether the signing happens directly
-# during the build or not.  If you use an external signing service,
-# set these to 0.
+# during the build or not. These need to be set before uboot-config is
+# inherited, to override the ?= setting there.
 UBOOT_SIGN_ENABLE ?= "${@'1' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else '0'}"
 SPL_SIGN_ENABLE ?= "${@'1' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else '0'}"
+
+# We need some variables from u-boot-config
+inherit uboot-config
 
 # Rockchip scripts assume 'dev' is the key name, and should be used
 # for both the U-Boot FIT and the kernel FIT.
