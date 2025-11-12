@@ -268,11 +268,14 @@ ALLOW_EMPTY:${PN} = "1"
 FILES:${PN} = "/boot ${datadir}"
 RDEPENDS:${PN} += "${PN}-env"
 
+UBOOT_DTB_BINARY_DEPLOYED ??= "${UBOOT_DTB_BINARY}"
+SPL_DTB_BINARY_DEPLOYED ??= "${SPL_DTB_BINARY}"
+
 do_deploy() {
     # The DTB file itself will get deployed by the kernel recipe, so
     # just create the symlinks here since that can't be easily done there
-    if ${@'true' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else 'false'} && [ -n "${UBOOT_DTB_BINARY}" ] ; then
-        if [ -e "${UBOOT_DTB_BINARY}" ]; then
+    if ${@'true' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else 'false'} && [ -n "${UBOOT_DTB_BINARY}" ]; then
+        if [ -e "${UBOOT_DTB_BINARY}" -a "${UBOOT_DTB_BINARY}" = "${UBOOT_DTB_BINARY_DEPLOYED}" ]; then
 	    ln -sf ${UBOOT_DTB_IMAGE} ${DEPLOYDIR}/${UBOOT_DTB_BINARY}
 	    ln -sf ${UBOOT_DTB_IMAGE} ${DEPLOYDIR}/${UBOOT_DTB_SYMLINK}
 	fi
@@ -283,7 +286,7 @@ do_deploy() {
     if ${@'true' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else 'false'} && \
 	    [ -n "${SPL_DTB_BINARY}" -a -f ${B}/${SPL_DIR}/${SPL_DTB_BINARY} ] ; then
         install -Dm 0644 ${B}/${SPL_DIR}/${SPL_DTB_BINARY} ${DEPLOYDIR}/${SPL_DTB_IMAGE}
-	ln -sf ${SPL_DTB_IMAGE} ${DEPLOYDIR}/${SPL_DTB_BINARY}
+	ln -sf ${SPL_DTB_IMAGE} ${DEPLOYDIR}/${SPL_DTB_BINARY_DEPLOYED}
     fi
 
     if [ -n "${UBOOT_CONFIG}" ]
@@ -412,7 +415,7 @@ do_deploy() {
 
     if [ -n "${UBOOT_DTB}" ]
     then
-        install -m 644 ${B}/arch/${UBOOT_ARCH}/dts/${UBOOT_DTB_BINARY} ${DEPLOYDIR}/
+        install -m 644 ${B}/arch/${UBOOT_ARCH}/dts/${UBOOT_DTB_BINARY} ${DEPLOYDIR}/${UBOOT_DTB_BINARY_DEPLOYED}
     fi
 
     deploy_rockchip_binaries
