@@ -9,5 +9,5 @@ S = "${WORKDIR}/git/drivers/rtl8822cs"
 inherit module
 
 MAKE_TARGETS = "V=1 -C ${STAGING_KERNEL_DIR} M=${S} modules DRV_PATH=${S} CONFIG_RTW_DEBUG=n CONFIG_PROC_DEBUG=n CONFIG_RTW_LOG_LEVEL=0"
-MAKE_TARGETS += 'USER_EXTRA_CFLAGS="-Wno-error=misleading-indentation -Wno-error=unused-function"'
+MAKE_TARGETS += 'USER_EXTRA_CFLAGS="-Wno-error=misleading-indentation -Wno-error=unused-function -Wno-error=address"'
 MODULES_INSTALL_TARGET = "-C ${STAGING_KERNEL_DIR} M=${S} modules_install"
