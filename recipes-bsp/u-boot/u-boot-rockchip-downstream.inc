@@ -23,7 +23,11 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS += "${@bb.utils.contains('UBOOT_ENV_SUFFIX', 'scr', 'u-boot-mkimage-native', '', d)}"
 
-inherit uboot-config uboot-extlinux-config rk-uboot-sign deploy python3native kernel-arch
+# XXX
+# N.B.: order here is important, since rk-uboot-sign does ?= settings that
+# should override the ?= settings in uboot-config
+# XXX
+inherit rk-uboot-sign uboot-config uboot-extlinux-config deploy python3native kernel-arch
 
 DEPENDS += "swig-native"
 DEPENDS += "bc-native dtc-native coreutils-native ${PYTHON_PN}-pyelftools-native rockchip-rkbin rockchip-rkbin-tools-native"
