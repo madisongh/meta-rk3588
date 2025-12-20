@@ -1,0 +1,24 @@
+From 65647af0e38869ad03ef28c534fd9000e066539f Mon Sep 17 00:00:00 2001
+From: Matt Madison <matt@madison.systems>
+Date: Fri, 7 Nov 2025 12:49:51 -0800
+Subject: [PATCH] Fix compilation error with g++ 13
+
+Upstream-Status: Pending
+
+Signed-off-by: Matt Madison <matt@madison.systems>
+---
+ rkaiq/ipc_server/MessageParser.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/rkaiq/ipc_server/MessageParser.cpp b/rkaiq/ipc_server/MessageParser.cpp
+index 8118da69..a1c34b94 100644
+--- a/rkaiq/ipc_server/MessageParser.cpp
++++ b/rkaiq/ipc_server/MessageParser.cpp
+@@ -19,6 +19,7 @@
+ #define BUFFER_MAX_SIZE (1024 * 512)
+ 
+ #ifndef LOGE
++#include <cstdio>
+ #define LOGE printf
+ #endif
+ 

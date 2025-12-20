@@ -10,9 +10,10 @@ COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 SRC_REPO = "gitlab.com/firefly-linux/external/camera_engine_rkaiq.git;protocol=https"
 SRCBRANCH = "rk3588/firefly"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH} \
-           file://0001-iq_parser_v2-add-variable-for-extra-compiler-flags.patch \ 
-           file://0002-Fix-install-paths.patch \ 
-           file://0003-Fix-AE-mutex-double-unlock.patch \ 
+           file://0001-iq_parser_v2-add-variable-for-extra-compiler-flags.patch \
+           file://0002-Fix-install-paths.patch \
+           file://0003-Fix-AE-mutex-double-unlock.patch \
+           file://0004-Fix-compilation-error-with-g-13.patch \
            file://rkaiq_3A.init \
            file://rkaiq_3A.service \
 "
@@ -39,6 +40,8 @@ EXTRA_OECMAKE = "     \
     -DIQ_PARSER_V2_EXTRA_CFLAGS='-I${STAGING_INCDIR}/rockchip-uapi;-I${STAGING_INCDIR}' \
     -DRKAIQ_TARGET_SOC=${RK_TARGET_SOC} \
 "
+
+CXXFLAGS += "-Wno-error=stringop-overflow"
 
 do_install:append () {
 	install -d ${D}${sysconfdir}/iqfiles
