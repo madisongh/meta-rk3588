@@ -31,7 +31,7 @@ IMAGE_CMD:rkupdateimg () {
 	fi
 	BUILDDIR="${TOPDIR}" PSEUDO_UNLOAD=1 wic create "$wks" --vars "${STAGING_DIR}/${MACHINE}/imgdata/" -e "${IMAGE_BASENAME}" -o "$build_wic/" -w "$tmp_wic" -i rkupdateimg ${WIC_CREATE_EXTRA_ARGS}
 	mv "$build_wic/$(basename "${wks%.wks}")"*.rkupdateimg "$out${IMAGE_NAME_SUFFIX}.rkupdateimg"
-	ln -sf ${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.rkupdateimg "${IMGDEPLOYDIR}/update.img"
+	ln -sf ${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.rkupdateimg "${IMGDEPLOYDIR}/update-${IMAGE_BASENAME}.img"
 }
 IMAGE_CMD:rkupdateimg[vardepsexclude] = "WKS_FULL_PATH WKS_FILES TOPDIR"
 do_image_rkupdateimg[cleandirs] = "${WORKDIR}/build-rkupdate"
