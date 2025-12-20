@@ -56,7 +56,7 @@ do_install:append () {
 inherit update-rc.d systemd
 
 INITSCRIPT_PACKAGES = "${PN}-server"
-INITSCRIPT_NAME:${PN}-server = "rkaiq_daemons.sh"
+INITSCRIPT_NAME:${PN}-server = "rkaiq_3A"
 INITSCRIPT_PARAMS:${PN}-server = "start 70 5 4 3 2 . stop 30 0 1 6 ."
 
 PACKAGES =+ "${PN}-server ${PN}-tool-server ${PN}-demo ${PN}-iqfiles"
