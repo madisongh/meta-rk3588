@@ -1,11 +1,8 @@
-# Copyright (C) 2023, M. Madison
-# Released under the MIT license (see COPYING.MIT for the terms)
-
 require recipes-kernel/linux/linux-yocto.inc
 
 inherit python3native
 
-require linux-rockchip-downstream-5.10.inc
+require linux-rockchip-downstream-6.1.inc
 
 SRC_URI += "\
     file://systemd.cfg \

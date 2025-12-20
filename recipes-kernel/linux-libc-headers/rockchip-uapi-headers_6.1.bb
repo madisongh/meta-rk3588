@@ -2,7 +2,7 @@
 # Released under the MIT license (see COPYING.MIT for the terms)
 
 require recipes-kernel/linux-libc-headers/linux-libc-headers.inc
-require recipes-kernel/linux/linux-rockchip-downstream-5.10.inc
+require recipes-kernel/linux/linux-rockchip-downstream-6.1.inc
 
 SRCREV = "${RK_UAPI_SRCREV}"
 
