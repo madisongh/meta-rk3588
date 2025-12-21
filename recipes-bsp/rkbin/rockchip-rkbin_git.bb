@@ -2,10 +2,10 @@ DESCRIPTION = "Rockchip boot firmware binaries, configs, tools"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Proprietary;md5=0557f9d92cf58f2ccdd50f62f8ac0b28"
 
-SRC_REPO = "gitlab.com/firefly-linux/rkbin.git;protocol=https"
-SRCBRANCH = "rk3588/firefly"
+SRC_REPO = "github.com/rockchip-linux/rkbin.git;protocol=https"
+SRCBRANCH = "master"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
-SRCREV = "fd46174432fbfdbdd3274bcd94990fd81185ae51"
+SRCREV = "74213af1e952c4683d2e35952507133b61394862"
 
 PV = "1.0+git"
 
@@ -105,3 +105,6 @@ FILES:${PN}-tools = "${bindir}"
 
 BBCLASSEXTEND = "native nativesdk"
 PACKAGE_ARCH:class-target = "${MACHINE_ARCH}"
+INHIBIT_SYSROOT_STRIP:class-native = "1"
+INHIBIT_PACKAGE_STRIP:class-native = "1"
+INHIBIT_PACKAGE_STRIP:class-nativesdk = "1"
