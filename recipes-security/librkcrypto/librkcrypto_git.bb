@@ -2,10 +2,10 @@ DESCRIPTION = "Rockchip crypto library"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Proprietary;md5=0557f9d92cf58f2ccdd50f62f8ac0b28"
 
-SRC_REPO = "gitlab.com/firefly-linux/external/security/librkcrypto.git;protocol=https"
-SRCBRANCH = "rk3588/firefly"
+SRC_REPO = "github.com/madisongh/rockchip-external-security-librkcrypto.git;protocol=https"
+SRCBRANCH = "rk3588-linux-6.1"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
-SRCREV = "70030e714459a2f2c3742869dd24fe788edd1979"
+SRCREV = "df05511fa6c22c02ce1940b03bdc1596bc4e27b9"
 
 SRC_URI += "file://0001-CMakeLists-changes-for-OE-builds.patch"
 

@@ -2,10 +2,10 @@ DESCRIPTION = "Pre-built Rockchip OP-TEE client"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://NOTICE;md5=9645f39e9db895a4aa6e02cb57294595"
 
-SRC_REPO = "gitlab.com/firefly-linux/external/security/bin.git;protocol=https"
-SRCBRANCH = "rk3588/firefly"
+SRC_REPO = "github.com/madisongh/rockchip-external-security-bin.git;protocol=https"
+SRCBRANCH = "rk3588-linux-6.1"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
-SRCREV = "61902b39cb5b266cd0bb9675e768e07d6ff1baca"
+SRCREV = "20850d7254231628101b3925e9fb3b0e8abefce1"
 
 SRC_URI += "\
     file://tee-supplicant.service.in \
