@@ -4,6 +4,10 @@ SOC_FAMILY = "rk3588"
 require conf/machine/include/soc-family.inc
 DEFAULTTUNE ?= "armv8a-crc"
 require conf/machine/include/arm/armv8-2a/tune-cortexa76-cortexa55.inc
+
+RK_KERNEL_EARLYCON ?= "earlycon=uart8250,mmio32,0xfeb50000"
+RK_KERNEL_BASEARGS ?= "irqchip.gicv3_pseudo_nmi=0 rcupdate.rcu_expedited=1 rcu_nocbs=all"
+
 require conf/machine/include/rockchip-common.inc
 
 UBOOT_MACHINE ?= "rk3588_defconfig"
