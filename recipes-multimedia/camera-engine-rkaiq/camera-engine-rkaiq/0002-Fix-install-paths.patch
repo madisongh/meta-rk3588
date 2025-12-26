@@ -1,10 +1,9 @@
-From eabd3c8c714dcb93b4291add9ccf3e3eb39eaab5 Mon Sep 17 00:00:00 2001
+From 483add96a710b2956685ed05d9e251a78f6bc917 Mon Sep 17 00:00:00 2001
 From: Matt Madison <matt@madison.systems>
-Date: Sat, 8 Jul 2023 08:35:05 -0700
-Subject: [PATCH 2/4] Fix install paths
+Date: Fri, 26 Dec 2025 06:56:33 -0800
+Subject: [PATCH 2/3] Fix install paths
 
 Upstream-Status: Inappropriate [upstream does not take patches]
-
 Signed-off-by: Matt Madison <matt@madison.systems>
 ---
  rkaiq_3A_server/CMakeLists.txt | 10 +---------
@@ -12,10 +11,10 @@ Signed-off-by: Matt Madison <matt@madison.systems>
  2 files changed, 3 insertions(+), 9 deletions(-)
 
 diff --git a/rkaiq_3A_server/CMakeLists.txt b/rkaiq_3A_server/CMakeLists.txt
-index 87593f36..b208c212 100644
+index b8e0fcaf..ae032f71 100644
 --- a/rkaiq_3A_server/CMakeLists.txt
 +++ b/rkaiq_3A_server/CMakeLists.txt
-@@ -132,13 +132,5 @@ if(BUILDROOT_BUILD_PROJECT)
+@@ -133,13 +133,5 @@ if(BUILDROOT_BUILD_PROJECT)
  		GROUP_EXECUTE GROUP_READ
  		WORLD_EXECUTE WORLD_READ)
  else()
@@ -31,15 +30,15 @@ index 87593f36..b208c212 100644
 +	install(TARGETS rkaiq_3A_server RUNTIME)
  endif()
 diff --git a/rkisp_demo/CMakeLists.txt b/rkisp_demo/CMakeLists.txt
-index 1a8eecbf..bcb7af7a 100644
+index e2be1546..bed1fb48 100644
 --- a/rkisp_demo/CMakeLists.txt
 +++ b/rkisp_demo/CMakeLists.txt
-@@ -211,3 +211,5 @@ else ()
-     target_link_libraries(rkisp_demo
-         pthread)
+@@ -237,3 +237,5 @@ else ()
  endif()
+ target_link_libraries(rkisp_demo
+     m)
 +
 +install(TARGETS rkisp_demo RUNTIME)
 -- 
-2.34.1
+2.43.0
 

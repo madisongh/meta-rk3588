@@ -1,7 +1,7 @@
-From 65647af0e38869ad03ef28c534fd9000e066539f Mon Sep 17 00:00:00 2001
+From 50efb12cc6130d2e43a510d21ef84e42ef2258ef Mon Sep 17 00:00:00 2001
 From: Matt Madison <matt@madison.systems>
 Date: Fri, 7 Nov 2025 12:49:51 -0800
-Subject: [PATCH] Fix compilation error with g++ 13
+Subject: [PATCH 3/3] Fix compilation error with g++ 13
 
 Upstream-Status: Pending
 
@@ -22,3 +22,6 @@ index 8118da69..a1c34b94 100644
  #define LOGE printf
  #endif
  
+-- 
+2.43.0
+
