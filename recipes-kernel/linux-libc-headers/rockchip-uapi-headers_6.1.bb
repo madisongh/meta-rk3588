@@ -15,7 +15,7 @@ HEADER_OVERRIDES = "\
     linux/cec.h \
     linux/dma-buf.h \
     linux/dma-heap.h \
-    linux/fec-config.h \
+    linux/iio/types.h \
     linux/media-bus-format.h \
     linux/serial_reg.h \
     linux/usb/g_uvc.h \
