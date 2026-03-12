@@ -1,0 +1,31 @@
+From 10102d8bc968e8cf101ab61f747154cbe0239e72 Mon Sep 17 00:00:00 2001
+From: Matt Madison <matt@madison.systems>
+Date: Tue, 10 Mar 2026 13:57:48 -0700
+Subject: [PATCH 2/2] Fix dlopen for libdrm to use full soname
+
+Upstream-Status: Pending
+Signed-off-by: Matt Madison <matt@madison.systems>
+---
+ samples/utils/allocator/drm_alloc.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/samples/utils/allocator/drm_alloc.cpp b/samples/utils/allocator/drm_alloc.cpp
+index f407c92..1e12064 100644
+--- a/samples/utils/allocator/drm_alloc.cpp
++++ b/samples/utils/allocator/drm_alloc.cpp
+@@ -213,10 +213,10 @@ __attribute__((constructor)) static int load_drm() {
+         return -1;
+     }
+ 
+-    drm_handle = dlopen("libdrm.so", RTLD_LAZY);
++    drm_handle = dlopen("libdrm.so.2", RTLD_LAZY);
+ 
+     if (!drm_handle) {
+-        printf("[RKNN] Can not find libdrm.so\n");
++        printf("[RKNN] Can not find libdrm.so.2\n");
+         drm_deinit(drm_fd);
+         return -1;
+     }
+-- 
+2.43.0
+

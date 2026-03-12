@@ -1,0 +1,100 @@
+From d5d94a86af1eac6da4dae7fd087fa5d46af41161 Mon Sep 17 00:00:00 2001
+From: Matt Madison <matt@madison.systems>
+Date: Tue, 10 Mar 2026 08:18:21 -0700
+Subject: [PATCH] Update meson.build for OE builds
+
+* Separate library from demo builds
+* Replace internal libdrm references with dependency
+
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Matt Madison <matt@madison.systems>
+---
+ meson.build | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
+
+diff --git a/meson.build b/meson.build
+index 770f210..c08be15 100644
+--- a/meson.build
++++ b/meson.build
+@@ -12,7 +12,9 @@ libthreads_dep = dependency('threads')
+ 
+ add_project_arguments('-DLINUX=1', language : 'cpp')
+ 
+-librga_srcs = [
++librga_demo_option = get_option('librga_demo')
++if librga_demo_option == 'false'
++  librga_srcs = [
+     'core/utils/android_utils/src/android_utils.cpp',
+     'core/utils/drm_utils/src/drm_utils.cpp',
+     'core/utils/utils.cpp',
+@@ -29,9 +31,9 @@ librga_srcs = [
+ 	'im2d_api/src/im2d.cpp',
+ ]
+ 
+-incdir = include_directories('include', 'im2d_api', 'core/hardware', 'core/utils', 'core/3rdparty/libdrm/include/drm')
++  incdir = include_directories('include', 'im2d_api', 'core/hardware', 'core/utils')
+ 
+-librga = shared_library(
++  librga = shared_library(
+     'rga',
+     librga_srcs,
+     dependencies : [libthreads_dep],
+@@ -41,7 +43,7 @@ librga = shared_library(
+     install : true,
+ )
+ 
+-librga = static_library(
++  librga_static = static_library(
+     'rga',
+     librga_srcs,
+     dependencies : [libthreads_dep],
+@@ -50,7 +52,7 @@ librga = static_library(
+     install : true,
+ )
+ 
+-install_headers(
++  install_headers(
+     'include/rga.h',
+     'include/drmrga.h',
+     'include/GrallocOps.h',
+@@ -72,17 +74,15 @@ install_headers(
+     subdir : 'rga',
+ )
+ 
+-pkgconfig.generate(
++  pkgconfig.generate(
+     libraries : librga,
+     filebase : 'librga',
+     name : 'librga',
+     version : meson.project_version(),
+     description : 'Userspace interface to Rockchip RGA 2D accelerator',
+     extra_cflags : ['-I${includedir}/rga'],
+-)
+-
+-librga_demo_option = get_option('librga_demo')
+-if librga_demo_option != 'false'
++  )
++else
+     demo_src = [
+         'samples/utils/utils.cpp',
+         'samples/utils/allocator/dma_alloc.cpp',
+@@ -95,15 +95,13 @@ if librga_demo_option != 'false'
+         'im2d_api',
+         'samples/utils',
+         'samples/utils/allocator/include',
+-        'utils/3rdparty/libdrm/include',
+-        'utils/3rdparty/libdrm/include/libdrm'
+     )
+     librga_dep = dependency('librga')
+     executable(
+             'rgaImDemo',
+             demo_src,
+             include_directories : demo_incdir,
+-            dependencies : librga_dep,
++            dependencies : [librga_dep],
+             cpp_args : ['-Wno-pedantic'],
+             install : true,
+     )
+-- 
+2.43.0
+

@@ -1,0 +1,39 @@
+From 651d9863b216ef4db5d23c6b619533015e0f19da Mon Sep 17 00:00:00 2001
+From: Matt Madison <matt@madison.systems>
+Date: Tue, 10 Mar 2026 12:11:28 -0700
+Subject: [PATCH 1/2] Fix DMA heap and local file paths
+
+* No separate DMA32 heap for 6.1 kernel
+* Use '.' as local file path, rather than '/data'
+
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Matt Madison <matt@madison.systems>
+---
+ samples/im2d_api_demo/rgaImDemo.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/samples/im2d_api_demo/rgaImDemo.cpp b/samples/im2d_api_demo/rgaImDemo.cpp
+index c3f1849..6b51b7f 100644
+--- a/samples/im2d_api_demo/rgaImDemo.cpp
++++ b/samples/im2d_api_demo/rgaImDemo.cpp
+@@ -34,7 +34,7 @@
+ #include "utils.h"
+ #include "dma_alloc.h"
+ 
+-#define LOCAL_FILE_PATH "/data"
++#define LOCAL_FILE_PATH "."
+ 
+ #define DEFAULT_WIDTH               1280
+ #define DEFAULT_HEIGHT              720
+@@ -163,7 +163,7 @@ int main(int argc, char*  argv[]) {
+     heap_name = RV1106_CMA_HEAP_PATH;
+     flush_cache = true;
+ #else
+-    heap_name = DMA_HEAP_DMA32_UNCACHED_PATH;
++    heap_name = "/dev/dma_heap/cma";
+ #endif
+ 
+     /********** Get parameters **********/
+-- 
+2.43.0
+
