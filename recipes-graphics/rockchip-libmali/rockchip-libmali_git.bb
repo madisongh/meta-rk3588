@@ -3,12 +3,14 @@ DESCRIPTION = "Userspace Mali GPU drivers for Rockchip SoCs"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://END_USER_LICENCE_AGREEMENT.txt;md5=3918cc9836ad038c5a090a0280233eea"
 
-SRC_REPO = "gitlab.com/firefly-linux/external/libmali.git;protocol=https"
-SRCBRANCH = "rk3588/firefly"
+SRC_REPO = "github.com/madisongh/rockchip-external-libmali.git;protocol=https"
+SRCBRANCH = "main"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
-SRCREV = "92ed60856079b982ef38a02c9f5a71802fbb4d48"
+SRCREV = "e6cc002edea6c1db446c78a720156186aff6b1a4"
 
-PV = "1.9.0+git"
+BB_GIT_SHALLOW ?= "1"
+
+PV = "1.9-1+git"
 
 COMPATIBLE_MACHINE = "(-)"
 COMPATIBLE_MACHINE:rockchip = "(rockchip)"
@@ -66,7 +68,8 @@ EXTRA_OEMESON = " \
 	-Dversion=${MALI_VERSION} \
 	-Dsubversion=${MALI_SUBVERSION} \
 	-Dplatform=${MALI_PLATFORM} \
-        -Dfirmware-dir=${nonarch_base_libdir}/firmware \
+	-Dfirmware-dir=/DONOTUSE/firmware \
+	-Dwayland-egl=false \
 "
 
 do_install:append () {
@@ -75,6 +78,8 @@ do_install:append () {
 		sed -i 's/defined(MESA_EGL_NO_X11_HEADERS)/1/' \
 			${D}${includedir}/EGL/eglplatform.h
 	fi
+	# firmware is now bundled into the kernel driver
+	rm -rf ${D}/DONOTUSE
 }
 
 INSANE_SKIP:${PN} = "already-stripped ldflags dev-so textrel"
