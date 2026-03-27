@@ -14,9 +14,9 @@ SRC_URI = "\
 do_install() {
     for i in 0 1; do
         install -d ${D}${datadir}/alsa/ucm2/conf.d/rockchip-hdmi$i
-        install -m 0644 ${WORKDIR}/rockchip-hdmi$i/* ${D}${datadir}/alsa/ucm2/conf.d/rockchip-hdmi$i/
+        install -m 0644 ${UNPACKDIR}/rockchip-hdmi$i/* ${D}${datadir}/alsa/ucm2/conf.d/rockchip-hdmi$i/
     done
-    install -D -t ${D}${datadir}/alsa/ucm2/conf.d/rockchip-es8388/ -m 0644 ${WORKDIR}/rockchip-es8388/*
+    install -D -t ${D}${datadir}/alsa/ucm2/conf.d/rockchip-es8388/ -m 0644 ${UNPACKDIR}/rockchip-es8388/*
 }
 
 FILES:${PN} = "${datadir}/alsa/ucm2/conf.d"

@@ -8,9 +8,9 @@ COMPATIBLE_MACHINE = "(-)"
 COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 
 do_install() {
-    if [ -s ${WORKDIR}/rockchip-udev.rules ]; then
+    if [ -s ${UNPACKDIR}/rockchip-udev.rules ]; then
         install -d ${D}${nonarch_base_libdir}/udev/rules.d
-        install -m 0644 ${WORKDIR}/rockchip-udev.rules ${D}${nonarch_base_libdir}/udev/rules.d/99-rockchip.rules
+        install -m 0644 ${UNPACKDIR}/rockchip-udev.rules ${D}${nonarch_base_libdir}/udev/rules.d/99-rockchip.rules
     fi
 }
 ALLOW_EMPTY:${PN} = "1"

@@ -21,7 +21,7 @@ S = "${WORKDIR}/git"
 
 do_install:append() {
     install -d ${D}${datadir}/X11/xorg.conf.d
-    install -m 0755 ${WORKDIR}/20-modesetting.conf \
+    install -m 0755 ${UNPACKDIR}/20-modesetting.conf \
         ${D}${datadir}/X11/xorg.conf.d/20-modesetting.conf
 }
 

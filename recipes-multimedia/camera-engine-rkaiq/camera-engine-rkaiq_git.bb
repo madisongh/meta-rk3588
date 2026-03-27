@@ -47,9 +47,9 @@ do_install:append () {
 	install -m 0644 ${S}/rkaiq/iqfiles/${IQFILES_SUBDIR}/*.json ${D}${sysconfdir}/iqfiles/
 
 	install -d ${D}${sysconfdir}/init.d
-	install -m 0755 ${WORKDIR}/rkaiq_3A.init ${D}${sysconfdir}/init.d/rkaiq_3A
+	install -m 0755 ${UNPACKDIR}/rkaiq_3A.init ${D}${sysconfdir}/init.d/rkaiq_3A
 	install -d ${D}${systemd_system_unitdir}
-	install -m 0644 ${WORKDIR}/rkaiq_3A.service ${D}${systemd_system_unitdir}/
+	install -m 0644 ${UNPACKDIR}/rkaiq_3A.service ${D}${systemd_system_unitdir}/
 }
 
 inherit update-rc.d systemd
