@@ -11,6 +11,8 @@ PV = "1.0+git"
 
 inherit meson
 
+CFLAGS += "-Wno-error=implicit-function-declaration"
+
 do_compile() {
     meson_do_compile
     oe_runmake -C ${S}/tools/rtk_hciattach rtk_hciattach CFLAGS="${CFLAGS}" CC="${CC} ${LDFLAGS}"
