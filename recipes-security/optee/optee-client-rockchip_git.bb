@@ -36,14 +36,14 @@ do_configure() {
 do_compile() {
     sed -e's,@sbindir@,${sbindir},g' \
         -e's,@sysconfdir@,${sysconfdir},g' \
-        ${WORKDIR}/tee-supplicant.service.in >${B}/tee-supplicant.service
+        ${UNPACKDIR}/tee-supplicant.service.in >${B}/tee-supplicant.service
     sed -e's,@tee_group@,${TEE_GROUP_NAME},g' \
         -e's,@teepriv_group@,teepriv,g' \
-	${WORKDIR}/optee-udev.rules.in >${B}/optee-udev.rules
+	${UNPACKDIR}/optee-udev.rules.in >${B}/optee-udev.rules
     sed -e's,@sbindir@,${sbindir},g' \
         -e's,@sysconfdir@,${sysconfdir},g' \
         -e's,@stripped_path@,${base_sbindir}:${base_bindir}:${sbindir}:${bindir},g' \
-        ${WORKDIR}/tee-supplicant.sh.in >${B}/tee-supplicant.sh
+        ${UNPACKDIR}/tee-supplicant.sh.in >${B}/tee-supplicant.sh
     rm -rf ${B}/ta
     cp -R ${S}/optee_v2/ta ${B}/
 }

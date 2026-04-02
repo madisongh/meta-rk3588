@@ -13,7 +13,7 @@ do_configure() {
 
 do_compile() {
    for f in rknn-server.service rknn-server.init; do
-      sed -e"s!@BINDIR@!${bindir}!" -e"s!@BASE_BINDIR@!${base_bindir}!" ${WORKDIR}/$f.in > ${B}/$f
+      sed -e"s!@BINDIR@!${bindir}!" -e"s!@BASE_BINDIR@!${base_bindir}!" ${UNPACKDIR}/$f.in > ${B}/$f
    done
 }
 
