@@ -40,7 +40,7 @@ EXTRA_OECMAKE = "     \
     -DRKAIQ_TARGET_SOC=${RK_TARGET_SOC} \
 "
 
-CXXFLAGS += "-Wno-error=stringop-overflow"
+CXXFLAGS += "-Wno-error=stringop-overflow -Wno-error=calloc-transposed-args -Wno-error=template-id-cdtor"
 
 do_install:append () {
 	install -d ${D}${sysconfdir}/iqfiles
