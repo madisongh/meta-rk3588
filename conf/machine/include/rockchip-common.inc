@@ -46,6 +46,11 @@ PREFERRED_PROVIDER_virtual/libgbm ?= "rockchip-libmali"
 PREFERRED_PROVIDER_virtual/libgl ?= "mesa-gl"
 PREFERRED_PROVIDER_virtual/mesa ?= "mesa-gl"
 
+PREFERRED_PROVIDER_optee-client ?= "optee-client-rockchip"
+PREFERRED_RPROVIDER_optee-client ?= "optee-client-rockchip"
+PREFERRED_PROVIDER_optee-test ?= "optee-test-rockchip"
+PREFERRED_RPROVIDER_optee-test ?= "optee-test-rockchip"
+
 # XXX Work around libforms directly depending on mesa rather than virtual/libgl
 COMPATIBLE_MACHINE:pn-libforms:rockchip = "(-)"
 
