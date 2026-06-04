@@ -11,6 +11,8 @@ SRC_URI = "\
     file://rockchip-es8388 \
 "
 
+S = "${UNPACKDIR}"
+
 do_install() {
     for i in 0 1; do
         install -d ${D}${datadir}/alsa/ucm2/conf.d/rockchip-hdmi$i

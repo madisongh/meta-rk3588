@@ -7,6 +7,8 @@ SRC_URI = "file://rockchip-udev.rules"
 COMPATIBLE_MACHINE = "(-)"
 COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 
+S = "${UNPACKDIR}"
+
 do_install() {
     if [ -s ${UNPACKDIR}/rockchip-udev.rules ]; then
         install -d ${D}${nonarch_base_libdir}/udev/rules.d
