@@ -10,7 +10,7 @@ DEPENDS = "optee-tadevkit-rockchip optee-client-rockchip python3-pyelftools-nati
 
 inherit python3native rk-optee-ta-signing
 
-export OPENSSL_MODULES="${STAGING_LIBDIR_NATIVE}/ossl-modules"
+export OPENSSL_MODULES = "${STAGING_LIBDIR_NATIVE}/ossl-modules"
 
 S = "${WORKDIR}/git/v2"
 B = "${WORKDIR}/build"
