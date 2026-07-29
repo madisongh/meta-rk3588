@@ -21,7 +21,6 @@ PV = "6.0-9.0+git"
 
 DEPENDS = "coreutils-native xxd-native rockchip-librga libdrm v4l-utils"
 
-S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
 
 inherit pkgconfig cmake rockchip_uapi

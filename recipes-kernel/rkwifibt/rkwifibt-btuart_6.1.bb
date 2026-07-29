@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://hci_uart.h;endline=24;md5=2afc1043c3931e9167681f36ec4
 
 require rkwifibt.inc
 
-S = "${WORKDIR}/git/drivers/bluetooth_uart_driver"
+S = "${UNPACKDIR}/${BP}/drivers/bluetooth_uart_driver"
 
 inherit module
 

@@ -16,7 +16,6 @@ COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 
 DEPENDS = "optee-client libdrm"
 
-S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
 
 inherit cmake pkgconfig rockchip_uapi

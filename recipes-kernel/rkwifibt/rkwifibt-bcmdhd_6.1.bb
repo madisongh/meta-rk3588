@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://Makefile;endline=20;md5=c9eea8e293304c41a58fd4838071f
 
 require rkwifibt.inc
 
-S = "${WORKDIR}/git/drivers/bcmdhd"
+S = "${UNPACKDIR}/${BP}/drivers/bcmdhd"
 
 inherit module
 

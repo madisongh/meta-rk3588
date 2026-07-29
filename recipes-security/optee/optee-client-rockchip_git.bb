@@ -24,7 +24,6 @@ TEE_GROUP_NAME ?= "tee"
 
 DEPENDS = "optee-client-rockchip-headers"
 
-S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
 
 inherit systemd rk-optee-ta-signing useradd

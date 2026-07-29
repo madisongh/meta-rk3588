@@ -4,7 +4,6 @@ LIC_FILES_CHKSUM = "file://v2/tools/ta_resign_tool-release/linux/resign_ta.py;be
 
 require rk-tee-user.inc
 
-S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
 
 COMPATIBLE_MACHINE:class-native = ""

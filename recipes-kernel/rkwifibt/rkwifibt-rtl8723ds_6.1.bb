@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://os_dep/linux/os_intfs.c;endline=14;md5=8092f02f993180
 
 require rkwifibt.inc
 
-S = "${WORKDIR}/git/drivers/rtl8723ds"
+S = "${UNPACKDIR}/${BP}/drivers/rtl8723ds"
 
 inherit module
 

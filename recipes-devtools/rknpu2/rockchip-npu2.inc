@@ -15,7 +15,6 @@ SRCREV = "a8dd54d41e92c95b4f95780ed0534362b2c98b92"
 
 PV = "2.3.0"
 
-S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
 
 PACKAGE_ARCH = "${SOC_FAMILY_PKGARCH}"

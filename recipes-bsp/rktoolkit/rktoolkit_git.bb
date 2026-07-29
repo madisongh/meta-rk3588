@@ -15,7 +15,6 @@ COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 RKTOOLKIT_TOOLS ?= "vendor_storage sample_vendor_lib"
 CFLAGS += "-Wno-error=format -Wno-error=unused-result"
 
-S = "${WORKDIR}/git"
 B = "${S}"
 
 do_compile() {

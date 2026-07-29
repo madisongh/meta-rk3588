@@ -15,7 +15,6 @@ PV = "1.9-1+git"
 COMPATIBLE_MACHINE = "(-)"
 COMPATIBLE_MACHINE:rockchip = "(rockchip)"
 
-S = "${WORKDIR}/git"
 
 DEPENDS = "coreutils-native libdrm"
 

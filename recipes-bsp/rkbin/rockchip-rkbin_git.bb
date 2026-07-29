@@ -24,7 +24,6 @@ RK_OPTEE_TOOLSDEP:class-native = ""
 RK_OPTEE_TOOLSDEP:class-nativesdk = ""
 DEPENDS = "${RK_OPTEE_TOOLSDEP}"
 
-S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
 
 RKBIN_SUBDIR = "${@d.getVar('SOC_FAMILY')[0:4] if d.getVar('SOC_FAMILY') else ''}"

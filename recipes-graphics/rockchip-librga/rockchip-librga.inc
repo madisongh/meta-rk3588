@@ -12,7 +12,6 @@ SRCREV = "396a26666974a4c90e785be93b9b0efd40a941c8"
 PE = "1"
 PV = "1.10.1-10+git"
 
-S = "${WORKDIR}/git"
 
 DEPENDS = "libdrm"
 

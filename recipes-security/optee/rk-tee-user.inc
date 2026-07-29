@@ -5,7 +5,6 @@ SRCREV = "150493459a0c8a57eb7bda49b19b11679ede7f0f"
 
 PV = "3.13.0-rk+git"
 
-S = "${WORKDIR}/git"
 
 COMPATIBLE_MACHINE = "(-)"
 COMPATIBLE_MACHINE:rockchip = "(rockchip)"

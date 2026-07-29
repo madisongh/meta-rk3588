@@ -12,7 +12,7 @@ inherit python3native rk-optee-ta-signing
 
 export OPENSSL_MODULES = "${STAGING_LIBDIR_NATIVE}/ossl-modules"
 
-S = "${WORKDIR}/git/v2"
+S = "${UNPACKDIR}/${BP}/v2"
 B = "${WORKDIR}/build"
 
 EXTRA_OEMAKE = "\

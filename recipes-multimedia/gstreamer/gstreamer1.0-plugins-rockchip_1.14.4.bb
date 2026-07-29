@@ -15,7 +15,6 @@ PACKAGECONFIG[mpp] = "-Drockchipmpp=enabled,-Drockchipmpp=disabled,rockchip-mpp"
 PACKAGECONFIG[x11] = "-Drkximage=enabled,-Drkximage=disabled,libx11 libdrm"
 PACKAGECONFIG[rga] = "-Drga=enabled,-Drga=disabled,rockchip-librga"
 
-S = "${WORKDIR}/git"
 
 inherit meson pkgconfig rockchip_uapi
 

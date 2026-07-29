@@ -17,7 +17,6 @@ PROVIDES += "xserver-xorg"
 
 inherit rockchip_uapi
 
-S = "${WORKDIR}/git"
 
 do_install:append() {
     install -d ${D}${datadir}/X11/xorg.conf.d

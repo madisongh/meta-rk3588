@@ -13,7 +13,6 @@ COMPATIBLE_MACHINE = "(-)"
 COMPATIBLE_MACHINE:class-native = ""
 COMPATIBLE_MACHINE:class-nativesdk = ""
 
-S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
 
 do_configure() {

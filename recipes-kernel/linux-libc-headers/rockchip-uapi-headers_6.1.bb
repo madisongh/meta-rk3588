@@ -8,7 +8,6 @@ SRCREV = "${RK_UAPI_SRCREV}"
 
 DEPENDS += "linux-libc-headers"
 
-S = "${WORKDIR}/git"
 
 HEADER_OVERRIDES = "\
     drm/drm_fourcc.h \
