@@ -5,16 +5,16 @@ SOC_FAMILY_PKGARCH = "${ARMPKGARCH}${ARMPKGSFX_DSP}${ARMPKGSFX_EABI}${ARMPKGSFX_
 RK_PKGARCH = "${ARMPKGARCH}${ARMPKGSFX_DSP}${ARMPKGSFX_EABI}${ARMPKGSFX_ENDIAN}${ARMPKGSFX_FPU}_rockchip"
 PACKAGE_EXTRA_ARCHS:append = " ${RK_PKGARCH} ${SOC_FAMILY_PKGARCH}"
 
-KERNEL_IMAGETYPE ?= "fitImage"
-KERNEL_ALT_IMAGETYPE ?= "Image.gz"
-KERNEL_IMAGETYPE_REPLACEMENT ?= "${KERNEL_ALT_IMAGETYPE}"
-KERNEL_CLASSES:append = "${@' rk-kernel-fitimage' if d.getVar('KERNEL_IMAGETYPE') == 'fitImage' else ''}"
+KERNEL_IMAGETYPE ?= "Image"
+KERNEL_CLASSES ?= "kernel-fit-extra-artifacts"
 RK_KERNEL_BOOTARGS ??= ""
 RK_KERNEL_EARLYCON ??= ""
 RK_KERNEL_BASEARGS ??= ""
 RK_KERNEL_CONSOLE ?= "${@' '.join(['console=%s,%s' % (c.split(';')[1], c.split(';')[0]) for c in d.getVar('SERIAL_CONSOLES').split()])}"
 RK_KERNEL_ARGS ?= "${RK_KERNEL_EARLYCON} ${RK_KERNEL_BASEARGS} ${RK_KERNEL_CONSOLE} ${RK_KERNEL_BOOTARGS}"
-RRECOMMENDS:${KERNEL_PACKAGE_NAME}-base ?= "${@'' if d.getVar('KERNEL_IMAGETYPE') == 'fitImage' else '${KERNEL_PACKAGE_NAME}-image (= ${EXTENDPKGV})'}"
+RK_KERNEL_PROVIDER ?= "linux-rockchip-downstream"
+RRECOMMENDS:${KERNEL_PACKAGE_NAME}-base ?= ""
+KERNEL_DEPLOY_DEPEND ?= "${RK_KERNEL_PROVIDER}-fitimage:do_deploy"
 
 IMAGE_BOOT_FILES ?= "${@rk.wic.image_boot_files(d)}"
 IMAGE_FSTYPES ?= "ext4 wic wic.bmap rkupdateimg"
@@ -25,7 +25,7 @@ do_image_wic[depends] += "${WIC_DEPLOY_EXTRA_DEPS}"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "${@'rockchip-udev-rules' if d.getVar('VIRTUAL-RUNTIME_dev_manager') in ['udev', 'systemd'] else ''}"
 
-PREFERRED_PROVIDER_virtual/kernel ?= "linux-rockchip-downstream"
+PREFERRED_PROVIDER_virtual/kernel ?= "${RK_KERNEL_PROVIDER}"
 PREFERRED_PROVIDER_virtual/bootloader ?= "u-boot-rockchip-downstream"
 PREFERRED_PROVIDER_u-boot ?= "u-boot-rockchip-downstream"
 
@@ -54,5 +54,4 @@ PREFERRED_RPROVIDER_optee-test ?= "optee-test-rockchip"
 # XXX Work around libforms directly depending on mesa rather than virtual/libgl
 COMPATIBLE_MACHINE:pn-libforms:rockchip = "(-)"
 
-RK_UBOOT_MKIMAGE_OPTIONS ?= " -E -p 0x1000"
-UBOOT_MKIMAGE:append = "${RK_UBOOT_MKIMAGE_OPTIONS}"
+FIT_MKIMAGE_EXTRA_OPTS ?= " -E -p 0x1000"
