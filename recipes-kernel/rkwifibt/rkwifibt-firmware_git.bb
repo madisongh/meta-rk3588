@@ -13,7 +13,7 @@ SRCREV_FORMAT = "rkwifibt_extra"
 
 require rkwifibt.inc
 
-S = "${WORKDIR}/rkwifibt"
+S = "${UNPACKDIR}/rkwifibt"
 B = "${S}"
 
 PV = "1.0+git"
