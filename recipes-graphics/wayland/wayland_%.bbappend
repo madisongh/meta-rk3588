@@ -1,7 +1,4 @@
-do_install:append:rockchip() {
-    rm -rf ${D}/${includedir}/wayland-egl*.h
-    rm -rf ${D}/${libdir}/libwayland-egl*
-    rm -rf ${D}/${libdir}/pkgconfig/wayland-egl*
-}
+FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
 
+SRC_URI:append:rockchip = " file://0001-HACK-egl-Prefer-using-libmali.so.1-s-Wayland-EGL-API.patch "
 PACKAGE_ARCH:rockchip = "${SOC_FAMILY_PKGARCH}"
