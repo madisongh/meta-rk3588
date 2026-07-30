@@ -11,7 +11,7 @@ PV = "1.0+git"
 
 inherit meson
 
-CFLAGS += "-Wno-error=implicit-function-declaration"
+CFLAGS += "-Wno-error=implicit-function-declaration -Wno-error=incompatible-pointer-types -std=gnu11"
 
 do_compile() {
     meson_do_compile
