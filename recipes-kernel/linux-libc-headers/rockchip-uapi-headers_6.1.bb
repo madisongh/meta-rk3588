@@ -4,6 +4,10 @@
 require recipes-kernel/linux-libc-headers/linux-libc-headers.inc
 require recipes-kernel/linux/linux-rockchip-downstream-6.1.inc
 
+# This gets set incorrectly for us in linux-libc-headers.inc,
+# put back the value we want
+S = "${UNPACKDIR}/${BP}"
+
 SRCREV = "${RK_UAPI_SRCREV}"
 
 DEPENDS += "linux-libc-headers"
