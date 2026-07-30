@@ -31,7 +31,7 @@ inherit rk-uboot-sign uboot-config uboot-extlinux-config deploy python3native ke
 
 DEPENDS += "swig-native"
 DEPENDS += "bc-native dtc-native coreutils-native ${PYTHON_PN}-pyelftools-native rockchip-rkbin rockchip-rkbin-tools-native"
-UBOOT_ASSEMBLE_FITIMAGE_DEPS ?= "${@'virtual/kernel:do_deploy' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else ''}"
+UBOOT_ASSEMBLE_FITIMAGE_DEPS ?= "${@'linux-rockchip-downstream-fitimage:do_deploy' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else ''}"
 RKUSBLOADER_ASSEMBLE_DEPS ?= "${@'virtual/bootloader:do_deploy' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else ''}"
 
 export RKBIN_TOOLS = "${STAGING_BINDIR_NATIVE}/rkbin-tools"
