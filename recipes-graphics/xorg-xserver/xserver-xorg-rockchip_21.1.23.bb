@@ -1,11 +1,11 @@
 require recipes-graphics/xorg-xserver/xserver-xorg.inc
+S = "${UNPACKDIR}/${BP}"
 SRC_REPO = "github.com/JeffyCN/xorg-xserver;protocol=https"
-SRC_URI = "git://${SRC_REPO};nobranch=1"
-# 21.1.8_2024_01_31 tag
-SRCREV = "19ac81ee935825dff2a16b680bbc66561e70eb7c"
+SRC_URI = "git://${SRC_REPO};branch=21.1.23"
+# untagged
+SRCREV = "f24d2746a698b523b034200992df054423ce4e7d"
 PV .= "+git"
 
-SRC_URI += "file://0001-Fix-unresolved-references-to-glamor-symbols.patch"
 SRC_URI += "file://20-modesetting.conf"
 
 DEPENDS += "rockchip-librga"
