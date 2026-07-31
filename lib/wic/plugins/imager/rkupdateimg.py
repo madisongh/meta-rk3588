@@ -5,7 +5,6 @@ import os
 from wic import WicError
 from wic.misc import BB_VARS, exec_native_cmd
 from wic.plugins.imager.direct import DirectPlugin
-from oe import path
 
 logger = logging.getLogger('wic')
 
@@ -29,12 +28,12 @@ class RkUpdateImagePlugin(DirectPlugin):
     def finalize(self):
         # We throw away the regular disk image, which we only really
         # needed for figuring out partition offsets and sizes.
-        path.remove(self._image.path, recurse=False)
+        os.unlink(self._image.path)
         # And the partition contents - actual files - that were
         # added to the tmp work directory, so they don't get copied
         # to the output directory (symlinks are automatically skipped).
         for tmpfile in self.to_remove:
-            path.remove(tmpfile, recurse=False)
+            os.unlink(tmpfile)
 
     def print_info(self):
         logger.info("Rockchip update package generated at: " + self.output_file_path)
@@ -64,7 +63,7 @@ class RkUpdateImagePlugin(DirectPlugin):
     def generate_package_file(self):
         image_basename = os.path.splitext(os.path.basename(self._image.path))[0]
         loader_name = BB_VARS.get_var('RK_LOADER_BIN') or "loader.bin"
-        path.symlink(os.path.join(BB_VARS.get_var('DEPLOY_DIR_IMAGE'), loader_name),
+        os.symlink(os.path.join(BB_VARS.get_var('DEPLOY_DIR_IMAGE'), loader_name),
                      os.path.join(self.workdir, loader_name))
         with open(os.path.join(self.workdir, "package-file"), "w") as pf:
             print("# IMAGE_NAME: " + image_basename, file=pf)
