@@ -66,4 +66,4 @@ do_install_armmultilib() {
 addtask install_prestage after do_compile before do_install
 addtask cleanse_prestage after do_install_prestage before do_install
 
-PACKAGE_ARCH = "${SOC_FAMILY_PKGARCH}"
+PACKAGE_ARCH = "${RK_PKGARCH}"
