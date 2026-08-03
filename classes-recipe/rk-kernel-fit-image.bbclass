@@ -163,11 +163,9 @@ python do_compile() {
     # Write the its file
     root_node.write_its_file(itsfile)
 
-    # Assemble the FIT image
+    # Assemble (and sign, if needed) the FIT image
     root_node.run_mkimage_assemble(itsfile, fitname)
 
-    # Sign the FIT image if required
-    root_node.run_mkimage_sign(fitname)
 }
 do_compile[depends] += "virtual/kernel:do_deploy"
 
