@@ -37,6 +37,7 @@ EXTRA_OECMAKE = "     \
     -DISP_HW_VERSION=-D${RK_ISP_VERSION} \
     -DIQ_PARSER_V2_EXTRA_CFLAGS='-I${STAGING_INCDIR}/rockchip-uapi;-I${STAGING_INCDIR}' \
     -DRKAIQ_TARGET_SOC=${RK_TARGET_SOC} \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \\
 "
 
 CXXFLAGS += "-Wno-error=stringop-overflow -Wno-error=calloc-transposed-args -Wno-error=template-id-cdtor"
