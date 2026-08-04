@@ -34,6 +34,12 @@ DEPENDS += "bc-native dtc-native coreutils-native ${PYTHON_PN}-pyelftools-native
 UBOOT_ASSEMBLE_FITIMAGE_DEPS ?= "${@'linux-rockchip-downstream-fitimage:do_deploy' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else ''}"
 RKUSBLOADER_ASSEMBLE_DEPS ?= "${@'virtual/bootloader:do_deploy' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else ''}"
 
+# Location for the u-boot DTB file that will get the public key needed
+# for signature checks. If using a non-default kernel, this should
+# probably be set to the "${DEPLOY_DIR_IMAGE}/${KERNEL_DEPLOYSUBDIR}"
+# deployment directory that alternate kernel uses.
+RK_KERNEL_FIT_DEPLOY_DIR ?= "${DEPLOY_DIR_IMAGE}"
+
 export RKBIN_TOOLS = "${STAGING_BINDIR_NATIVE}/rkbin-tools"
 
 EXTRA_OEMAKE = 'CROSS_COMPILE=${TARGET_PREFIX} CC="${TARGET_PREFIX}gcc ${TOOLCHAIN_OPTIONS}" V=1'
@@ -276,13 +282,14 @@ UBOOT_DTB_BINARY_DEPLOYED ??= "${UBOOT_DTB_BINARY}"
 SPL_DTB_BINARY_DEPLOYED ??= "${SPL_DTB_BINARY}"
 
 do_deploy() {
-    # The DTB file itself will get deployed by the kernel recipe, so
-    # just create the symlinks here since that can't be easily done there
+    # The DTB file itself will get deployed by the kernel-fitimage
+    # (into a subidrectory for non-default kernels), so just
+    # create the symlinks here since that can't be easily done there
     if ${@'true' if bb.utils.to_boolean(d.getVar('RK_SECURE_BOOT'), False) else 'false'} && [ -n "${UBOOT_DTB_BINARY}" ]; then
-        if [ -e "${UBOOT_DTB_BINARY}" -a "${UBOOT_DTB_BINARY}" = "${UBOOT_DTB_BINARY_DEPLOYED}" ]; then
-	    ln -sf ${UBOOT_DTB_IMAGE} ${DEPLOYDIR}/${UBOOT_DTB_BINARY}
-	    ln -sf ${UBOOT_DTB_IMAGE} ${DEPLOYDIR}/${UBOOT_DTB_SYMLINK}
-	fi
+        if [ -e "${UBOOT_DTB_BINARY}" ]; then
+            ln -sf ${UBOOT_DTB_IMAGE} ${RK_KERNEL_FIT_DEPLOY_DIR}/${UBOOT_DTB_BINARY}
+            ln -sf ${UBOOT_DTB_IMAGE} ${RK_KERNEL_FIT_DEPLOY_DIR}/${UBOOT_DTB_SYMLINK}
+        fi
     fi
 
     # Stage the SPL DTB with the RSA public key in it, for use when
@@ -446,7 +453,7 @@ do_uboot_assemble_fitimage() {
 	# subdirectory we created just after compilation, rather
 	# than one that has the public key inserted
 	if [ "${UBOOT_SIGN_ENABLE}" = "1" ]; then
-		cp ${DEPLOY_DIR_IMAGE}/${UBOOT_DTB_IMAGE} ${B}/u-boot.dtb
+		cp ${RK_KERNEL_FIT_DEPLOY_DIR}/${UBOOT_DTB_IMAGE} ${B}/u-boot.dtb
 		cp ${B}/dtb-stash/u-boot-spl.dtb ${B}/spl
 		mkdir -p keys
 		for f in ${SPL_SIGN_KEYDIR}/${SPL_SIGN_KEYNAME}.*; do

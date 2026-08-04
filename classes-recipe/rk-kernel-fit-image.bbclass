@@ -12,9 +12,11 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 # This bbclass requires KERNEL_CLASSES += "kernel-fit-extra-artifacts"
 EXCLUDE_FROM_WORLD = "1"
 
+RK_KERNEL_FIT_BOOTLOADER_DEPENDENCY ?= "virtual/bootloader"
+
 DEPENDS += "\
     rk-u-boot-tools-native dtc-native \
-    ${@'virtual/bootloader' if oe.types.boolean(d.getVar('FIT_KERNEL_SIGN_ENABLE')) else ''} \
+    ${@d.getVar('RK_KERNEL_FIT_BOOTLOADER_DEPENDENCY') if oe.types.boolean(d.getVar('FIT_KERNEL_SIGN_ENABLE')) else ''} \
     ${@'kernel-signing-keys-native' if d.getVar('FIT_GENERATE_KEYS') == '1' else ''} \
 "
 
