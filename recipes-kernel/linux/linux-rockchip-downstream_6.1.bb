@@ -36,10 +36,6 @@ set_chosen_bootargs() {
     done
 }
 
-do_assemble_fitimage:prepend() {
-    set_chosen_bootargs
-}
-
-do_assemble_fitimage_initramfs:prepend() {
+do_compile:append() {
     set_chosen_bootargs
 }
