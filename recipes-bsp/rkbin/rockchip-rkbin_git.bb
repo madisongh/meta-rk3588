@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Proprietary;md5=0557f9d92cf58f2
 SRC_REPO = "github.com/rockchip-linux/rkbin.git;protocol=https"
 SRCBRANCH = "master"
 SRC_URI = "git://${SRC_REPO};branch=${SRCBRANCH}"
-SRCREV = "74213af1e952c4683d2e35952507133b61394862"
+SRCREV = "ecb4fcbe954edf38b3ae037d5de6d9f5bccf81f4"
 
 PV = "1.0+git"
 
